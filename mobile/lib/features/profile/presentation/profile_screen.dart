@@ -540,15 +540,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: const Text('Batal'),
             ),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 Navigator.pop(ctx);
-                await ref.read(authProvider.notifier).loginAsMember(
-                  name: nameCtrl.text.trim(),
-                  phone: phoneCtrl.text.trim(),
-                );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Profil berhasil diperbarui!')),
+                    const SnackBar(content: Text('Fitur pembaruan profil sedang dalam pengembangan tahap lanjut.')),
                   );
                 }
               },

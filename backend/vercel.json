@@ -1,9 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "installCommand": "cd backend 2>/dev/null || true; npm install",
-  "buildCommand": "cd backend 2>/dev/null || true; npx prisma generate && npm run build",
-  "outputDirectory": "backend/.next",
   "headers": [
     {
       "source": "/api/(.*)",
