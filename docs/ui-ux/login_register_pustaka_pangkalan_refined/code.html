@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pustaka Pangkalan - Gerbang Ilmu Pengetahuan Desa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#73796f",
+                        "on-secondary-container": "#5d645d",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#424842",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#3b5836",
+                        "on-tertiary-fixed-variant": "#444746",
+                        "primary-fixed": "#caecbf",
+                        "secondary": "#596059",
+                        "surface-variant": "#dfe4dc",
+                        "outline-variant": "#c3c8bd",
+                        "surface-container-low": "#f0f5ed",
+                        "surface": "#f6fbf2",
+                        "inverse-primary": "#aed0a5",
+                        "tertiary-fixed": "#e1e3e1",
+                        "on-primary-container": "#abcda2",
+                        "background": "#f6fbf2",
+                        "on-surface-variant": "#434840",
+                        "primary-fixed-dim": "#aed0a5",
+                        "on-primary-fixed": "#052105",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#c5c7c5",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#2d322c",
+                        "surface-container-highest": "#dfe4dc",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d7dbd3",
+                        "surface-tint": "#486643",
+                        "surface-bright": "#f6fbf2",
+                        "surface-container-high": "#e5eae1",
+                        "inverse-on-surface": "#eef2ea",
+                        "on-primary-fixed-variant": "#314e2d",
+                        "on-tertiary-container": "#c2c5c3",
+                        "secondary-fixed": "#dee4db",
+                        "on-secondary-fixed": "#171d18",
+                        "secondary-fixed-dim": "#c1c8c0",
+                        "on-tertiary-fixed": "#191c1b",
+                        "surface-container": "#ebefe7",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#383b3a",
+                        "primary": "#244021",
+                        "secondary-container": "#dbe2d8",
+                        "tertiary-container": "#4f5251",
+                        "on-background": "#181d18",
+                        "on-surface": "#181d18"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "4xl": "2rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "margin": "20px",
+                        "lg": "24px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        .glass-panel {
+            background: rgba(246, 251, 242, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(195, 200, 189, 0.4);
+            box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tab-indicator {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .form-input:focus-within {
+            border-color: #3b5836;
+            background-color: #ffffff;
+        }
+        .form-input:focus-within label {
+            color: #3b5836;
+        }
+        .form-input:focus-within .material-symbols-outlined {
+            color: #3b5836;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col relative overflow-x-hidden antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Ambient Background Layer -->
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A serene, soft-focus landscape of a lush rural Indonesian village at dawn. The scene features gentle rolling hills, verdant rice terraces, and a traditional wooden library building nestled among tall trees. Soft golden morning light filters through the mist, creating a warm, inviting, and peaceful atmosphere. The color palette leans heavily into natural sage greens, soft whites, and earthy tones, maintaining a high-key, modern aesthetic suitable for a UI background overlay. The composition leaves ample negative space for UI elements to overlay cleanly." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2RgjnnkOIty9EHC7n0O3AjIYJjGmenwmh-fIlplTyxXRp2oCcttosrqpK65N4h3JHuCEq30_vugrxQ9WW5cSz9pXLU_BLGBEVYBvRMihlLCnZEEWqb2vFvy8Bec_8p4Pvta8KO8d8JgzZnOEqzpIUtirDN-OMQsoFZ9SJuCuytUBEdP35VEwRCSa4D3GN2UAKKYQ4sYc_dPheuU8sp9DBcwAwr1OXTFYzS1CHO-LsAWIDkpi_HADP')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-surface-variant/40"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="relative z-10 flex-grow flex flex-col items-center justify-center p-margin md:p-xl w-full max-w-7xl mx-auto min-h-screen pt-12 md:pt-0">
+<!-- Grid Layout Container -->
+<div class="w-full grid grid-cols-1 md:grid-cols-12 gap-gutter lg:gap-xl h-full items-center">
+<!-- Hero / Branding Section (Left on Desktop, Top on Mobile) -->
+<div class="md:col-span-6 lg:col-span-7 flex flex-col justify-center items-center md:items-start pb-8 md:py-0 md:pr-12 text-center md:text-left">
+<div class="w-20 h-20 md:w-28 md:h-28 bg-primary-container rounded-[2rem] flex items-center justify-center mb-6 shadow-lg shadow-primary-container/20 mx-auto md:mx-0 transform hover:-translate-y-1 transition-transform duration-300">
+<span class="material-symbols-outlined filled text-[40px] md:text-[56px] text-on-primary-container" data-icon="local_library">local_library</span>
+</div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-primary mb-3">
+                    Pustaka Pangkalan
+                </h1>
+<p class="font-body-lg text-on-surface-variant/90 mb-8 max-w-md mx-auto md:mx-0 leading-relaxed">
+                    Gerbang Ilmu Pengetahuan Desa. Akses ribuan koleksi buku digital untuk membangun potensi Pangkalan.
+                </p>
+<div class="hidden md:flex gap-4 flex-wrap">
+<div class="flex items-center gap-2 bg-surface px-5 py-2.5 rounded-full border border-outline-variant/30 shadow-sm">
+<span class="material-symbols-outlined filled text-primary-container text-[20px]" data-icon="menu_book">menu_book</span>
+<span class="font-title-md text-sm text-on-surface">5,000+ Buku</span>
+</div>
+<div class="flex items-center gap-2 bg-surface px-5 py-2.5 rounded-full border border-outline-variant/30 shadow-sm">
+<span class="material-symbols-outlined filled text-primary-container text-[20px]" data-icon="group">group</span>
+<span class="font-title-md text-sm text-on-surface">Komunitas Warga</span>
+</div>
+</div>
+</div>
+<!-- Auth Card Section (Right on Desktop, Bottom on Mobile) -->
+<div class="md:col-span-6 lg:col-span-5 w-full max-w-md mx-auto relative perspective">
+<!-- Decorative element behind card -->
+<div class="absolute -inset-4 bg-primary-fixed/30 rounded-[3rem] blur-2xl opacity-60 hidden md:block"></div>
+<!-- The Interactive Auth Card -->
+<div class="glass-panel rounded-[2rem] p-6 md:p-8 relative overflow-hidden flex flex-col">
+<!-- Segmented Tab Bar -->
+<div class="relative flex p-1.5 bg-surface-variant/50 rounded-2xl mb-8">
+<div class="absolute inset-y-1.5 left-1.5 w-[calc(50%-6px)] bg-surface rounded-xl shadow-sm tab-indicator border border-outline-variant/20" id="tab-bg"></div>
+<button class="flex-1 py-2.5 px-4 rounded-xl font-title-md text-sm text-center z-10 transition-colors duration-200 text-primary" id="tab-login" onclick="switchTab('login')">
+                            Masuk
+                        </button>
+<button class="flex-1 py-2.5 px-4 rounded-xl font-title-md text-sm text-center z-10 transition-colors duration-200 text-on-surface-variant" id="tab-register" onclick="switchTab('register')">
+                            Daftar
+                        </button>
+</div>
+<!-- Login Form View -->
+<form class="flex flex-col gap-4 transition-opacity duration-300 opacity-100" id="form-login">
+<!-- NIK Input -->
+<div class="form-input relative bg-surface-container-low border border-outline-variant/60 hover:border-outline rounded-2xl transition-all duration-200 group flex items-center px-4 h-16">
+<span class="material-symbols-outlined text-outline mr-3 transition-colors duration-200" data-icon="badge">badge</span>
+<div class="flex flex-col justify-center w-full h-full relative pt-3">
+<label class="absolute top-2 left-0 font-label-md text-outline-variant text-[11px] uppercase tracking-wider transition-colors duration-200 pointer-events-none" for="nik_login">NIK / ID Anggota</label>
+<input class="w-full bg-transparent border-none outline-none font-body-lg text-on-surface p-0 pb-1 placeholder-transparent focus:ring-0" id="nik_login" placeholder="16 digit NIK" required="" type="text"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="form-input relative bg-surface-container-low border border-outline-variant/60 hover:border-outline rounded-2xl transition-all duration-200 group flex items-center px-4 h-16">
+<span class="material-symbols-outlined text-outline mr-3 transition-colors duration-200" data-icon="lock">lock</span>
+<div class="flex flex-col justify-center w-full h-full relative pt-3">
+<label class="absolute top-2 left-0 font-label-md text-outline-variant text-[11px] uppercase tracking-wider transition-colors duration-200 pointer-events-none" for="pwd_login">Password / PIN</label>
+<input class="w-full bg-transparent border-none outline-none font-body-lg text-on-surface p-0 pb-1 placeholder-transparent focus:ring-0" id="pwd_login" placeholder="••••••••" required="" type="password"/>
+</div>
+<button aria-label="Toggle password visibility" class="p-2 -mr-2 text-outline hover:text-primary transition-colors focus:outline-none rounded-full" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+<!-- Forgot Password Link -->
+<div class="flex justify-end mt-[-4px]">
+<a class="font-body-md text-sm text-primary hover:text-primary-container transition-colors" href="#">Lupa PIN/Password?</a>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-4 mt-4">
+<button class="w-full h-14 bg-gradient-to-r from-primary-container to-[#4a6b44] hover:from-primary hover:to-primary-container active:scale-[0.98] text-on-primary-container font-title-md rounded-2xl transition-all shadow-md shadow-primary-container/20 flex items-center justify-center gap-2 group" type="button">
+<span>Masuk Ke Perpustakaan</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<div class="relative flex items-center py-2 opacity-70">
+<div class="flex-grow border-t border-outline-variant/50"></div>
+<span class="flex-shrink-0 mx-4 font-label-md text-outline">ATAU</span>
+<div class="flex-grow border-t border-outline-variant/50"></div>
+</div>
+<button class="w-full h-14 bg-surface-container-lowest border border-outline-variant hover:bg-surface-container-low active:scale-[0.98] text-on-surface font-title-md rounded-2xl transition-all flex items-center justify-center gap-3 shadow-sm" type="button">
+<span class="material-symbols-outlined filled text-primary" data-icon="local_police">local_police</span>
+<span>Masuk dengan Akun Desa</span>
+</button>
+</div>
+</form>
+<!-- Register Form View (Hidden by default) -->
+<form class="flex flex-col gap-4 transition-opacity duration-300 opacity-0 hidden absolute inset-0 p-6 md:p-8 pt-[104px] z-0" id="form-register">
+<div class="form-input relative bg-surface-container-low border border-outline-variant/60 hover:border-outline rounded-2xl transition-all duration-200 group flex items-center px-4 h-16">
+<span class="material-symbols-outlined text-outline mr-3 transition-colors duration-200" data-icon="person">person</span>
+<div class="flex flex-col justify-center w-full h-full relative pt-3">
+<label class="absolute top-2 left-0 font-label-md text-outline-variant text-[11px] uppercase tracking-wider transition-colors duration-200 pointer-events-none" for="name_reg">Nama Lengkap Sesuai KTP</label>
+<input class="w-full bg-transparent border-none outline-none font-body-lg text-on-surface p-0 pb-1 placeholder-transparent focus:ring-0" id="name_reg" placeholder="Nama Lengkap" type="text"/>
+</div>
+</div>
+<div class="form-input relative bg-surface-container-low border border-outline-variant/60 hover:border-outline rounded-2xl transition-all duration-200 group flex items-center px-4 h-16">
+<span class="material-symbols-outlined text-outline mr-3 transition-colors duration-200" data-icon="badge">badge</span>
+<div class="flex flex-col justify-center w-full h-full relative pt-3">
+<label class="absolute top-2 left-0 font-label-md text-outline-variant text-[11px] uppercase tracking-wider transition-colors duration-200 pointer-events-none" for="nik_reg">NIK (16 Digit)</label>
+<input class="w-full bg-transparent border-none outline-none font-body-lg text-on-surface p-0 pb-1 placeholder-transparent focus:ring-0" id="nik_reg" placeholder="16 digit NIK" type="text"/>
+</div>
+</div>
+<button class="w-full h-14 mt-6 bg-gradient-to-r from-primary-container to-[#4a6b44] hover:from-primary hover:to-primary-container active:scale-[0.98] text-on-primary-container font-title-md rounded-2xl transition-all shadow-md shadow-primary-container/20 flex items-center justify-center gap-2" type="button">
+<span>Daftar Akun Baru</span>
+</button>
+<p class="text-center font-body-md text-xs text-on-surface-variant/80 mt-3">
+                            Dengan mendaftar, Anda menyetujui Syarat &amp; Ketentuan.
+                        </p>
+</form>
+</div>
+<!-- Footer Info specific to Auth -->
+<div class="mt-8 text-center flex flex-col items-center justify-center gap-1.5">
+<p class="font-body-md text-on-surface-variant flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]" data-icon="info">info</span>
+                        Belum punya kartu anggota?
+                    </p>
+<p class="font-title-md text-primary hover:text-primary-container transition-colors cursor-pointer">
+                        Hubungi Balai Desa Pangkalan
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<!-- Global Footer -->
+<footer class="relative z-10 w-full pb-8 pt-4 text-center px-6">
+<p class="font-body-md text-sm text-on-surface-variant/70">
+            © 2024 Perpustakaan Desa Pangkalan · Versi 1.0.0
+        </p>
+</footer>
+<script>
+        function switchTab(tab) {
+            const bg = document.getElementById('tab-bg');
+            const loginBtn = document.getElementById('tab-login');
+            const regBtn = document.getElementById('tab-register');
+            const loginForm = document.getElementById('form-login');
+            const regForm = document.getElementById('form-register');
+            
+            if (tab === 'login') {
+                bg.style.transform = 'translateX(0)';
+                
+                loginBtn.classList.remove('text-on-surface-variant');
+                loginBtn.classList.add('text-primary');
+                
+                regBtn.classList.remove('text-primary');
+                regBtn.classList.add('text-on-surface-variant');
+                
+                regForm.classList.remove('opacity-100', 'z-10');
+                regForm.classList.add('opacity-0', 'z-0');
+                
+                setTimeout(() => {
+                    regForm.classList.add('hidden');
+                    loginForm.classList.remove('hidden');
+                    // Small delay to allow display:block to apply before animating opacity
+                    requestAnimationFrame(() => {
+                        loginForm.classList.remove('opacity-0', 'absolute', 'inset-0');
+                        loginForm.classList.add('opacity-100');
+                    });
+                }, 150); // wait for fade out
+                
+            } else {
+                // transform based on exact width would be better, but this approximates a 50% shift for a 2-item flex layout
+                bg.style.transform = 'translateX(100%)';
+                
+                regBtn.classList.remove('text-on-surface-variant');
+                regBtn.classList.add('text-primary');
+                
+                loginBtn.classList.remove('text-primary');
+                loginBtn.classList.add('text-on-surface-variant');
+                
+                loginForm.classList.remove('opacity-100');
+                loginForm.classList.add('opacity-0');
+                
+                setTimeout(() => {
+                    loginForm.classList.add('hidden', 'absolute', 'inset-0');
+                    regForm.classList.remove('hidden');
+                    requestAnimationFrame(() => {
+                        regForm.classList.remove('opacity-0', 'z-0');
+                        regForm.classList.add('opacity-100', 'z-10');
+                    });
+                }, 150);
+            }
+        }
+    </script>
+</body></html>

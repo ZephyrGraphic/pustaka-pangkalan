@@ -1,0 +1,346 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class RakBukuScreen extends StatefulWidget {
+  const RakBukuScreen({super.key});
+
+  @override
+  State<RakBukuScreen> createState() => _RakBukuScreenState();
+}
+
+class _RakBukuScreenState extends State<RakBukuScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const armyGreen = Color(0xFF3B5836);
+    const sageWhite = Color(0xFFF7F9F7);
+    const deepSlate = Color(0xFF1F241F);
+    const oliveGray = Color(0xFF8E958D);
+
+    return Scaffold(
+      backgroundColor: sageWhite,
+      appBar: AppBar(
+        backgroundColor: sageWhite,
+        elevation: 0,
+        title: Text(
+          'Rak Buku Saya',
+          style: GoogleFonts.plusJakartaSans(
+            color: deepSlate,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined, color: deepSlate),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // 1. Reading Stats Card
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: armyGreen,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: armyGreen.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildStatRow(Icons.auto_stories, '14', 'Buku Dibaca'),
+                        const SizedBox(height: 12),
+                        _buildStatRow(Icons.timer_outlined, '28', 'Jam Membaca'),
+                        const SizedBox(height: 12),
+                        _buildStatRow(Icons.cloud_done_outlined, '6', 'Buku Offline'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  // Progress Ring
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: CircularProgressIndicator(
+                          value: 0.75,
+                          strokeWidth: 8,
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '75%',
+                            style: GoogleFonts.plusJakartaSans(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Target',
+                            style: GoogleFonts.plusJakartaSans(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // 2. Tab Bar
+          TabBar(
+            controller: _tabController,
+            indicatorColor: armyGreen,
+            labelColor: armyGreen,
+            unselectedLabelColor: oliveGray,
+            labelStyle: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 13),
+            tabs: const [
+              Tab(text: 'Sedang Dibaca'),
+              Tab(text: 'Offline'),
+              Tab(text: 'Favorit'),
+            ],
+          ),
+
+          // 3. Tab Content
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildReadingTab(),
+                _buildOfflineTab(),
+                const Center(child: Text('Halaman Favorit')),
+              ],
+            ),
+          ),
+
+          // 4. Auto-Sync Banner
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            width: double.infinity,
+            color: armyGreen.withOpacity(0.05),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.check_circle, size: 14, color: Colors.green),
+                const SizedBox(width: 8),
+                Text(
+                  'Tersinkronisasi dengan Server Desa',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: armyGreen,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatRow(IconData icon, String value, String label) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.white.withOpacity(0.7), size: 18),
+        const SizedBox(width: 12),
+        Text(
+          value,
+          style: GoogleFonts.plusJakartaSans(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: GoogleFonts.plusJakartaSans(
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReadingTab() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: 2,
+      itemBuilder: (context, index) {
+        return _buildBookProgressCard(
+          title: index == 0 ? 'Panduan Budidaya Padi Organik' : 'Strategi UMKM Desa',
+          progress: index == 0 ? 0.68 : 0.25,
+          lastRead: 'Kemarin, 19:30',
+          image: index == 0 
+            ? 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070&auto=format&fit=crop'
+            : 'https://images.unsplash.com/photo-1554224155-1696413565d3?q=80&w=2011&auto=format&fit=crop',
+        );
+      },
+    );
+  }
+
+  Widget _buildBookProgressCard({required String title, required double progress, required String lastRead, required String image}) {
+    const armyGreen = Color(0xFF3B5836);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.black.withOpacity(0.05)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 90,
+            width: 65,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: DecorationImage(image: NetworkImage(image), fit: BoxFit.cover),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                Text(
+                  'Terakhir: $lastRead',
+                  style: GoogleFonts.plusJakartaSans(fontSize: 11, color: Colors.grey),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          backgroundColor: Colors.black.withOpacity(0.05),
+                          color: armyGreen,
+                          minHeight: 6,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${(progress * 100).toInt()}%',
+                      style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.bold, color: armyGreen),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.play_circle_fill, color: armyGreen, size: 32),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOfflineTab() {
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F4F0),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.storage_rounded, color: Color(0xFF3B5836)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Penyimpanan Lokal', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 13)),
+                    Text('12.4 MB terpakai dari 512 MB', style: GoogleFonts.plusJakartaSans(fontSize: 11, color: Colors.grey[600])),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text('Kelola', style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF3B5836))),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        _buildOfflineBookItem('Panduan Praktis Bertani', '3.2 MB'),
+        _buildOfflineBookItem('Pembuatan Pupuk Kompos', '1.5 MB'),
+      ],
+    );
+  }
+
+  Widget _buildOfflineBookItem(String title, String size) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Container(
+        width: 45,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(Icons.picture_as_pdf, color: Colors.redAccent, size: 20),
+      ),
+      title: Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600)),
+      subtitle: Text(size, style: GoogleFonts.plusJakartaSans(fontSize: 11, color: Colors.grey)),
+      trailing: IconButton(
+        icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+        onPressed: () {},
+      ),
+    );
+  }
+}

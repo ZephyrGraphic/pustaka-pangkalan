@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Beranda - Pustaka Pangkalan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "primary": "#244021",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#aed0a5",
+                        "surface-container": "#ebefe7",
+                        "on-secondary-container": "#5d645d",
+                        "surface": "#f6fbf2",
+                        "background": "#f6fbf2",
+                        "tertiary-container": "#4f5251",
+                        "on-primary-container": "#abcda2",
+                        "inverse-on-surface": "#eef2ea",
+                        "surface-tint": "#486643",
+                        "tertiary": "#383b3a",
+                        "secondary": "#596059",
+                        "on-tertiary-fixed": "#191c1b",
+                        "on-secondary-fixed-variant": "#424842",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2d322c",
+                        "outline-variant": "#c3c8bd",
+                        "surface-container-highest": "#dfe4dc",
+                        "primary-container": "#3b5836",
+                        "secondary-container": "#dbe2d8",
+                        "on-secondary-fixed": "#171d18",
+                        "primary-fixed-dim": "#aed0a5",
+                        "surface-variant": "#dfe4dc",
+                        "on-tertiary-container": "#c2c5c3",
+                        "secondary-fixed-dim": "#c1c8c0",
+                        "surface-bright": "#f6fbf2",
+                        "on-tertiary-fixed-variant": "#444746",
+                        "surface-container-low": "#f0f5ed",
+                        "on-primary-fixed-variant": "#314e2d",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d7dbd3",
+                        "primary-fixed": "#caecbf",
+                        "on-background": "#181d18",
+                        "surface-container-high": "#e5eae1",
+                        "on-surface": "#181d18",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#052105",
+                        "tertiary-fixed": "#e1e3e1",
+                        "on-surface-variant": "#434840",
+                        "outline": "#73796f",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#dee4db",
+                        "tertiary-fixed-dim": "#c5c7c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "sm": "8px",
+                        "margin": "20px",
+                        "md": "16px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "gutter": "16px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Hide scrollbar for horizontal scroll but allow scrolling */
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl bg-surface/85 dark:bg-surface-dim/85 shadow-sm">
+<div class="flex items-center justify-between px-margin py-sm w-full">
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">signal_cellular_alt</span>
+</button>
+<h1 class="font-title-md text-title-md font-bold text-primary dark:text-primary-fixed-dim truncate px-4">
+                Mode Terhubung - Hemat Kuota Aktif
+            </h1>
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[80px] pb-[100px] px-margin md:px-xl flex flex-col gap-xl">
+<!-- Header Section: Greeting & Streak -->
+<section class="flex flex-col gap-md">
+<div class="flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Desa Pangkalan</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary">
+                        Wilujeng Sumping,<br/>Pak Ahmad 👋
+                    </h2>
+</div>
+<div class="relative">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-surface-container-highest shadow-sm" data-alt="A close-up portrait of an older Indonesian man smiling warmly. He is wearing a traditional Sundanese iket (headpiece) and a neat button-down shirt. The background is slightly blurred, showing a lush, sunlit rural landscape. High-quality photography, warm lighting, approachable and trustworthy mood. Modern pastoral aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTq0Cti8bDeirOJoUQ1pERXmvyOKucM_2H_jL4lNw8r3YO9I3AAP6mZns5BF481njT0AIahD3W-PPH-AtQX8j0MYKTVX4KGNqHSVXhQqEt_CNNdPJ-URoirYv9syH7D2FiPQZ2zsKZe2fKfPY0X7HFoqqJjdyYi96FJA0OZXZ-tOlmlKYAXiRgZd4OkhCVauv5u1upFyYHSfWIFeFxe8LkywgGOYH6Low9L22cllsUADHzoXa4-7SM"/>
+<div class="absolute top-0 right-0 w-4 h-4 bg-error rounded-full border-2 border-surface"></div>
+</div>
+</div>
+<!-- Streak Card (Glassmorphic) -->
+<div class="bg-surface-container/60 backdrop-blur-lg rounded-xl p-md border border-outline-variant/20 shadow-[0px_4px_20px_rgba(0,0,0,0.03)] flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-2xl">
+                    🔥
+                </div>
+<div class="flex-grow">
+<p class="font-title-md text-title-md text-primary mb-1">5 Hari Beruntun</p>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[70%] rounded-full"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-secondary">Target: 7 Hari</p>
+</div>
+</div>
+</section>
+<!-- Search Bar -->
+<section>
+<div class="relative flex items-center w-full shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[20px] bg-surface border border-outline-variant/30 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant">search</span>
+<input class="w-full bg-transparent border-none py-4 pl-12 pr-12 text-body-lg rounded-[20px] focus:ring-0 placeholder:text-on-surface-variant/70 text-on-surface" placeholder="Cari modul pertanian, e-book, atau cerita rakyat..." type="text"/>
+<button class="absolute right-4 text-primary hover:bg-surface-container rounded-full p-1 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">tune</span>
+</button>
+</div>
+</section>
+<!-- Categories -->
+<section>
+<h3 class="font-title-md text-title-md text-on-surface mb-md">Kategori Pengetahuan Desa</h3>
+<div class="flex overflow-x-auto hide-scroll gap-sm pb-2 -mx-margin px-margin md:mx-0 md:px-0">
+<!-- Chip 1 -->
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-2 transition-colors">
+<span class="text-xl">🌾</span>
+<span class="font-label-md text-label-md text-on-surface">Pertanian &amp; Peternakan</span>
+</button>
+<!-- Chip 2 -->
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-2 transition-colors">
+<span class="text-xl">📚</span>
+<span class="font-label-md text-label-md text-on-surface">Sastra &amp; Budaya Sunda</span>
+</button>
+<!-- Chip 3 -->
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-2 transition-colors">
+<span class="text-xl">💼</span>
+<span class="font-label-md text-label-md text-on-surface">Wirausaha UMKM</span>
+</button>
+<!-- Chip 4 -->
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low hover:bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-2 transition-colors">
+<span class="text-xl">🩺</span>
+<span class="font-label-md text-label-md text-on-surface">Kesehatan Desa</span>
+</button>
+</div>
+</section>
+<!-- Continue Reading -->
+<section>
+<h3 class="font-title-md text-title-md text-on-surface mb-md">Sedang Dibaca</h3>
+<div class="bg-surface border border-outline-variant/20 rounded-xl p-md flex gap-md shadow-[0px_4px_20px_rgba(0,0,0,0.03)] items-center">
+<img class="w-20 h-28 object-cover rounded-md shadow-sm" data-alt="A simple, elegant book cover illustration depicting organic rice farming. It shows a stylized, vibrant green rice paddy with mountains in the background under a soft sunrise. Earthy greens and warm yellows dominate. High quality, modern vector art style, suitable for an agricultural manual." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASpiQfv-vrouyW_CZ0I8VvxZ7kRSGjPfTgTqZaw78giT-aH9jqxl2pZds8xKn2nC_1K1AttCo-HJx0c6JcNdWgDzj7oqujfvyZOtIP9FkAABc34oB1jJgQGR6vwmmfN4EqLwSSMPB_aaCvswIta4K-PNsIAvagB2eI-EtwgoSUlI8n1JWxPTMo00PCDvO4iQJhbsGTUXelAtKN1LYnEEMSPW5DEwsCP4X679k-OjpnA0Zbag98nPKJ"/>
+<div class="flex-grow flex flex-col justify-between h-full py-1">
+<div>
+<span class="inline-block px-2 py-1 bg-secondary-container/50 text-on-secondary-container rounded font-label-md text-[10px] uppercase mb-1">Modul</span>
+<h4 class="font-title-md text-title-md text-on-surface leading-tight mb-2">Panduan Budidaya Padi Organik</h4>
+<p class="font-body-md text-body-md text-secondary text-sm">Halaman 42 dari 120</p>
+</div>
+<div class="mt-3 flex items-center gap-4">
+<div class="flex-grow h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[35%] rounded-full"></div>
+</div>
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-full font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm">
+                            Lanjutkan
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Carousel -->
+<section>
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-title-md text-title-md text-on-surface">Unggulan Minggu Ini</h3>
+<button class="text-primary font-label-md text-label-md flex items-center hover:bg-surface-container px-2 py-1 rounded transition-colors">
+                    Lihat Semua
+                    <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</button>
+</div>
+<div class="flex overflow-x-auto hide-scroll gap-md pb-4 -mx-margin px-margin md:mx-0 md:px-0 snap-x snap-mandatory">
+<!-- Card 1 -->
+<div class="snap-center flex-shrink-0 w-[240px] bg-surface rounded-xl border border-outline-variant/20 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col group">
+<div class="relative h-40 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A beautifully designed book cover titled 'Sejarah Desa Pangkalan'. It features a vintage-style sepia-toned illustration of a traditional Sundanese village with stilt houses and lush trees, overlaid with modern typography. Elegant, historic, and culturally rich aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlPezszFmh9d4B75Bofkmdc68q3hc2Bkt1JtPYrjtmPD_HCLfyPdylQEb0D-fBoBG6H_G4KCEXWqrAlbuT0CXAikalh5TloNdpWvsW8aqaKH3MAIGWcfS9B4W0p8wmjK_P-Q0ddvlXFeKtOSwimmat4STLVK-N9USEYGx2_j5Q1TmqfKh8xOFDyfD-szjdLeId4LZumzw5jMWwnS5tr8YCCOue8AB5o5pbe9CxK32dn5v0BdZ4SlW_"/>
+<div class="absolute top-2 right-2 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-on-surface flex items-center gap-1 shadow-sm">
+<span class="text-yellow-500">⭐</span> 4.9
+                        </div>
+<div class="absolute bottom-2 left-2 bg-primary-container text-on-primary-container px-2 py-1 rounded text-[10px] font-label-md font-bold uppercase shadow-sm">
+                            Tersedia Offline
+                        </div>
+</div>
+<div class="p-4 flex flex-col flex-grow">
+<p class="font-label-md text-label-md text-secondary mb-1">Sejarah &amp; Budaya</p>
+<h4 class="font-title-md text-title-md text-on-surface mb-1 line-clamp-2">Sejarah Desa Pangkalan &amp; Silsilah Leluhur</h4>
+<p class="font-body-md text-body-md text-secondary text-sm mt-auto">Oleh: Ki Dalang Asep</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-center flex-shrink-0 w-[240px] bg-surface rounded-xl border border-outline-variant/20 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col group opacity-80 scale-95 origin-left">
+<div class="relative h-40 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A modern, clean book cover for a small business guide. The cover shows stylized icons of a small market stall, a smartphone, and rising bar charts in a cohesive flat design style. Colors are muted sage greens and warm terracottas. Professional and empowering mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxh5dUR4Ge9wIf2qvAOJjcZdbaTH5QAzwrTMEJUHiyGNV_k4bIRUDFBwH1HKnNFMX5mVpfF9RVxi-ZOw_ZvKGcDScRBN2ETaGRChROv5DhubSn7txS-fzrW0chbO1xa_4eKqYMvJ5XD2bzqh4tSqNOTHsJ0qDSUylWkD0VSIsg_uhoi8J6gxXu-XW84tBQYUyj1iwP9Wczvj3bxPNhFTneeA2HxbuaNZQVr4z99jjokiBxmhIhoP91"/>
+<div class="absolute top-2 right-2 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-on-surface flex items-center gap-1 shadow-sm">
+<span class="text-yellow-500">⭐</span> 4.7
+                        </div>
+</div>
+<div class="p-4 flex flex-col flex-grow">
+<p class="font-label-md text-label-md text-secondary mb-1">Ekonomi</p>
+<h4 class="font-title-md text-title-md text-on-surface mb-1 line-clamp-2">Strategi Pemasaran Digital untuk UMKM Desa</h4>
+<p class="font-body-md text-body-md text-secondary text-sm mt-auto">Oleh: BUMDes Pangkalan</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Local Heritage Banner -->
+<section class="mt-4">
+<div class="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-primary to-[#5b4636] p-lg flex flex-col justify-end min-h-[160px] shadow-md">
+<!-- Decorative subtle texture overlay -->
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 16px 16px;"></div>
+<div class="relative z-10 w-2/3">
+<span class="inline-block px-2 py-1 bg-on-primary/20 backdrop-blur-sm text-on-primary rounded font-label-md text-[10px] uppercase mb-2 border border-on-primary/30">Khasanah Lokal</span>
+<h3 class="font-title-md text-title-md text-on-primary mb-1">Cerita Rakyat &amp; Dongeng Sunda</h3>
+<p class="font-body-md text-body-md text-on-primary/80 text-sm">Lestarikan warisan leluhur kita untuk generasi mendatang.</p>
+</div>
+<button class="absolute bottom-lg right-lg w-10 h-10 bg-on-primary text-primary rounded-full flex items-center justify-center hover:bg-surface-container transition-colors shadow-lg">
+<span class="material-symbols-outlined">play_arrow</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 mb-4 mx-margin rounded-full backdrop-blur-20px border border-outline-variant/10 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] bg-surface/85 dark:bg-surface-dim/85 md:hidden">
+<div class="flex justify-around items-center h-16 w-auto px-2">
+<!-- Beranda (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-2 active:scale-90 transition-transform duration-300 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-[10px] mt-1 font-bold">Beranda</span>
+</button>
+<!-- Katalog (Inactive) -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full">
+<span class="material-symbols-outlined">import_contacts</span>
+<span class="font-label-md text-[10px] mt-1">Katalog</span>
+</button>
+<!-- Rak Buku (Inactive) -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-label-md text-[10px] mt-1">Rak Buku</span>
+</button>
+<!-- Profil (Inactive) -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-[10px] mt-1">Profil</span>
+</button>
+</div>
+</nav>
+<!-- Spacer for desktop to account for bottom nav absence -->
+<div class="hidden md:block h-8"></div>
+</body></html>

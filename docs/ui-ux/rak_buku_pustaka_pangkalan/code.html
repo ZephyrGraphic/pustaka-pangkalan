@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rak Buku Saya - Pustaka Pangkalan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#3b5836",
+                      "on-secondary-fixed": "#171d18",
+                      "tertiary": "#383b3a",
+                      "on-primary-fixed": "#052105",
+                      "primary-fixed-dim": "#aed0a5",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#181d18",
+                      "background": "#f6fbf2",
+                      "on-surface-variant": "#434840",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface-container-high": "#e5eae1",
+                      "surface-variant": "#dfe4dc",
+                      "error": "#ba1a1a",
+                      "secondary": "#596059",
+                      "on-error-container": "#93000a",
+                      "inverse-on-surface": "#eef2ea",
+                      "on-tertiary-fixed": "#191c1b",
+                      "tertiary-fixed-dim": "#c5c7c5",
+                      "on-secondary-container": "#5d645d",
+                      "inverse-surface": "#2d322c",
+                      "tertiary-fixed": "#e1e3e1",
+                      "secondary-fixed": "#dee4db",
+                      "on-tertiary-container": "#c2c5c3",
+                      "surface-container-low": "#f0f5ed",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#ebefe7",
+                      "on-background": "#181d18",
+                      "on-secondary-fixed-variant": "#424842",
+                      "inverse-primary": "#aed0a5",
+                      "on-primary-container": "#abcda2",
+                      "surface-container-highest": "#dfe4dc",
+                      "secondary-container": "#dbe2d8",
+                      "surface-bright": "#f6fbf2",
+                      "surface-dim": "#d7dbd3",
+                      "on-error": "#ffffff",
+                      "outline": "#73796f",
+                      "on-tertiary-fixed-variant": "#444746",
+                      "outline-variant": "#c3c8bd",
+                      "tertiary-container": "#4f5251",
+                      "primary-fixed": "#caecbf",
+                      "surface-tint": "#486643",
+                      "surface": "#f6fbf2",
+                      "secondary-fixed-dim": "#c1c8c0",
+                      "on-primary-fixed-variant": "#314e2d",
+                      "primary": "#244021",
+                      "error-container": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "margin": "20px",
+                      "xl": "32px",
+                      "md": "16px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "title-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg-mobile": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "title-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .circular-chart {
+            display: block;
+            margin: 0 auto;
+            max-width: 80%;
+            max-height: 250px;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: #dfe4dc;
+            stroke-width: 3.8;
+        }
+        .circle {
+            fill: none;
+            stroke-width: 2.8;
+            stroke-linecap: round;
+            animation: progress 1s ease-out forwards;
+        }
+        @keyframes progress {
+            0% {
+                stroke-dasharray: 0 100;
+            }
+        }
+        .percentage {
+            fill: #3b5836;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.5em;
+            text-anchor: middle;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen pb-32">
+<!-- Top App Bar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl bg-surface/85 dark:bg-surface-dim/85 shadow-sm">
+<div class="flex items-center justify-between px-margin py-sm w-full">
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-highest/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">signal_cellular_alt</span>
+</button>
+<h1 class="font-title-md text-title-md font-bold text-primary dark:text-primary-fixed-dim">Mode Terhubung - Hemat Kuota Aktif</h1>
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-highest/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-margin max-w-7xl mx-auto grid grid-cols-4 md:grid-cols-8 gap-gutter">
+<!-- Header Stats Card -->
+<section class="col-span-4 md:col-span-8 mb-xl">
+<div class="bg-surface rounded-xl border border-outline-variant/10 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-lg flex justify-between items-center relative overflow-hidden">
+<div class="absolute inset-0 bg-primary-container opacity-5 pointer-events-none"></div>
+<div class="z-10 flex flex-col gap-sm">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Rak Buku Saya</h2>
+<div class="flex flex-col gap-xs mt-sm">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">book</span>
+<span class="font-body-md text-body-md">14 Buku Dibaca</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">schedule</span>
+<span class="font-body-md text-body-md">28 Jam Membaca</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">cloud_download</span>
+<span class="font-body-md text-body-md">6 Buku Offline</span>
+</div>
+</div>
+</div>
+<!-- Circular Progress Ring -->
+<div class="w-24 h-24 z-10 hidden md:block">
+<svg class="circular-chart text-primary" viewbox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle stroke-primary" d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="75, 100"></path>
+<text class="percentage" x="18" y="20.35">75%</text>
+</svg>
+<p class="font-label-md text-label-md text-center text-on-surface-variant mt-2">Target Bulanan</p>
+</div>
+</div>
+</section>
+<!-- Segmented Navigation (TabBar) -->
+<section class="col-span-4 md:col-span-8 mb-lg border-b border-outline-variant/20">
+<div class="flex overflow-x-auto hide-scrollbar -mb-px">
+<button class="flex-1 whitespace-nowrap py-sm px-md border-b-2 border-primary text-primary font-title-md text-title-md">
+                    Sedang Dibaca
+                </button>
+<button class="flex-1 whitespace-nowrap py-sm px-md border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-colors font-title-md text-title-md">
+                    Tersimpan Offline
+                </button>
+<button class="flex-1 whitespace-nowrap py-sm px-md border-b-2 border-transparent text-on-surface-variant hover:text-primary transition-colors font-title-md text-title-md">
+                    Favorit
+                </button>
+</div>
+</section>
+<!-- List Content (Sedang Dibaca) -->
+<section class="col-span-4 md:col-span-8 flex flex-col gap-md">
+<!-- Book Card 1 -->
+<div class="bg-surface rounded-xl border border-outline-variant/10 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-md flex gap-md items-start">
+<div class="w-24 h-32 rounded-lg overflow-hidden flex-shrink-0 bg-surface-variant">
+<img class="object-cover w-full h-full" data-alt="A detailed image of a modern agricultural handbook cover featuring a minimalist illustration of a stylized tractor in a field, utilizing an army green and sage white color palette with clean typography. The mood is instructional and professional, suitable for a digital library in a rural setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBytu0Rn6l4EMfEJtl5t43Hr0IE1HRyrMvdvUJFF5Z1Ydrk8s7QsZEarM2-GBlJtKdfFBGpE7ey2o-e7_1gQyhn85NolAp_ag2ZTCPvKb52Pk-2yINxVZUasHpWKAn8XW1fU9G_ySlfnEb2gu0PCFajqkESUSvhzZKEXak9iyc7Jo5boGtBBuPbfvSJjKs8uf7lBUOYDjuR7Nb_cnXzevBg4Nk1NfeEphvkTGSYZpVjCw3GOoxIuQ10"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-1">Panduan Pertanian Modern Terpadu</h3>
+<p class="font-label-md text-label-md text-on-surface-variant line-clamp-1 mb-sm">Budi Santoso</p>
+<div class="flex items-center gap-sm mb-xs">
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 68%;"></div>
+</div>
+<span class="font-label-md text-label-md text-primary font-bold">68%</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant/80 text-xs">Terakhir dibaca: Kemarin, 19:30</p>
+</div>
+<div class="mt-sm flex justify-end">
+<button class="bg-primary text-on-primary font-label-md text-label-md px-md py-sm rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+                            Lanjutkan
+                        </button>
+</div>
+</div>
+</div>
+<!-- Book Card 2 -->
+<div class="bg-surface rounded-xl border border-outline-variant/10 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-md flex gap-md items-start">
+<div class="w-24 h-32 rounded-lg overflow-hidden flex-shrink-0 bg-surface-variant">
+<img class="object-cover w-full h-full" data-alt="A detailed image of a local history book cover featuring a vintage photograph of a village landscape blended with modern geometric shapes in army green and sage white. The design is elegant and accessible, reflecting a trusted digital archive for community history." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1Jh7mlFnbxuUKmHwAIlcTmy1ZzW9Q4eXBvFHqDTIOOkFJIHTSXG_hv3ygvYTGi4tialCKKPXU5Zvt1CNq3rSkHfdInOw8TYKqYdtSIJ4DXpEgc1iC05Y1sWAHaRIhf1uh8H-l0AvPaSHH_cehUn4IzvmxHJGD8FRfGRy4IZj0GhKMOdPcWC2OC6SHlOaSAX5qZQdudXFz-PiJUOr0BAkY3N8GP-LFILStI49Qu2pjapKYyU0IndmL"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-1">Sejarah Desa Pangkalan</h3>
+<p class="font-label-md text-label-md text-on-surface-variant line-clamp-1 mb-sm">Tim Arsip Desa</p>
+<div class="flex items-center gap-sm mb-xs">
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 32%;"></div>
+</div>
+<span class="font-label-md text-label-md text-primary font-bold">32%</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant/80 text-xs">Terakhir dibaca: 2 Hari yang lalu</p>
+</div>
+<div class="mt-sm flex justify-end">
+<button class="bg-primary text-on-primary font-label-md text-label-md px-md py-sm rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+                            Lanjutkan
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Status -->
+<div class="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none hidden md:flex">
+<div class="bg-surface-container-high/90 backdrop-blur-md text-on-surface-variant font-label-md text-label-md px-md py-sm rounded-full shadow-sm border border-outline-variant/20 flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+            Tersinkronisasi dengan Server Desa
+        </div>
+</div>
+<!-- Bottom Navigation Bar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 mb-4 mx-margin rounded-full backdrop-blur-20px border border-outline-variant/10 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] bg-surface/85 dark:bg-surface-dim/85 md:hidden">
+<div class="flex justify-around items-center h-16 w-auto">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-md text-label-md mt-1 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1">Beranda</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">import_contacts</span>
+<span class="font-label-md text-label-md mt-1 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1">Katalog</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-label-md text-label-md mt-1">Rak Buku</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-label-md mt-1 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1">Profil</span>
+</a>
+</div>
+</nav>
+<div class="fixed bottom-24 left-0 right-0 flex justify-center z-40 pointer-events-none md:hidden">
+<div class="bg-surface-container-high/90 backdrop-blur-md text-on-surface-variant font-label-md text-label-md px-md py-sm rounded-full shadow-sm border border-outline-variant/20 flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+            Tersinkronisasi
+        </div>
+</div>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

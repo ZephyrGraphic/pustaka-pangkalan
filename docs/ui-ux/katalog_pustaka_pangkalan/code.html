@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Katalog &amp; Pencarian - Perpustakaan Desa</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#171d18",
+                        "on-background": "#181d18",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#dbe2d8",
+                        "primary-fixed": "#caecbf",
+                        "outline": "#73796f",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f6fbf2",
+                        "on-primary-fixed": "#052105",
+                        "surface-variant": "#dfe4dc",
+                        "secondary-fixed-dim": "#c1c8c0",
+                        "tertiary-container": "#4f5251",
+                        "inverse-on-surface": "#eef2ea",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#c5c7c5",
+                        "inverse-surface": "#2d322c",
+                        "surface-dim": "#d7dbd3",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#486643",
+                        "tertiary": "#383b3a",
+                        "on-tertiary-fixed-variant": "#444746",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f0f5ed",
+                        "primary": "#244021",
+                        "surface-container": "#ebefe7",
+                        "on-secondary-fixed-variant": "#424842",
+                        "on-primary-fixed-variant": "#314e2d",
+                        "surface": "#f6fbf2",
+                        "secondary": "#596059",
+                        "primary-fixed-dim": "#aed0a5",
+                        "tertiary-fixed": "#e1e3e1",
+                        "on-tertiary-fixed": "#191c1b",
+                        "on-secondary-container": "#5d645d",
+                        "on-tertiary-container": "#c2c5c3",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#abcda2",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c3c8bd",
+                        "primary-container": "#3b5836",
+                        "background": "#f6fbf2",
+                        "secondary-fixed": "#dee4db",
+                        "surface-container-highest": "#dfe4dc",
+                        "on-surface": "#181d18",
+                        "inverse-primary": "#aed0a5",
+                        "on-surface-variant": "#434840",
+                        "surface-container-high": "#e5eae1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "gutter": "16px",
+                        "margin": "20px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for horizontal scrolling containers */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-[90px] md:pb-0 md:pl-[240px]">
+<!-- Desktop Side Navigation (Responsive adaptation) -->
+<aside class="hidden md:flex flex-col fixed top-0 left-0 h-screen w-[240px] bg-surface-container-lowest border-r border-outline-variant/20 z-50">
+<div class="p-margin">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">DesaDigital</h1>
+</div>
+<nav class="flex-1 px-sm flex flex-col gap-sm mt-md">
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-secondary-container/30 transition-all font-title-md text-title-md" href="#">
+<span class="material-symbols-outlined">home</span> Beranda
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-full bg-primary-container text-on-primary-container font-title-md text-title-md" href="#">
+<span class="material-symbols-outlined filled">import_contacts</span> Katalog
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-secondary-container/30 transition-all font-title-md text-title-md" href="#">
+<span class="material-symbols-outlined">auto_stories</span> Rak Buku
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-secondary-container/30 transition-all font-title-md text-title-md" href="#">
+<span class="material-symbols-outlined">person</span> Profil
+            </a>
+</nav>
+</aside>
+<!-- Sticky Header & Search Area -->
+<header class="sticky top-0 z-40 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm md:pt-md">
+<!-- Search Bar Container -->
+<div class="px-margin py-sm flex items-center gap-sm max-w-4xl mx-auto">
+<div class="flex-1 flex items-center bg-surface-container rounded-full px-md py-2 border border-outline-variant/30 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm">search</span>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface font-body-md placeholder:text-on-surface-variant/70 p-0" placeholder="Cari buku, modul, atau penulis..." type="text" value="Pertanian Organik"/>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full transition-colors">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<div class="w-px h-6 bg-outline-variant/30 mx-sm"></div>
+<button class="text-primary hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+</div>
+<button class="p-2 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:bg-secondary-container/30 transition-all active:scale-95 shrink-0">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+<!-- Filter Chips -->
+<div class="px-margin pb-sm flex overflow-x-auto hide-scrollbar gap-sm max-w-4xl mx-auto">
+<button class="px-md py-sm rounded-xl font-label-md text-label-md whitespace-nowrap bg-surface-container text-on-surface-variant hover:bg-secondary-container/30 transition-colors border border-outline-variant/20">Semua</button>
+<button class="px-md py-sm rounded-xl font-label-md text-label-md whitespace-nowrap bg-primary-container text-on-primary-container border border-primary/20 shadow-sm transition-colors">E-Book PDF</button>
+<button class="px-md py-sm rounded-xl font-label-md text-label-md whitespace-nowrap bg-surface-container text-on-surface-variant hover:bg-secondary-container/30 transition-colors border border-outline-variant/20">Modul Praktis</button>
+<button class="px-md py-sm rounded-xl font-label-md text-label-md whitespace-nowrap bg-surface-container text-on-surface-variant hover:bg-secondary-container/30 transition-colors border border-outline-variant/20">Audio/Cerita</button>
+<button class="px-md py-sm rounded-xl font-label-md text-label-md whitespace-nowrap bg-surface-container text-on-surface-variant hover:bg-secondary-container/30 transition-colors border border-outline-variant/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span> Tersedia Offline
+            </button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="max-w-4xl mx-auto w-full">
+<!-- Stats Bar -->
+<div class="flex justify-between items-center px-margin py-md">
+<p class="font-body-md text-body-md text-on-surface-variant">
+<span class="font-title-md text-title-md text-on-surface">124</span> Koleksi Ditemukan
+            </p>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-1 text-on-surface-variant cursor-pointer hover:bg-surface-container rounded-lg px-2 py-1 transition-colors">
+<span class="font-label-md text-label-md">Terbaru</span>
+<span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container rounded-lg p-1 border border-outline-variant/20">
+<button class="p-1 rounded bg-surface shadow-sm text-primary">
+<span class="material-symbols-outlined text-[20px] filled">grid_view</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[20px]">view_list</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Populated State: Grid Layout -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md px-margin pb-xl" id="populated-state">
+<!-- Book Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/10 overflow-hidden flex flex-col group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
+<div class="relative w-full p-sm pb-0 aspect-[3/4]">
+<img class="w-full h-full object-cover rounded-lg shadow-sm border border-outline-variant/10" data-alt="A brightly lit, modern flat-lay photograph of an agricultural guidebook with a vibrant green cover resting on a clean, light sage wooden table. The cover features minimalist vector illustrations of crops. Soft, diffused daylight casts gentle shadows, creating a pristine, high-quality editorial aesthetic suitable for a modern digital library." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6hj057i0fwYl3EGb2BLnSblxWu4ZG3GsRrxqr6Vr6AhTp_qTyjmgo4imyp2z_DlHCQUxOw3kRSzSalRSjHt9yL7jj1a8A0krkXafj7hBbFyG73tJCKfSh91Wgg2eU3kbxcH6GTtrNZchgmp3T7Bm0cjTS0ZmazTA19cc40-7t-5Y_CcS2cczY3vbgusmiAcUEEADU4WJdPQv6Wpw0laChMTzX2XnevXn-DdfunR7Mjn-r25Q5WGPC"/>
+<!-- Badges -->
+<div class="absolute top-3 left-3 flex flex-col gap-1">
+<span class="bg-secondary-container/90 backdrop-blur-sm text-on-secondary-container font-label-md text-label-md px-2 py-0.5 rounded-full shadow-sm text-[10px]">Pertanian</span>
+</div>
+<div class="absolute top-3 right-3 bg-surface/90 backdrop-blur-sm rounded-full p-1 shadow-sm text-primary">
+<span class="material-symbols-outlined text-[14px]">cloud_done</span>
+</div>
+</div>
+<div class="p-sm flex flex-col flex-1 gap-1">
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-2 leading-tight mt-1 group-hover:text-primary transition-colors">Panduan Praktis Bertani Hidroponik Skala Desa</h3>
+<p class="font-label-md text-label-md text-on-surface-variant line-clamp-1">Budi Santoso</p>
+<div class="flex justify-between items-end mt-auto pt-2">
+<div class="flex items-center gap-2">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-amber-500 filled">star</span>
+<span class="font-label-md text-[11px] ml-0.5">4.8</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span class="font-label-md text-[11px] ml-0.5">1.2k</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:scale-90">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Book Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/10 overflow-hidden flex flex-col group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
+<div class="relative w-full p-sm pb-0 aspect-[3/4]">
+<img class="w-full h-full object-cover rounded-lg shadow-sm border border-outline-variant/10" data-alt="A minimalist digital illustration serving as an e-book cover, showing a stylized tractor in a sunny, abstract field. The color palette emphasizes modern sage greens, warm earthy browns, and pristine whites. The image is rendered with smooth vectors and subtle gradients, suggesting accessibility and modern agricultural technology in a serene setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG4z2DfiJojRhc7-R0W1dbKYKdcxFtTuJ5rpiWFGNYnGHeCrfg0Ny7gx4El8vJIqXG3vOw2yVNbRSiCVtYz5cQmZiGxjzTrwVyEAU-Wz-fcsb65HNw3xcc_-OTGa3reL_rOaVoAUCCrK_VEnfgpM0lyI4JMGEwzFdlL3c0YCXUYafJwrjYRLex9sdecGWulnN5iB4RtrDLrjayCk_jxxW1-QPASkcP2hEEQ1INDjpDKED-IUE7QinR"/>
+<!-- Badges -->
+<div class="absolute top-3 left-3 flex flex-col gap-1">
+<span class="bg-secondary-container/90 backdrop-blur-sm text-on-secondary-container font-label-md text-label-md px-2 py-0.5 rounded-full shadow-sm text-[10px]">Teknologi</span>
+</div>
+</div>
+<div class="p-sm flex flex-col flex-1 gap-1">
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-2 leading-tight mt-1 group-hover:text-primary transition-colors">Pengenalan Alat Tani Modern</h3>
+<p class="font-label-md text-label-md text-on-surface-variant line-clamp-1">Dinas Pertanian</p>
+<div class="flex justify-between items-end mt-auto pt-2">
+<div class="flex items-center gap-2">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-amber-500 filled">star</span>
+<span class="font-label-md text-[11px] ml-0.5">4.5</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span class="font-label-md text-[11px] ml-0.5">850</span>
+</div>
+</div>
+<button class="text-primary hover:text-primary-container transition-colors active:scale-90">
+<span class="material-symbols-outlined text-[20px] filled">bookmark</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Book Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/10 overflow-hidden flex flex-col group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
+<div class="relative w-full p-sm pb-0 aspect-[3/4]">
+<div class="w-full h-full bg-surface-variant rounded-lg flex items-center justify-center border border-outline-variant/10">
+<span class="material-symbols-outlined text-outline text-[48px]">menu_book</span>
+</div>
+<!-- Badges -->
+<div class="absolute top-3 left-3 flex flex-col gap-1">
+<span class="bg-secondary-container/90 backdrop-blur-sm text-on-secondary-container font-label-md text-label-md px-2 py-0.5 rounded-full shadow-sm text-[10px]">Ekonomi</span>
+</div>
+<div class="absolute top-3 right-3 bg-surface/90 backdrop-blur-sm rounded-full p-1 shadow-sm text-primary">
+<span class="material-symbols-outlined text-[14px]">cloud_done</span>
+</div>
+</div>
+<div class="p-sm flex flex-col flex-1 gap-1">
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-2 leading-tight mt-1 group-hover:text-primary transition-colors">Manajemen BUMDes yang Efektif</h3>
+<p class="font-label-md text-label-md text-on-surface-variant line-clamp-1">Dr. Hendra</p>
+<div class="flex justify-between items-end mt-auto pt-2">
+<div class="flex items-center gap-2">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-amber-500 filled">star</span>
+<span class="font-label-md text-[11px] ml-0.5">4.9</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span class="font-label-md text-[11px] ml-0.5">3.4k</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:scale-90">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Book Card 4 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/10 overflow-hidden flex flex-col group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
+<div class="relative w-full p-sm pb-0 aspect-[3/4]">
+<img class="w-full h-full object-cover rounded-lg shadow-sm border border-outline-variant/10" data-alt="A beautiful, soft-focus photograph of seedlings sprouting in rich, dark soil, captured during the golden hour. The sunlight bathes the tiny green leaves in a warm, ethereal glow. The image is framed within a clean, modern card layout, emphasizing the organic texture against the sleek UI elements. The mood is hopeful and rooted in nature." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR9MgioeWRJ-xmaARYbOIdjGZW3olN0q2KDDL7CQ7Ch6v4j3d4__8PXVS3XaF1suYHU6LTfafwWoAa0vDZNvRcvN7TUn0kZzkp62_dMN7h6UGute_UYuhdURncxThqv61JOXOEgNpU7Qj9JMVaSuYbd_nX8AGNSbMmlDOLxPjkYOIga-2PRR3HT7kgSZMpt4PB7ebgxj8owNOSZ6CHF7OCur76oPVH4xfbwbUM9i9kO-jbQ_-4_xGD"/>
+<!-- Badges -->
+<div class="absolute top-3 left-3 flex flex-col gap-1">
+<span class="bg-secondary-container/90 backdrop-blur-sm text-on-secondary-container font-label-md text-label-md px-2 py-0.5 rounded-full shadow-sm text-[10px]">Pertanian</span>
+</div>
+</div>
+<div class="p-sm flex flex-col flex-1 gap-1">
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-2 leading-tight mt-1 group-hover:text-primary transition-colors">Pembuatan Pupuk Kompos Mandiri</h3>
+<p class="font-label-md text-label-md text-on-surface-variant line-clamp-1">Kelompok Tani Maju</p>
+<div class="flex justify-between items-end mt-auto pt-2">
+<div class="flex items-center gap-2">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-amber-500 filled">star</span>
+<span class="font-label-md text-[11px] ml-0.5">4.2</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span class="font-label-md text-[11px] ml-0.5">520</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:scale-90">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<!-- Empty State (Hidden by default, shown when no results) -->
+<div class="hidden flex-col items-center justify-center py-xl px-margin text-center min-h-[50vh]" id="empty-state">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-md text-outline-variant">
+<span class="material-symbols-outlined text-[48px]">search_off</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Tidak ada hasil ditemukan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mb-lg">Kami tidak dapat menemukan koleksi yang cocok dengan "Kata Kunci Salah". Coba gunakan kata kunci lain atau hapus filter.</p>
+<button class="px-lg py-3 rounded-full bg-primary text-on-primary font-title-md text-title-md shadow-sm hover:bg-primary-container transition-colors active:scale-95">
+                Riset Ulang Pencarian
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<!-- Applying exact styling from Shared Components JSON with logic applied for active state "Katalog" -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 mb-4 mx-margin rounded-full backdrop-blur-20px border border-outline-variant/10 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex justify-around items-center h-16 w-auto bg-surface/85">
+<!-- Beranda (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md mt-1 hidden sm:block">Beranda</span>
+</a>
+<!-- Katalog (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined filled">import_contacts</span>
+<span class="font-label-md text-label-md mt-1 hidden sm:block">Katalog</span>
+</a>
+<!-- Rak Buku (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-label-md text-label-md mt-1 hidden sm:block">Rak Buku</span>
+</a>
+<!-- Profil (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary px-5 py-2 hover:bg-secondary-container/30 transition-all active:scale-90 duration-300 ease-out rounded-full" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md mt-1 hidden sm:block">Profil</span>
+</a>
+</nav>
+</body></html>

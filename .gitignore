@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js Build
+backend/.next/
+backend/out/
+backend/build/
+
+# Mobile Flutter Build & Cache
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+
+# Android Gradle Build (recursive — catches android/app/build, .cxx, etc.)
+**/android/**/build/
+**/android/**/.cxx/
+**/android/.gradle/
+**/.gradle/
+
+# Flutter Web Build
+mobile/web/
+
+# Database & Environment
+*.db
+*.db-journal
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE & System Files
+.DS_Store
+*.pem
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Lock files (opsional — bisa dihapus jika ingin lock file ter-commit)
+# package-lock.json
+# pubspec.lock
+

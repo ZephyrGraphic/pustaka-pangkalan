@@ -1,0 +1,245 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleName {
+  SUPER_ADMIN
+  ADMIN
+  LIBRARIAN
+  USER
+}
+
+enum ContentType {
+  BOOK
+  MODULE
+  ARTICLE
+  DOCUMENT
+  LOCAL_HISTORY
+  LOCAL_CULTURE
+  COMMUNITY_WORK
+}
+
+enum ContentVisibility {
+  PUBLIC
+  REGISTERED
+  PRIVATE
+}
+
+enum ContentStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LicenseType {
+  PUBLIC_DOMAIN
+  OPEN_LICENSE
+  GOVERNMENT_OWNED
+  VILLAGE_OWNED
+  AUTHOR_PERMISSION
+  COMMUNITY_WORK
+}
+
+enum ReadingStatus {
+  NOT_STARTED
+  READING
+  COMPLETED
+}
+
+enum NotificationType {
+  SYSTEM
+  NEW_CONTENT
+  READING_REMINDER
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        RoleName @unique
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id              String            @id @default(uuid())
+  roleId          String
+  role            Role              @relation(fields: [roleId], references: [id])
+  name            String
+  email           String?           @unique
+  phone           String            @unique
+  passwordHash    String
+  avatarUrl       String?
+  isActive        Boolean           @default(true)
+  lastLoginAt     DateTime?
+  bookmarks       Bookmark[]
+  readingProgress ReadingProgress[]
+  readingHistory  ReadingHistory[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]        @relation("ActorAuditLogs")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([phone])
+  @@index([roleId])
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  icon        String?
+  description String?
+  contents    Content[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Author {
+  id        String    @id @default(uuid())
+  name      String
+  bio       String?
+  avatarUrl String?
+  contents  Content[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Content {
+  id              String            @id @default(uuid())
+  categoryId      String
+  category        Category          @relation(fields: [categoryId], references: [id])
+  authorId        String?
+  author          Author?           @relation(fields: [authorId], references: [id])
+  title           String
+  slug            String            @unique
+  description     String?           @db.Text
+  contentType     ContentType       @default(BOOK)
+  publicationYear Int?
+  coverUrl        String?
+  visibility      ContentVisibility @default(REGISTERED)
+  status          ContentStatus     @default(DRAFT)
+  license         LicenseType       @default(VILLAGE_OWNED)
+  viewCount       Int               @default(0)
+  publishedAt     DateTime?
+  digitalAssets   DigitalAsset[]
+  tags            ContentTag[]
+  bookmarks       Bookmark[]
+  readingProgress ReadingProgress[]
+  readingHistory  ReadingHistory[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([categoryId])
+  @@index([status, visibility])
+  @@index([contentType])
+}
+
+model DigitalAsset {
+  id            String   @id @default(uuid())
+  contentId     String
+  content       Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  storageKey    String
+  fileUrl       String
+  mimeType      String   @default("application/pdf")
+  fileSizeBytes BigInt
+  checksum      String?
+  createdAt     DateTime @default(now())
+
+  @@index([contentId])
+}
+
+model Tag {
+  id        String       @id @default(uuid())
+  name      String       @unique
+  slug      String       @unique
+  contents  ContentTag[]
+  createdAt DateTime     @default(now())
+}
+
+model ContentTag {
+  contentId String
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  tagId     String
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, tagId])
+}
+
+model Bookmark {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentId  String
+  content    Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  pageNumber Int      @default(1)
+  note       String?
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, contentId, pageNumber])
+  @@index([userId])
+}
+
+model ReadingProgress {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentId       String
+  content         Content       @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  currentPage     Int           @default(1)
+  totalPages      Int           @default(1)
+  progressPercent Float         @default(0.0)
+  status          ReadingStatus @default(READING)
+  lastReadAt      DateTime      @default(now()) @updatedAt
+  createdAt       DateTime      @default(now())
+
+  @@unique([userId, contentId])
+  @@index([userId])
+}
+
+model ReadingHistory {
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentId      String
+  content        Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  startedAt      DateTime  @default(now())
+  finishedAt     DateTime?
+  totalPagesRead Int       @default(0)
+  lastReadAt     DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      NotificationType @default(SYSTEM)
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, isRead])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  actor     User?    @relation("ActorAuditLogs", fields: [actorId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([actorId])
+  @@index([entity, entityId])
+}

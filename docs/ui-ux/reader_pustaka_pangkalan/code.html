@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panduan Budidaya Padi Organik - Reader</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#e1e3e1",
+                        "surface-container": "#ebefe7",
+                        "primary-container": "#3b5836",
+                        "on-secondary": "#ffffff",
+                        "background": "#f6fbf2",
+                        "surface-dim": "#d7dbd3",
+                        "inverse-primary": "#aed0a5",
+                        "on-secondary-fixed": "#171d18",
+                        "secondary-fixed": "#dee4db",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-surface": "#181d18",
+                        "on-surface-variant": "#434840",
+                        "outline-variant": "#c3c8bd",
+                        "tertiary-container": "#4f5251",
+                        "surface-container-high": "#e5eae1",
+                        "on-primary-container": "#abcda2",
+                        "on-tertiary-fixed-variant": "#444746",
+                        "surface-container-low": "#f0f5ed",
+                        "on-primary-fixed": "#052105",
+                        "inverse-surface": "#2d322c",
+                        "surface-bright": "#f6fbf2",
+                        "secondary-container": "#dbe2d8",
+                        "secondary-fixed-dim": "#c1c8c0",
+                        "on-secondary-container": "#5d645d",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#c5c7c5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#dfe4dc",
+                        "on-background": "#181d18",
+                        "on-tertiary-fixed": "#191c1b",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#dfe4dc",
+                        "outline": "#73796f",
+                        "inverse-on-surface": "#eef2ea",
+                        "surface-tint": "#486643",
+                        "surface": "#f6fbf2",
+                        "on-tertiary-container": "#c2c5c3",
+                        "secondary": "#596059",
+                        "on-secondary-fixed-variant": "#424842",
+                        "primary-fixed-dim": "#aed0a5",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#383b3a",
+                        "primary-fixed": "#caecbf",
+                        "on-error": "#ffffff",
+                        "primary": "#244021",
+                        "on-primary-fixed-variant": "#314e2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "md": "16px",
+                        "base": "4px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "margin": "20px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "title-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better reading experience */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #dee4db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c3c8bd; }
+        
+        .glass-panel {
+            background: rgba(246, 251, 242, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        /* Range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #244021;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #c3c8bd;
+            border-radius: 2px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased h-screen overflow-hidden flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation App Bar -->
+<header class="fixed top-0 w-full z-50 glass-panel shadow-sm flex justify-between items-center px-gutter h-16 w-full transition-transform duration-300 transform translate-y-0" id="topNav">
+<button class="p-sm text-on-surface-variant hover:bg-surface-variant/50 rounded-full transition-colors active:scale-95 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex-1 text-center truncate px-md">
+<h1 class="font-title-md text-title-md text-primary">Panduan Budidaya Padi Organik</h1>
+</div>
+<div class="flex items-center gap-xs">
+<button class="p-sm text-on-surface-variant hover:bg-surface-variant/50 rounded-full transition-colors active:scale-95 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="bookmark_add">bookmark_add</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:bg-surface-variant/50 rounded-full transition-colors active:scale-95 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="format_list_bulleted">format_list_bulleted</span>
+</button>
+</div>
+</header>
+<!-- Reading Canvas -->
+<main class="flex-1 overflow-y-auto pt-24 pb-32 px-margin md:px-xl" id="readingCanvas">
+<article class="max-w-2xl mx-auto space-y-lg relative">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface mb-xl mt-lg">Bab 3: Persiapan Lahan dan Pengolahan Tanah</h2>
+<p class="font-body-lg text-body-lg text-on-surface/90 leading-relaxed indent-8 text-justify">
+                Keberhasilan budidaya padi organik sangat bergantung pada kualitas persiapan lahan. Berbeda dengan metode konvensional yang mengandalkan bahan kimia sintetis untuk memanipulasi kondisi tanah secara cepat, pertanian organik mengedepankan proses alami untuk mengembalikan dan mempertahankan kesuburan tanah. Lahan harus dipersiapkan dengan cermat untuk memastikan sirkulasi udara, retensi air, dan aktivitas mikrobiologi berjalan optimal.
+            </p>
+<figure class="my-xl rounded-xl overflow-hidden border border-outline-variant/30 shadow-sm">
+<img alt="Ilustrasi profil tanah sawah" class="w-full h-auto object-cover aspect-video" data-alt="A detailed, high-quality, modern minimalist illustration depicting a cross-section of fertile organic soil in a rice paddy field. The soil layers are visible, showing rich dark brown organic matter near the surface, healthy root systems of rice plants extending downward, and microscopic life symbols indicating microbial activity. The illustration uses a color palette centered around earthy browns, deep army green, and soft sage green accents on a clean, light background. The style is educational, professional, and visually engaging, suitable for a high-end digital textbook." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrfr_6-6FLx5eW4x4hetDVTpgJckhqGeNkgjDNrcUDFrjmZAjDDhY7__X-L45kuZenG-6p5cmXfGOy1r6z8uWME8WohJca4TgNin5ViZo4_eFVY-hmDSD9UMSamLHhUSKPMKpKDijKU9rDxUWn5qiy4vx9c27-JZLUF-3PqoGnZ8ASQVEo17v8vRBNf0wzNn7BuW7YOsrOniv6hE2W-CjTfEy1jA4n_AQbE3EElIP24EPaq9pGKreg"/>
+<figcaption class="p-sm text-center font-label-md text-label-md text-on-surface-variant bg-surface-container-low border-t border-outline-variant/30">
+                    Gambar 3.1: Profil tanah sawah yang ideal untuk budidaya organik, menunjukkan lapisan olah yang kaya akan bahan organik.
+                </figcaption>
+</figure>
+<p class="font-body-lg text-body-lg text-on-surface/90 leading-relaxed indent-8 text-justify">
+                Tahap pertama dalam pengolahan tanah adalah pembersihan lahan dari sisa-sisa tanaman musim sebelumnya. Sisa jerami sebaiknya tidak dibakar, melainkan dikembalikan ke lahan sebagai pupuk dasar. Proses dekomposisi jerami akan menambah kandungan karbon dan nitrogen organik yang krusial bagi pertumbuhan awal padi. Penggunaan dekomposer alami berbasis mikroba lokal (MOL) dapat mempercepat proses pembusukan ini.
+            </p>
+<h3 class="font-title-md text-title-md text-on-surface mt-xl mb-md">3.1 Pembajakan dan Penggaruan</h3>
+<p class="font-body-lg text-body-lg text-on-surface/90 leading-relaxed text-justify">
+                Pembajakan dilakukan untuk membalik lapisan tanah, memutus siklus hidup gulma, dan membawa nutrisi yang terpendam ke permukaan. Disarankan untuk melakukan pembajakan sedalam 15-20 cm. Setelah pembajakan pertama, lahan dibiarkan selama 7-10 hari untuk proses oksidasi.
+            </p>
+<p class="font-body-lg text-body-lg text-on-surface/90 leading-relaxed text-justify mt-md">
+                Selanjutnya adalah penggaruan (pelumpuran) yang bertujuan untuk melumatkan gumpalan tanah menjadi struktur lumpur halus. Lumpur yang sempurna akan menahan air dengan baik (mencegah perkolasi berlebihan) dan memudahkan perakaran padi muda untuk menembus tanah. Selama proses penggaruan, pupuk kandang atau kompos yang telah matang disebarkan secara merata dengan dosis anjuran 2-3 ton per hektar.
+            </p>
+<p class="font-body-lg text-body-lg text-on-surface/90 leading-relaxed text-justify mt-md pb-xl">
+               Penting untuk memastikan bahwa permukaan lahan setelah digaru benar-benar rata (leveling). Permukaan lahan yang tidak rata akan menyebabkan distribusi air yang tidak merata—area yang lebih tinggi akan kekurangan air sehingga memicu pertumbuhan gulma, sementara area yang lebih rendah akan tergenang terlalu dalam, menghambat pertumbuhan anakan padi.
+            </p>
+<!-- Floating Page Indicator -->
+<div class="fixed bottom-32 right-6 md:right-10 bg-surface-container-high/90 backdrop-blur-md text-on-surface-variant font-label-md text-label-md py-2 px-4 rounded-full shadow-md border border-outline-variant/20 z-40 transition-opacity duration-300" id="pageIndicator">
+                Halaman 42 / 120
+            </div>
+</article>
+</main>
+<!-- Bottom Control Toolbar -->
+<footer class="fixed bottom-0 w-full z-50 glass-panel shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-xl transition-transform duration-300 transform translate-y-0" id="bottomToolbar">
+<div class="px-6 pt-4 pb-2">
+<!-- Progress Slider -->
+<div class="flex items-center gap-sm mb-4">
+<span class="font-label-md text-label-md text-on-surface-variant w-8 text-right">0</span>
+<div class="flex-1 relative h-4 flex items-center">
+<input class="w-full relative z-10" id="pageSlider" max="120" min="0" type="range" value="42"/>
+<!-- Custom progress fill track -->
+<div class="absolute left-0 h-1 bg-primary rounded-l-full z-0 pointer-events-none" style="width: 35%; top: 50%; transform: translateY(-50%);"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant w-8">120</span>
+</div>
+<!-- Controls Row -->
+<div class="flex justify-between items-center mb-2 border-t border-outline-variant/20 pt-4">
+<!-- Font Size Controls -->
+<div class="flex items-center bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button aria-label="Decrease font size" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 rounded-full transition-colors font-title-md">
+                        -A
+                    </button>
+<div class="w-px h-6 bg-outline-variant/50 mx-1"></div>
+<button aria-label="Increase font size" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 rounded-full transition-colors font-title-md text-lg">
+                        A+
+                    </button>
+</div>
+<!-- Theme Toggles -->
+<div class="flex items-center bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button aria-label="Light Theme" class="w-10 h-10 flex items-center justify-center bg-primary-container text-on-primary-container rounded-full shadow-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px]" data-icon="light_mode">light_mode</span>
+</button>
+<button aria-label="Sepia Theme" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 rounded-full transition-transform active:scale-95 mx-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="history_edu">history_edu</span>
+</button>
+<button aria-label="Dark Theme" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 rounded-full transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px]" data-icon="dark_mode">dark_mode</span>
+</button>
+</div>
+</div>
+<!-- Auto Sync Status -->
+<div class="text-center mt-2 pb-2">
+<p class="font-label-md text-label-md text-on-surface-variant/70 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="cloud_sync">cloud_sync</span>
+                    Progress Otomatis Tersimpan (Auto-Sync)
+                </p>
+</div>
+</div>
+</footer>
+<script>
+        // Simple script to handle showing/hiding UI elements on scroll for a distraction-free experience
+        let lastScrollY = 0;
+        const topNav = document.getElementById('topNav');
+        const bottomToolbar = document.getElementById('bottomToolbar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const canvas = document.getElementById('readingCanvas');
+
+        canvas.addEventListener('scroll', () => {
+            const currentScrollY = canvas.scrollTop;
+            
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                // Scrolling down - hide UI
+                topNav.classList.add('-translate-y-full');
+                bottomToolbar.classList.add('translate-y-full');
+                pageIndicator.classList.add('opacity-50');
+                pageIndicator.classList.remove('opacity-100');
+            } else {
+                // Scrolling up - show UI
+                topNav.classList.remove('-translate-y-full');
+                bottomToolbar.classList.remove('translate-y-full');
+                pageIndicator.classList.add('opacity-100');
+                pageIndicator.classList.remove('opacity-50');
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+
+        // Click on content area toggles UI visibility
+        canvas.addEventListener('click', (e) => {
+            if(e.target === canvas || e.target.closest('article')) {
+                const isHidden = topNav.classList.contains('-translate-y-full');
+                if (isHidden) {
+                    topNav.classList.remove('-translate-y-full');
+                    bottomToolbar.classList.remove('translate-y-full');
+                } else {
+                    topNav.classList.add('-translate-y-full');
+                    bottomToolbar.classList.add('translate-y-full');
+                }
+            }
+        });
+
+        // Update progress bar track visual dynamically
+        const slider = document.getElementById('pageSlider');
+        const progressFill = slider.nextElementSibling;
+        
+        slider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            const max = e.target.max;
+            const percentage = (val / max) * 100;
+            progressFill.style.width = `${percentage}%`;
+            pageIndicator.innerText = `Halaman ${val} / ${max}`;
+        });
+    </script>
+</body></html>

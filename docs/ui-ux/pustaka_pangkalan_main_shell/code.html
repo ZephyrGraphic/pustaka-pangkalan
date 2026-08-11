@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pustaka Pangkalan - Main Shell</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#dfe4dc",
+                      "secondary-fixed": "#dee4db",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "on-secondary-container": "#5d645d",
+                      "primary-fixed": "#caecbf",
+                      "secondary-fixed-dim": "#c1c8c0",
+                      "on-surface": "#181d18",
+                      "tertiary-fixed": "#e1e3e1",
+                      "background": "#f6fbf2",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#191c1b",
+                      "outline-variant": "#c3c8bd",
+                      "on-secondary-fixed-variant": "#424842",
+                      "primary": "#244021",
+                      "primary-container": "#3b5836",
+                      "tertiary-container": "#4f5251",
+                      "tertiary": "#383b3a",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#dbe2d8",
+                      "on-primary-fixed-variant": "#314e2d",
+                      "surface": "#f6fbf2",
+                      "surface-tint": "#486643",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#abcda2",
+                      "surface-container-low": "#f0f5ed",
+                      "surface-variant": "#dfe4dc",
+                      "on-primary-fixed": "#052105",
+                      "on-background": "#181d18",
+                      "surface-container-high": "#e5eae1",
+                      "inverse-primary": "#aed0a5",
+                      "inverse-surface": "#2d322c",
+                      "surface-bright": "#f6fbf2",
+                      "on-error": "#ffffff",
+                      "surface-container": "#ebefe7",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#444746",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed-dim": "#aed0a5",
+                      "inverse-on-surface": "#eef2ea",
+                      "outline": "#73796f",
+                      "on-secondary-fixed": "#171d18",
+                      "secondary": "#596059",
+                      "on-tertiary-container": "#c2c5c3",
+                      "tertiary-fixed-dim": "#c5c7c5",
+                      "surface-dim": "#d7dbd3",
+                      "on-surface-variant": "#434840"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "margin": "20px",
+                      "base": "4px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "md": "16px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "title-md": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "title-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface font-body-lg text-body-lg min-h-screen relative pb-24 md:pb-0">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl bg-surface/85 dark:bg-surface-dim/85 shadow-sm">
+<div class="flex items-center justify-between px-margin py-sm w-full">
+<div class="flex items-center gap-2 text-primary dark:text-primary-fixed-dim bg-primary-container/20 px-3 py-1.5 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-sm">signal_cellular_alt</span>
+<span class="font-label-md text-label-md font-medium">Mode Terhubung - Hemat Kuota Aktif</span>
+</div>
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-highest/20 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-20 px-margin flex flex-col gap-xl max-w-7xl mx-auto w-full">
+<!-- Welcome Section -->
+<section class="mt-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2">Selamat Datang di Pustaka Pangkalan</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Temukan ribuan koleksi buku digital untuk menunjang aktivitas membaca dan belajarmu.</p>
+</section>
+<!-- Featured Books Grid (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-md">
+<!-- Hero Card -->
+<article class="col-span-1 md:col-span-8 bg-surface-container-low border border-outline-variant/10 rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-md transition-shadow group cursor-pointer relative h-64 md:h-80">
+<div class="absolute inset-0 bg-cover bg-center z-0 group-hover:scale-105 transition-transform duration-700" data-alt="A modern agricultural scene showing a farmer using a tablet device in a lush green rice field during golden hour. The lighting is soft and warm, highlighting the integration of technology and traditional farming. The color palette features rich earthy greens, vibrant yellow sunlight, and clear blue skies, creating an optimistic and progressive mood suitable for a rural digital library." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQLorAOhW1vzA_PENyZFYW7Zt_RCIOh_nQCAgGBI2QUtwbVZNSd1539GsLwuzMbik7Yig8smRzfASCf6IJls89TaDX-g9Eh56oZ_ROGD1lUx4ueYLYf0yFD6eubIMY32DTuCG5PqHprEq8xxg4zq7x7oLuBAs2c53uotmuLSJIdMnIBhctjrb7LruLg6Pn_XLH91sdJuWv7OFmD_gIDOy-ZF9Cz18rGplpB8NJJgVfiM-TcqKxHbGl')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10"></div>
+<div class="absolute bottom-0 left-0 p-lg z-20 w-full">
+<span class="inline-block bg-primary text-on-primary px-2 py-1 rounded-full font-label-md text-label-md mb-2">Terpopuler</span>
+<h2 class="font-title-md text-title-md text-white mb-1">Panduan Modern Bertani Padi</h2>
+<p class="font-body-md text-body-md text-surface-container-highest line-clamp-2">Teknik terbaru meningkatkan hasil panen dengan metode ramah lingkungan.</p>
+</div>
+</article>
+<!-- Side Card 1 -->
+<article class="col-span-1 md:col-span-4 bg-primary-container text-on-primary-container rounded-xl p-lg flex flex-col justify-between shadow-[0px_4px_20px_rgba(0,0,0,0.04)] h-64 md:h-80">
+<div class="flex justify-between items-start">
+<div class="bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-white">menu_book</span>
+</div>
+<span class="font-label-md text-label-md text-primary bg-white px-2 py-1 rounded-full">Baru</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md mb-2">Katalog Pertanian</h3>
+<p class="font-body-md text-body-md text-on-primary-container/80">Jelajahi koleksi terbaru seputar agrikultur dan perkebunan.</p>
+</div>
+<button class="mt-4 w-full bg-white text-primary py-2 rounded-lg font-title-md text-body-md hover:bg-surface-container-low transition-colors text-center">Lihat Katalog</button>
+</article>
+<!-- Small Card 1 -->
+<article class="col-span-1 md:col-span-6 bg-surface-container-low border border-outline-variant/10 rounded-xl p-md flex gap-md items-center shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:bg-surface-container-highest/20 transition-colors cursor-pointer">
+<div class="w-20 h-24 rounded-lg bg-cover bg-center shrink-0 shadow-sm" data-alt="A brightly lit, cozy reading corner in a community center. A wooden table with a stack of colorful books, a small potted plant, and warm sunlight streaming through a window. The aesthetic is welcoming, clean, and modern pastoral, utilizing soft whites, sage greens, and natural wood tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBdfF8QL0jtmqe1z4EXdUyvsfnBzTxyOGkqdKFoDkijjmmQvz2aAZ38rRn_xweDhuC--5ty25qQRz_au57Ktqe3C3UNWUBZgGc9zb5H0Gk3B0QQGI3abgASiXtDbltN_k1sVd-1uBATuYtjJUe6SR4MJ0uMLKaT2OYYd0A0SuNoIcKaWCsgnThZ0NaDfT95WUiBrGySmyKkRGDHknO6r7lmzAC8CocHrNsGETsxaGcyxcG92DU_Ca05')"></div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface mb-1">Cerita Rakyat Nusantara</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Kumpulan dongeng inspiratif dari berbagai daerah.</p>
+</div>
+</article>
+<!-- Small Card 2 -->
+<article class="col-span-1 md:col-span-6 bg-surface-container-low border border-outline-variant/10 rounded-xl p-md flex gap-md items-center shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:bg-surface-container-highest/20 transition-colors cursor-pointer">
+<div class="w-20 h-24 rounded-lg bg-cover bg-center shrink-0 shadow-sm" data-alt="A clean, minimalist desk setup featuring a digital tablet displaying educational charts and graphs. A cup of coffee and a notebook sit nearby. The lighting is bright and even, creating a professional yet approachable learning environment. The color palette focuses on muted sage, white, and subtle earthy browns." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGxKMEOpaoEzB4Bd4miCyIa7XPH79RgtDt1qw2r3BQ5PTdkSD4qKmieprqk8Yfdf8qYF5Hir-aRvbHZ4UyklX9KKsCiiFesi-4jpHHiZhYAQ_gmqmK3mAruX71e3-KiEADlnuIq4u1a74shA-QOBI4vUPHwpuFHHJcW7zCm9RqnT6Nq2yV3q_A2ofJ2lwu1NhClZWxKzaevuunX3DLoCY4Mp1autSUQTaoGBg-U2Rg8c3FpQUrwMDV')"></div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface mb-1">Dasar-Dasar Koperasi</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Membangun ekonomi desa melalui koperasi modern.</p>
+</div>
+</article>
+</section>
+<div class="h-24 md:hidden"></div> <!-- Spacer for mobile nav -->
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 mb-4 mx-margin rounded-full backdrop-blur-20px border border-outline-variant/10 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] bg-surface/85 dark:bg-surface-dim/85">
+<ul class="flex justify-around items-center h-16 w-auto px-2">
+<!-- Active Item: Beranda -->
+<li>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-2 active:scale-90 transition-transform duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md mt-1">Beranda</span>
+</a>
+</li>
+<!-- Inactive Item: Katalog -->
+<li>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all rounded-full active:scale-90 duration-300 ease-out group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">import_contacts</span>
+<span class="font-label-md text-label-md mt-1 group-hover:text-primary transition-colors">Katalog</span>
+</a>
+</li>
+<!-- Inactive Item: Rak Buku -->
+<li>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all rounded-full active:scale-90 duration-300 ease-out group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">auto_stories</span>
+<span class="font-label-md text-label-md mt-1 group-hover:text-primary transition-colors">Rak Buku</span>
+</a>
+</li>
+<!-- Inactive Item: Profil -->
+<li>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-5 py-2 hover:bg-secondary-container/30 transition-all rounded-full active:scale-90 duration-300 ease-out group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">person</span>
+<span class="font-label-md text-label-md mt-1 group-hover:text-primary transition-colors">Profil</span>
+</a>
+</li>
+</ul>
+</nav>
+</body></html>

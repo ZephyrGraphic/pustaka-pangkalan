@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Detail Buku - Panduan Budidaya Padi Organik &amp; Lahan Desa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f6fbf2",
+                      "secondary-container": "#dbe2d8",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#dee4db",
+                      "inverse-surface": "#2d322c",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#e1e3e1",
+                      "outline": "#73796f",
+                      "on-secondary-container": "#5d645d",
+                      "surface-container": "#ebefe7",
+                      "surface-container-high": "#e5eae1",
+                      "on-surface": "#181d18",
+                      "on-primary-container": "#abcda2",
+                      "on-background": "#181d18",
+                      "secondary-fixed-dim": "#c1c8c0",
+                      "primary-container": "#3b5836",
+                      "primary-fixed": "#caecbf",
+                      "on-secondary-fixed": "#171d18",
+                      "background": "#f6fbf2",
+                      "outline-variant": "#c3c8bd",
+                      "tertiary-container": "#4f5251",
+                      "tertiary-fixed-dim": "#c5c7c5",
+                      "surface-container-low": "#f0f5ed",
+                      "on-secondary-fixed-variant": "#424842",
+                      "secondary": "#596059",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#444746",
+                      "primary-fixed-dim": "#aed0a5",
+                      "on-tertiary-container": "#c2c5c3",
+                      "on-surface-variant": "#434840",
+                      "tertiary": "#383b3a",
+                      "inverse-primary": "#aed0a5",
+                      "surface-dim": "#d7dbd3",
+                      "on-tertiary-fixed": "#191c1b",
+                      "primary": "#244021",
+                      "surface": "#f6fbf2",
+                      "on-primary-fixed": "#052105",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#dfe4dc",
+                      "inverse-on-surface": "#eef2ea",
+                      "on-secondary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#dfe4dc",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#486643",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed-variant": "#314e2d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "32px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "base": "4px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "gutter": "16px",
+                      "margin": "20px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "title-md": ["Plus Jakarta Sans"],
+                      "body-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-margin h-16 bg-surface/85 backdrop-blur-xl shadow-sm transition-all duration-200">
+<button aria-label="Go back" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-high/80 hover:bg-surface-variant/20 text-primary transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary truncate max-w-[200px] hidden md:block">Book Details</h1>
+<button aria-label="Share" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-high/80 hover:bg-surface-variant/20 text-primary transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+</header>
+<!-- Hero Header Background -->
+<div class="relative w-full h-64 md:h-80 -z-10">
+<div class="absolute inset-0 bg-cover bg-center w-full h-full filter blur-sm scale-105" data-alt="A beautifully photographed, high-resolution close-up of a lush, vibrant green terraced rice field in the early morning light. The scene is bathed in soft, golden hour sunshine, creating a serene and grounded atmosphere. The image is designed to fade seamlessly into a clean, modern light-mode background color (#F7F9F7) at the bottom edge. The overall aesthetic is organic, peaceful, and visually rich, fitting for an agricultural community library app header." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD_X9YcF_F0j03cxTnpgtgsyw1YyvXGq-Lio3shX7bXJ4ghrvZMlL0-AWEM2GmKg_Hyhy99seEpZdgtT7-ejYgyb6dVG9YK9SbqMOE54REvY4MLgI9AGXywWPP28gIU1OSxUF0G1bVVIsepUvTq1ej67MCsuY5feHr9I819qnZEHQw7MFD4fxH5QZWawbuuRidt54u-X80-EhYVdnoYzjyPeFShNvaXZEnacV-YKXfIjrB2xqRlf_l0')"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-black/20 via-background/60 to-background"></div>
+</div>
+<!-- Main Content Container -->
+<main class="max-w-screen-md mx-auto px-margin -mt-32 md:-mt-40 z-10 relative">
+<!-- Book Cover & Title Card -->
+<section class="flex flex-col items-center text-center animate-fade-in-up">
+<div class="w-[160px] h-[230px] rounded-2xl overflow-hidden shadow-[0px_16px_32px_-8px_rgba(36,64,33,0.3)] mb-lg border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A professional, high-quality digital book cover titled 'Panduan Budidaya Padi Organik &amp; Lahan Desa'. The design features a modern, clean layout with an illustration of healthy green rice stalks on a clean, light sage background. The typography is bold and legible, emphasizing agricultural education. The overall style is modern pastoral, trustworthy, and clean, perfectly matching a high-end village digital library aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgw-ucDyF6hY5W1G-p48Jt49qNN1-utc105NBRPZDibSZ-ceY84shoPei8OaMN5ZubjcS-7ZzxDKVoxHXYWiJWFidaMXeZ2Xih9mKc1zLlJ4_g3lvOgPgph16R4kERJvrcbMiNWw2BXXQz_I8JpT5rs4gnArO-XhTJb54Gq7xZoiB-BMMMVUP5p3_RbL4J1ZUdmKKDeZuml_cC9_nrIsdqidcl8CpVBFSmbS16kEKdEwQ6ieL4bTRk"/>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface mb-xs max-w-lg">Panduan Budidaya Padi Organik &amp; Lahan Desa</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">Oleh Ir. Ahmad Subagyo • Dinas Pertanian</p>
+<div class="flex flex-wrap justify-center gap-xs mb-xl">
+<span class="px-3 py-1 rounded-full bg-secondary-container/40 text-on-surface font-label-md text-label-md border border-outline-variant/10">Klasifikasi DDC 630</span>
+<span class="px-3 py-1 rounded-full bg-secondary-container/40 text-on-surface font-label-md text-label-md border border-outline-variant/10">Bahasa Indonesia</span>
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md">E-Book Resmi</span>
+</div>
+</section>
+<!-- Key Metrics Bar -->
+<section class="grid grid-cols-3 gap-sm mb-xl">
+<div class="bg-surface-container rounded-xl p-md flex flex-col items-center justify-center text-center shadow-sm border border-outline-variant/10">
+<span class="material-symbols-outlined text-outline mb-xs" data-icon="menu_book">menu_book</span>
+<span class="font-title-md text-title-md text-on-surface">120</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Hlm</span>
+</div>
+<div class="bg-surface-container rounded-xl p-md flex flex-col items-center justify-center text-center shadow-sm border border-outline-variant/10">
+<span class="material-symbols-outlined text-outline mb-xs" data-icon="description">description</span>
+<span class="font-title-md text-title-md text-on-surface">4.8</span>
+<span class="font-label-md text-label-md text-on-surface-variant">MB (PDF)</span>
+</div>
+<div class="bg-surface-container rounded-xl p-md flex flex-col items-center justify-center text-center shadow-sm border border-outline-variant/10">
+<span class="material-symbols-outlined text-primary mb-xs" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-md text-title-md text-on-surface">4.9</span>
+<span class="font-label-md text-label-md text-on-surface-variant">38 Ulasan</span>
+</div>
+</section>
+<!-- Synopsis & Info -->
+<section class="bg-surface-container-low rounded-2xl p-lg shadow-sm border border-outline-variant/10 mb-xl">
+<h3 class="font-title-md text-title-md text-on-surface mb-sm">Sinopsis</h3>
+<div class="relative">
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-4 leading-relaxed mb-4">
+                    Buku panduan komprehensif ini dirancang khusus untuk para petani dan penyuluh pertanian di pedesaan yang ingin beralih atau meningkatkan hasil panen padi organik. Menyajikan metode praktis dari persiapan lahan, pemilihan bibit unggul lokal, teknik pemupukan alami, hingga pengendalian hama terpadu tanpa bahan kimia sintetis. Dilengkapi dengan ilustrasi dan studi kasus keberhasilan desa percontohan.
+                </p>
+<button class="text-primary font-label-md text-label-md hover:underline bg-surface-container-low w-full text-left -mt-2 relative z-10" onclick="this.previousElementSibling.classList.toggle('line-clamp-4'); this.textContent = this.textContent === 'Baca Selengkapnya' ? 'Tutup' : 'Baca Selengkapnya'">Baca Selengkapnya</button>
+</div>
+<hr class="border-t border-outline-variant/20 my-lg"/>
+<h3 class="font-title-md text-title-md text-on-surface mb-sm">Informasi Detail</h3>
+<ul class="space-y-sm">
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/10 last:border-0">
+<span class="font-body-md text-body-md text-on-surface-variant">ISBN</span>
+<span class="font-title-md text-body-md text-on-surface">978-602-5555-88-2</span>
+</li>
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/10 last:border-0">
+<span class="font-body-md text-body-md text-on-surface-variant">Tahun Terbit</span>
+<span class="font-title-md text-body-md text-on-surface">2023</span>
+</li>
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/10 last:border-0">
+<span class="font-body-md text-body-md text-on-surface-variant">SLiMS No.</span>
+<span class="font-title-md text-body-md text-on-surface">SLM-2023-4421</span>
+</li>
+</ul>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/85 backdrop-blur-xl border-t border-outline-variant/10 shadow-[0px_-4px_20px_0px_rgba(0,0,0,0.04)] flex justify-around items-center px-margin py-sm w-full">
+<button class="flex flex-col items-center justify-center p-sm text-on-surface-variant hover:opacity-90 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="bookmark_border">bookmark_border</span>
+</button>
+<button class="flex flex-1 items-center justify-center gap-sm bg-secondary-container text-on-secondary-container py-md mx-sm rounded-full hover:opacity-90 active:scale-[0.98] transition-transform font-title-md text-title-md">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+<span class="hidden sm:inline">Unduh Offline (4.8 MB)</span>
+<span class="sm:hidden font-label-md text-label-md">Unduh</span>
+</button>
+<button class="flex flex-1 items-center justify-center gap-sm bg-primary text-on-primary py-md mx-sm rounded-full hover:opacity-90 active:scale-[0.98] transition-transform font-title-md text-title-md shadow-md">
+<span>BACA SEKARANG</span>
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+</button>
+</nav>
+</body></html>
