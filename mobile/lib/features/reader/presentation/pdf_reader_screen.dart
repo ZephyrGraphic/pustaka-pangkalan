@@ -149,10 +149,10 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
             child: Container(
               padding: const EdgeInsets.only(top: 45, bottom: 12, left: 16, right: 16),
               decoration: BoxDecoration(
-                color: currentColors['bg']!.withOpacity(0.95),
+                color: currentColors['bg']!.withValues(alpha: 0.95),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                   ),
                 ],
@@ -207,11 +207,11 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: currentColors['bg']!.withOpacity(0.96),
+                color: currentColors['bg']!.withValues(alpha: 0.96),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 20,
                     offset: const Offset(0, -5),
                   ),
@@ -254,7 +254,7 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
                       Text(
                         '${_totalPages.toInt()}',
                         style: GoogleFonts.plusJakartaSans(
-                          color: currentColors['text']!.withOpacity(0.6),
+                          color: currentColors['text']!.withValues(alpha: 0.6),
                           fontSize: 12,
                         ),
                       ),
@@ -318,7 +318,7 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
                                 child: Text('A-', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 12, color: currentColors['text'])),
                               ),
                             ),
-                            Container(height: 14, width: 1, color: currentColors['text']!.withOpacity(0.2)),
+                            Container(height: 14, width: 1, color: currentColors['text']!.withValues(alpha: 0.2)),
                             GestureDetector(
                               onTap: () {
                                 if (_fontSizeFactor < 1.5) {

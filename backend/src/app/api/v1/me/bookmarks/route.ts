@@ -3,6 +3,37 @@ import { prisma } from "@/lib/prisma";
 import { apiError, apiSuccess } from "@/lib/response";
 import { getAuthUser } from "@/lib/jwt";
 
+export async function GET(request: Request) {
+  try {
+    const authUser = getAuthUser(request);
+    if (!authUser) {
+      return apiError("Sesi Anda tidak valid", 401, "UNAUTHORIZED");
+    }
+
+    const bookmarks = await prisma.bookmark.findMany({
+      where: { userId: authUser.userId },
+      include: {
+        content: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            coverUrl: true,
+            author: { select: { name: true } },
+            category: { select: { name: true, slug: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return apiSuccess(bookmarks, "Berhasil mengambil daftar bookmark");
+  } catch (error: any) {
+    console.error("GET Bookmarks Error:", error);
+    return apiError("Gagal mengambil bookmark", 500, "INTERNAL_SERVER_ERROR", error.message);
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const authUser = getAuthUser(request);

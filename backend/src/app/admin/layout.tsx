@@ -1,15 +1,18 @@
 import Sidebar from "./components/Sidebar";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export const metadata = {
   title: "Admin Dashboard - Perpustakaan Digital Desa",
   description: "Administrative Management Platform for Village Digital Library",
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const admin = await requireAdmin();
+
   return (
     <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
       <Sidebar />
@@ -25,8 +28,8 @@ export default function AdminLayout({
 
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm font-semibold text-slate-200">Pengelola Desa</p>
-              <p className="text-xs text-emerald-400">Role: Administrator</p>
+              <p className="text-sm font-semibold text-slate-200">Admin ({admin.phone})</p>
+              <p className="text-xs text-emerald-400">Role: {admin.role}</p>
             </div>
             <div className="h-9 w-9 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-white text-sm">
               AD

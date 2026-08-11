@@ -71,9 +71,10 @@ async function main() {
 
   const authorsList = [];
   for (const author of authorsData) {
-    const a = await prisma.author.create({
-      data: author,
-    });
+    let a = await prisma.author.findFirst({ where: { name: author.name } });
+    if (!a) {
+      a = await prisma.author.create({ data: author });
+    }
     authorsList.push(a.id);
   }
   console.log("✅ Authors seeded.");

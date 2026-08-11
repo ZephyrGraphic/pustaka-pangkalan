@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { Content, Category, Author } from "@prisma/client";
 
 export const revalidate = 0; // Dynamic server rendering
+
+type ContentWithRelations = Content & { category: Category; author: Author | null };
 
 export default async function AdminDashboardPage() {
   let totalContents = 142;
   let totalUsers = 64;
   let totalReads = 85;
   let publishedCount = 138;
-  let recentContents: any[] = [];
+  let recentContents: ContentWithRelations[] = [];
+  let isDbError = false;
 
   try {
     const res = await Promise.all([
@@ -30,10 +34,21 @@ export default async function AdminDashboardPage() {
         author: true,
       },
     });
-  } catch (_) {}
+  } catch (_) {
+    isDbError = true;
+  }
 
   return (
     <div className="space-y-8">
+      {isDbError && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl flex items-center gap-3">
+          <span className="text-xl">⚠️</span>
+          <div>
+            <h3 className="font-bold">Mode Preview (Database Tidak Terhubung)</h3>
+            <p className="text-sm">Silakan periksa konfigurasi DATABASE_URL di file .env</p>
+          </div>
+        </div>
+      )}
       {/* Title & Actions */}
       <div className="flex items-center justify-between">
         <div>

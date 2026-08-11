@@ -12,17 +12,18 @@ void main() {
   );
 }
 
-class PerpustakaanApp extends StatelessWidget {
+class PerpustakaanApp extends ConsumerWidget {
   const PerpustakaanApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
     return MaterialApp.router(
       title: 'Perpustakaan Digital Desa',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
+      themeMode: themeMode,
       routerConfig: router,
     );
   }

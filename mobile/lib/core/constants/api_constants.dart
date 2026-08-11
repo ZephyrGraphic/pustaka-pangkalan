@@ -6,12 +6,15 @@ class ApiConstants {
 
   // Base URL otomatis memilih endpoint yang tepat berdasarkan platform & environment
   static String get baseUrl {
+    const isProduction = bool.fromEnvironment('PRODUCTION', defaultValue: false);
+    if (isProduction || kReleaseMode) {
+      return productionDomainUrl;
+    }
     if (kIsWeb) {
       // Pada mode Web lokal, gunakan origin server backend
       return 'http://localhost:3000/api/v1';
     }
     // Pada mode Android APK / Emulator:
-    // Gunakan productionDomainUrl jika sudah ter-deploy di server/Vercel, atau 10.0.2.2 untuk Android Emulator lokal.
     return 'http://10.0.2.2:3000/api/v1';
   }
 

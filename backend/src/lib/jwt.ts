@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "perpustakaan-digital-desa-jwt-secret-key-2026-super-secure";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("❌ JWT_SECRET environment variable is required! Set it in your .env file.");
+}
 
 export interface JwtPayload {
   userId: string;

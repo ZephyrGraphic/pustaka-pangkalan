@@ -156,7 +156,7 @@ class MainShell extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: bannerBg,
                           borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: bannerTextColor.withOpacity(0.2)),
+                          border: Border.all(color: bannerTextColor.withValues(alpha: 0.2)),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -202,15 +202,15 @@ class MainShell extends ConsumerWidget {
                 child: Container(
                   height: 66,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(30),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       width: 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),

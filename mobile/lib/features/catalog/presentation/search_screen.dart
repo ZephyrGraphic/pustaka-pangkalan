@@ -66,7 +66,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 color: sageWhite,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
+                    color: Colors.black.withValues(alpha: 0.02),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -82,10 +82,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.black.withOpacity(0.06)),
+                            border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
+                                color: Colors.black.withValues(alpha: 0.03),
                                 blurRadius: 10,
                                 offset: const Offset(0, 2),
                               ),
@@ -141,7 +141,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               color: isSelected ? armyGreen : Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: isSelected ? armyGreen : Colors.black.withOpacity(0.06),
+                                color: isSelected ? armyGreen : Colors.black.withValues(alpha: 0.06),
                               ),
                             ),
                             child: Text(
@@ -218,7 +218,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.search_off_rounded, size: 60, color: oliveGray.withOpacity(0.5)),
+                          Icon(Icons.search_off_rounded, size: 60, color: oliveGray.withValues(alpha: 0.5)),
                           const SizedBox(height: 12),
                           Text(
                             'Koleksi Tidak Ditemukan',
@@ -281,7 +281,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -301,7 +301,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         book.coverUrl ?? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop',
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
-                          color: armyGreen.withOpacity(0.1),
+                          color: armyGreen.withValues(alpha: 0.1),
                           child: Icon(Icons.book, color: armyGreen, size: 50),
                         ),
                       ),
@@ -313,7 +313,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -389,7 +389,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -406,7 +406,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   book.coverUrl ?? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop',
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
-                    color: armyGreen.withOpacity(0.1),
+                    color: armyGreen.withValues(alpha: 0.1),
                     child: Icon(Icons.book, color: armyGreen),
                   ),
                 ),

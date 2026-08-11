@@ -84,7 +84,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
               leading: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
-                  backgroundColor: Colors.white.withOpacity(0.85),
+                  backgroundColor: Colors.white.withValues(alpha: 0.85),
                   child: IconButton(
                     icon: Icon(Icons.arrow_back_rounded, color: deepSlate),
                     onPressed: () => Navigator.pop(context),
@@ -95,7 +95,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(0.85),
+                    backgroundColor: Colors.white.withValues(alpha: 0.85),
                     child: IconButton(
                       icon: Icon(Icons.share_outlined, color: deepSlate),
                       onPressed: () {
@@ -114,12 +114,12 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                     Image.network(
                       coverUrl,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(color: armyGreen.withOpacity(0.2)),
+                      errorBuilder: (context, error, stackTrace) => Container(color: armyGreen.withValues(alpha: 0.2)),
                     ),
                     BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                       child: Container(
-                        color: sageWhite.withOpacity(0.45),
+                        color: sageWhite.withValues(alpha: 0.45),
                       ),
                     ),
                     Container(
@@ -129,7 +129,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.transparent,
-                            sageWhite.withOpacity(0.8),
+                            sageWhite.withValues(alpha: 0.8),
                             sageWhite,
                           ],
                         ),
@@ -144,7 +144,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -178,7 +178,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: armyGreen.withOpacity(0.1),
+                        color: armyGreen.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -224,7 +224,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -234,9 +234,9 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _buildMetricItem(Icons.menu_book_rounded, '120 Hlm', 'Halaman', armyGreen, deepSlate, oliveGray),
-                          Container(height: 30, width: 1, color: Colors.black.withOpacity(0.08)),
+                          Container(height: 30, width: 1, color: Colors.black.withValues(alpha: 0.08)),
                           _buildMetricItem(Icons.sd_card_outlined, '4.8 MB', 'PDF Offline', armyGreen, deepSlate, oliveGray),
-                          Container(height: 30, width: 1, color: Colors.black.withOpacity(0.08)),
+                          Container(height: 30, width: 1, color: Colors.black.withValues(alpha: 0.08)),
                           _buildMetricItem(Icons.star_rounded, '4.9 ⭐', '38 Ulasan', armyGreen, deepSlate, oliveGray),
                         ],
                       ),
@@ -260,7 +260,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                       synopsis,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 13,
-                        color: deepSlate.withOpacity(0.8),
+                        color: deepSlate.withValues(alpha: 0.8),
                         height: 1.6,
                       ),
                       maxLines: _isExpanded ? 100 : 4,
@@ -292,7 +292,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.black.withOpacity(0.05)),
+                        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
                       ),
                       child: Column(
                         children: [
@@ -324,7 +324,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, -4),
                 ),

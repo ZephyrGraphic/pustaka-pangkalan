@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../providers/bookshelf_provider.dart';
+import '../../../shared/models/book.dart';
+import '../../../shared/models/reading_progress.dart';
 
 class BookshelfScreen extends ConsumerStatefulWidget {
   const BookshelfScreen({super.key});
@@ -31,6 +34,8 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
     const sageWhite = Color(0xFFF7F9F7);
     const deepSlate = Color(0xFF1F241F);
     const oliveGray = Color(0xFF8E958D);
+
+    final bookshelfState = ref.watch(bookshelfProvider);
 
     return Scaffold(
       backgroundColor: sageWhite,
@@ -65,7 +70,7 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: armyGreen.withOpacity(0.3),
+                    color: armyGreen.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -77,9 +82,9 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildStatRow(Icons.auto_stories_rounded, '14', 'Buku Dibaca'),
+                        _buildStatRow(Icons.auto_stories_rounded, bookshelfState.activeReading.length.toString(), 'Buku Dibaca'),
                         const SizedBox(height: 12),
-                        _buildStatRow(Icons.timer_outlined, '28', 'Jam Membaca'),
+                        _buildStatRow(Icons.bookmark_border_rounded, bookshelfState.bookmarks.length.toString(), 'Bookmark'),
                         const SizedBox(height: 12),
                         _buildStatRow(Icons.cloud_done_outlined, '6', 'Buku Offline'),
                       ],
@@ -96,7 +101,7 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
                         child: CircularProgressIndicator(
                           value: 0.75,
                           strokeWidth: 7,
-                          backgroundColor: Colors.white.withOpacity(0.2),
+                          backgroundColor: Colors.white.withValues(alpha: 0.2),
                           valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       ),
@@ -134,7 +139,7 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.black.withOpacity(0.05)),
+              border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
             ),
             child: TabBar(
               controller: _tabController,
@@ -158,17 +163,19 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
 
           // 3. Tab Views Content
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Tab 1: Sedang Dibaca
-                _buildActiveReadingList(context, armyGreen, deepSlate, oliveGray),
-                // Tab 2: Tersimpan Offline
-                _buildOfflineSavedList(context, armyGreen, deepSlate, oliveGray),
-                // Tab 3: Bookmark & Favorit
-                _buildBookmarksList(context, armyGreen, deepSlate, oliveGray),
-              ],
-            ),
+            child: bookshelfState.isLoading 
+              ? const Center(child: CircularProgressIndicator(color: armyGreen))
+              : TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Tab 1: Sedang Dibaca
+                    _buildActiveReadingList(context, armyGreen, deepSlate, oliveGray, bookshelfState.activeReading),
+                    // Tab 2: Tersimpan Offline
+                    _buildOfflineSavedList(context, armyGreen, deepSlate, oliveGray),
+                    // Tab 3: Bookmark & Favorit
+                    _buildBookmarksList(context, armyGreen, deepSlate, oliveGray, bookshelfState.bookmarks),
+                  ],
+                ),
           ),
         ],
       ),
@@ -200,34 +207,22 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
     );
   }
 
-  Widget _buildActiveReadingList(BuildContext context, Color armyGreen, Color deepSlate, Color oliveGray) {
-    final activeItems = [
-      {
-        'id': 'demo-1',
-        'title': 'Panduan Budidaya Padi Organik',
-        'category': 'Pertanian',
-        'progress': 0.35,
-        'page': 'Hlm 42 / 120',
-        'lastRead': 'Kemarin, 19:30',
-        'cover': 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=400&auto=format&fit=crop',
-      },
-      {
-        'id': 'demo-2',
-        'title': 'Kumpulan Dongeng & Sasakala Tatar Sunda',
-        'category': 'Sastra Sunda',
-        'progress': 0.70,
-        'page': 'Hlm 64 / 90',
-        'lastRead': 'Hari ini, 08:15',
-        'cover': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400&auto=format&fit=crop',
-      },
-    ];
+  Widget _buildActiveReadingList(BuildContext context, Color armyGreen, Color deepSlate, Color oliveGray, List<ReadingProgressModel> items) {
+    if (items.isEmpty) {
+      return Center(
+        child: Text(
+          'Belum ada buku yang sedang dibaca.',
+          style: GoogleFonts.plusJakartaSans(color: oliveGray, fontSize: 13),
+        ),
+      );
+    }
 
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: activeItems.length,
+      itemCount: items.length,
       separatorBuilder: (context, index) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
-        final item = activeItems[index];
+        final item = items[index];
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -235,7 +230,7 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -248,11 +243,13 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
                 child: SizedBox(
                   width: 54,
                   height: 74,
-                  child: Image.network(
-                    item['cover'] as String,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(color: armyGreen.withOpacity(0.1)),
-                  ),
+                  child: item.coverUrl != null
+                      ? Image.network(
+                          item.coverUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(color: armyGreen.withValues(alpha: 0.1)),
+                        )
+                      : Container(color: armyGreen.withValues(alpha: 0.1)),
                 ),
               ),
               const SizedBox(width: 14),
@@ -261,21 +258,21 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item['title'] as String,
+                      item.title,
                       style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.bold, color: deepSlate),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${item['page']} • ${item['lastRead']}',
+                      'Hlm ${item.currentPage} / ${item.totalPages} • Terakhir dibaca ${item.lastReadAt != null ? item.lastReadAt!.day.toString() + "/" + item.lastReadAt!.month.toString() : "-"}',
                       style: GoogleFonts.plusJakartaSans(fontSize: 10, color: oliveGray),
                     ),
                     const SizedBox(height: 8),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(
-                        value: item['progress'] as double,
+                        value: item.progressPercent / 100,
                         backgroundColor: const Color(0xFFF7F9F7),
                         valueColor: AlwaysStoppedAnimation<Color>(armyGreen),
                         minHeight: 5,
@@ -287,7 +284,7 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
               const SizedBox(width: 10),
               IconButton(
                 icon: Icon(Icons.play_circle_fill_rounded, color: armyGreen, size: 36),
-                onPressed: () => context.push('/reader/${item['id']}?title=${Uri.encodeComponent(item['title'] as String)}'),
+                onPressed: () => context.push('/reader/${item.contentId}?title=${Uri.encodeComponent(item.title)}'),
               ),
             ],
           ),
@@ -303,7 +300,7 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: armyGreen.withOpacity(0.08),
+            color: armyGreen.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -331,12 +328,32 @@ class _BookshelfScreenState extends ConsumerState<BookshelfScreen> with SingleTi
     );
   }
 
-  Widget _buildBookmarksList(BuildContext context, Color armyGreen, Color deepSlate, Color oliveGray) {
-    return Center(
-      child: Text(
-        'Belum ada bookmark favorit.',
-        style: GoogleFonts.plusJakartaSans(color: oliveGray, fontSize: 13),
-      ),
+  Widget _buildBookmarksList(BuildContext context, Color armyGreen, Color deepSlate, Color oliveGray, List<Book> items) {
+    if (items.isEmpty) {
+      return Center(
+        child: Text(
+          'Belum ada bookmark favorit.',
+          style: GoogleFonts.plusJakartaSans(color: oliveGray, fontSize: 13),
+        ),
+      );
+    }
+    
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      itemCount: items.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          tileColor: Colors.white,
+          leading: Icon(Icons.bookmark, color: armyGreen),
+          title: Text(item.title, style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
+          subtitle: Text(item.categoryName ?? 'Buku', style: GoogleFonts.plusJakartaSans(fontSize: 10, color: oliveGray)),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+          onTap: () => context.push('/content/${item.id}'),
+        );
+      },
     );
   }
 }

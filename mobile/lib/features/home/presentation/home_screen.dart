@@ -72,7 +72,7 @@ class HomeScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: armyGreen.withOpacity(0.1),
+                        color: armyGreen.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -99,7 +99,7 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 24,
-                        backgroundColor: armyGreen.withOpacity(0.15),
+                        backgroundColor: armyGreen.withValues(alpha: 0.15),
                         child: Icon(
                           authState.role == UserRole.admin
                               ? Icons.admin_panel_settings_rounded
@@ -136,7 +136,7 @@ class HomeScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xFFFEF3C7),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.amber.withOpacity(0.5)),
+                    border: Border.all(color: Colors.amber.withValues(alpha: 0.5)),
                   ),
                   child: Row(
                     children: [
@@ -172,9 +172,9 @@ class HomeScreen extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: armyGreen.withOpacity(0.1),
+                    color: armyGreen.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: armyGreen.withOpacity(0.2)),
+                    border: Border.all(color: armyGreen.withValues(alpha: 0.2)),
                   ),
                   child: Row(
                     children: [
@@ -214,7 +214,7 @@ class HomeScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: softGreen,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: armyGreen.withOpacity(0.15)),
+                    border: Border.all(color: armyGreen.withValues(alpha: 0.15)),
                   ),
                   child: Row(
                     children: [
@@ -244,7 +244,7 @@ class HomeScreen extends ConsumerWidget {
                               'Target hari ini: 15 menit membaca modul desa',
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 11,
-                                color: armyGreen.withOpacity(0.8),
+                                color: armyGreen.withValues(alpha: 0.8),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -252,7 +252,7 @@ class HomeScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(10),
                               child: LinearProgressIndicator(
                                 value: 0.65,
-                                backgroundColor: armyGreen.withOpacity(0.2),
+                                backgroundColor: armyGreen.withValues(alpha: 0.2),
                                 valueColor: const AlwaysStoppedAnimation<Color>(armyGreen),
                                 minHeight: 6,
                               ),
@@ -277,7 +277,7 @@ class HomeScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 15,
                       offset: const Offset(0, 4),
                     ),
@@ -357,9 +357,9 @@ class HomeScreen extends ConsumerWidget {
                           style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: deepSlate),
                         ),
                         backgroundColor: Colors.white,
-                        side: BorderSide(color: armyGreen.withOpacity(0.15)),
+                        side: BorderSide(color: armyGreen.withValues(alpha: 0.15)),
                         elevation: 1,
-                        shadowColor: Colors.black.withOpacity(0.04),
+                        shadowColor: Colors.black.withValues(alpha: 0.04),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         onPressed: () => context.go('/search?category=${cat.slug}'),
                       );
@@ -387,7 +387,7 @@ class HomeScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 15,
                     offset: const Offset(0, 4),
                   ),
@@ -400,7 +400,7 @@ class HomeScreen extends ConsumerWidget {
                     child: Container(
                       width: 56,
                       height: 76,
-                      color: armyGreen.withOpacity(0.1),
+                      color: armyGreen.withValues(alpha: 0.1),
                       child: Image.network(
                         'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=400&auto=format&fit=crop',
                         fit: BoxFit.cover,
@@ -511,7 +511,7 @@ class HomeScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
+                                color: Colors.black.withValues(alpha: 0.04),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -528,7 +528,7 @@ class HomeScreen extends ConsumerWidget {
                                     book.coverUrl ?? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop',
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) => Container(
-                                      color: armyGreen.withOpacity(0.1),
+                                      color: armyGreen.withValues(alpha: 0.1),
                                       child: const Icon(Icons.book, color: armyGreen, size: 40),
                                     ),
                                   ),
@@ -605,7 +605,7 @@ class HomeScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: armyGreen.withOpacity(0.3),
+                    color: armyGreen.withValues(alpha: 0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -620,7 +620,7 @@ class HomeScreen extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -692,9 +692,9 @@ class HomeScreen extends ConsumerWidget {
               style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFF1F241F)),
             ),
             backgroundColor: Colors.white,
-            side: BorderSide(color: brandColor.withOpacity(0.15)),
+            side: BorderSide(color: brandColor.withValues(alpha: 0.15)),
             elevation: 1,
-            shadowColor: Colors.black.withOpacity(0.04),
+            shadowColor: Colors.black.withValues(alpha: 0.04),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             onPressed: () => context.go('/search?category=${cat['slug']}'),
           );

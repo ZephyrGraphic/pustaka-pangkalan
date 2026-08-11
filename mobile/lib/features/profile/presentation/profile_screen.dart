@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../../app/theme.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -12,7 +13,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  bool _isDarkMode = false;
   bool _isDataSaver = true;
   bool _isNotificationsEnabled = true;
 
@@ -39,9 +39,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     const oliveGray = Color(0xFF596059);
 
     final authState = ref.watch(authProvider);
+    final themeMode = ref.watch(themeProvider);
+    final isDark = themeMode == ThemeMode.dark;
 
     return Scaffold(
-      backgroundColor: sageWhite,
+      backgroundColor: isDark ? AppTheme.bgDark : sageWhite,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -49,7 +51,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         title: Text(
           'Profil & Pengaturan Warga',
           style: GoogleFonts.plusJakartaSans(
-            color: deepSlate,
+            color: isDark ? Colors.white : deepSlate,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -71,7 +73,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 24),
 
             // 2. Main Settings Section
-            _buildSettingsGroup([
+            _buildSettingsGroup(isDark, [
               if (authState.role == UserRole.admin)
                 _buildNavigationTile(
                   icon: Icons.admin_panel_settings_rounded,
@@ -100,9 +102,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 icon: Icons.dark_mode_outlined,
                 title: 'Mode Malam',
                 subtitle: 'Tampilan nyaman di kegelapan',
-                value: _isDarkMode,
+                value: isDark,
+                isDark: isDark,
                 onChanged: (val) {
-                  setState(() => _isDarkMode = val);
+                  ref.read(themeProvider.notifier).state = val ? ThemeMode.dark : ThemeMode.light;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(val ? 'Mode Malam Diaktifkan' : 'Mode Terang Diaktifkan')),
                   );
@@ -114,6 +117,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 title: 'Mode Hemat Kuota',
                 subtitle: 'Prioritaskan bacaan dari penyimpanan lokal (Offline First)',
                 value: _isDataSaver,
+                isDark: isDark,
                 onChanged: (val) => setState(() => _isDataSaver = val),
               ),
 
@@ -122,6 +126,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 title: 'Notifikasi & Warta Desa',
                 subtitle: 'Koleksi baru & kegiatan literasi desa',
                 value: _isNotificationsEnabled,
+                isDark: isDark,
                 onChanged: (val) => setState(() => _isNotificationsEnabled = val),
               ),
 
@@ -129,6 +134,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 icon: Icons.sd_storage_outlined,
                 title: 'Kelola Penyimpanan Offline',
                 subtitle: '${_offlineDownloads.length} Berkas PDF Terunduh',
+                isDark: isDark,
                 trailing: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
@@ -151,6 +157,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 icon: Icons.help_outline_rounded,
                 title: 'Bantuan & Layanan Balai Desa',
                 subtitle: 'Hubungi pengelola perpustakaan di Balai Desa',
+                isDark: isDark,
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Layanan Kontak Balai Desa Pangkalan: WhatsApp 0852-1122-3344')),
@@ -162,6 +169,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 icon: Icons.info_outline_rounded,
                 title: 'Tentang Aplikasi',
                 subtitle: 'Versi 1.0.0 (SLiMS Engine Integrated)',
+                isDark: isDark,
                 onTap: () {
                   showAboutDialog(
                     context: context,
@@ -652,10 +660,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildSettingsGroup(List<Widget> children) {
+  Widget _buildSettingsGroup(bool isDark, List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -675,6 +683,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     String? subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
+    bool isDark = false,
   }) {
     const armyGreen = Color(0xFF3B5836);
     return ListTile(
@@ -686,7 +695,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
         child: Icon(icon, color: armyGreen, size: 20),
       ),
-      title: Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.bold)),
+      title: Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
       subtitle: subtitle != null ? Text(subtitle, style: GoogleFonts.plusJakartaSans(fontSize: 10, color: Colors.grey)) : null,
       trailing: Switch(
         value: value,
@@ -702,6 +711,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     String? subtitle,
     Widget? trailing,
     required VoidCallback onTap,
+    bool isDark = false,
   }) {
     const armyGreen = Color(0xFF3B5836);
     return ListTile(
@@ -714,9 +724,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
         child: Icon(icon, color: armyGreen, size: 20),
       ),
-      title: Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.bold)),
+      title: Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
       subtitle: subtitle != null ? Text(subtitle, style: GoogleFonts.plusJakartaSans(fontSize: 10, color: Colors.grey)) : null,
-      trailing: trailing ?? const Icon(Icons.chevron_right_rounded, size: 20),
+      trailing: trailing ?? Icon(Icons.chevron_right_rounded, size: 20, color: isDark ? Colors.white54 : Colors.black54),
     );
   }
 }
