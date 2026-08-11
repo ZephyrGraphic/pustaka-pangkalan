@@ -1,50 +1,45 @@
-# Dependencies
-node_modules/
-.pnpm-store/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Next.js Build
-backend/.next/
-backend/out/
-backend/build/
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Mobile Flutter Build & Cache
-mobile/.dart_tool/
-mobile/.flutter-plugins
-mobile/.flutter-plugins-dependencies
-mobile/.pub-cache/
-mobile/.pub/
-mobile/build/
+# testing
+/coverage
 
-# Android Gradle Build (recursive — catches android/app/build, .cxx, etc.)
-**/android/**/build/
-**/android/**/.cxx/
-**/android/.gradle/
-**/.gradle/
+# next.js
+/.next/
+/out/
 
-# Flutter Web Build
-mobile/web/
+# production
+/build
 
-# Database & Environment
-*.db
-*.db-journal
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (keep .env.example for reference)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# IDE & System Files
-.DS_Store
-*.pem
-.idea/
-.vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# vercel
+.vercel
 
-# Lock files (opsional — bisa dihapus jika ingin lock file ter-commit)
-# package-lock.json
-# pubspec.lock
-
+# typescript
+*.tsbuildinfo
+next-env.d.ts
