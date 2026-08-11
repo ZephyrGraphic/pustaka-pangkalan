@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ChevronLeft, Share2, Heart, BookOpen, Star } from "lucide-react";
 
-export default function BookDetailPage({ params }: { params: { id: string } }) {
+export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
   // In a real app, we'd fetch the book by ID here
   
   return (
@@ -31,7 +32,7 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
           </div>
           
           <h1 className="text-2xl font-bold text-slate-900 text-center leading-tight mb-2">
-            Sejarah Desa Pangkalan Vol. {params.id}
+            Sejarah Desa Pangkalan Vol. {resolvedParams.id}
           </h1>
           <p className="text-slate-500 text-sm font-medium mb-4">Pemerintah Desa Pangkalan</p>
           
@@ -66,7 +67,7 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
       {/* Bottom Action Bar */}
       <div className="fixed bottom-0 w-full p-4 bg-white border-t border-slate-100 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <Link 
-          href={`/read/${params.id}`} 
+          href={`/read/${resolvedParams.id}`} 
           className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/30 transition-transform active:scale-[0.98]"
         >
           <BookOpen className="mr-2" size={20} />

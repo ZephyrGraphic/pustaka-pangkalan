@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import Link from "next/link";
 import { ChevronLeft, MoreVertical, ZoomIn, ZoomOut, Maximize, Settings } from "lucide-react";
 
-export default function ReadingPage({ params }: { params: { id: string } }) {
+export default function ReadingPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
   const [zoom, setZoom] = useState(100);
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-slate-900 text-slate-100">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-slate-800">
-        <Link href={`/books/${params.id}`} className="p-2 -ml-2 text-slate-300 hover:bg-slate-800 rounded-full transition-colors">
+        <Link href={`/books/${resolvedParams.id}`} className="p-2 -ml-2 text-slate-300 hover:bg-slate-800 rounded-full transition-colors">
           <ChevronLeft size={24} />
         </Link>
         <h1 className="text-sm font-semibold truncate flex-1 text-center px-4">
