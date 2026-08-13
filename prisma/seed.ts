@@ -1,169 +1,110 @@
-import { PrismaClient, RoleName, ContentType, ContentStatus, ContentVisibility, LicenseType } from "@prisma/client";
+import "dotenv/config";
+import prisma from "../src/lib/prisma";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
-
 async function main() {
-  console.log("🌱 Starting Comprehensive Seed for Perpustakaan Digital Desa...");
+  console.log("Mulai melakukan seeding...");
 
-  // 1. Seed Roles
-  const rolesData = [
-    { name: RoleName.SUPER_ADMIN, description: "Administrator utama dengan akses penuh" },
-    { name: RoleName.ADMIN, description: "Pengelola desa & sistem perpustakaan" },
-    { name: RoleName.LIBRARIAN, description: "Pengelola konten & koleksi digital" },
-    { name: RoleName.USER, description: "Warga desa pembaca" },
-  ];
-
-  const rolesMap: Record<string, string> = {};
-  for (const role of rolesData) {
-    const r = await prisma.role.upsert({
-      where: { name: role.name },
-      update: { description: role.description },
-      create: role,
-    });
-    rolesMap[role.name] = r.id;
-  }
-  console.log("✅ Roles seeded.");
-
-  // 2. Seed Admin User
-  const passwordHash = await bcrypt.hash("Kaydeen303", 10);
-  const adminUser = await prisma.user.upsert({
-    where: { phone: "081574627052" },
-    update: { passwordHash, name: "Admin Kai (Kaydeen303)" },
+  // Seed Users
+  const hashedPassword = await bcrypt.hash("1234567812345678", 10);
+  
+  const user1 = await prisma.user.upsert({
+    where: { email: "1234567812345678" },
+    update: {},
     create: {
-      name: "Admin Kai (Kaydeen303)",
-      phone: "081574627052",
-      email: "admin@desa.id",
-      passwordHash,
-      roleId: rolesMap[RoleName.ADMIN] || rolesMap[RoleName.SUPER_ADMIN],
+      email: "1234567812345678", // NIK
+      name: "Bapak Ahmad Subagyo",
+      password: hashedPassword,
     },
   });
-  console.log("✅ Default Admin User created (Phone: 081574627052 / Pass: Kaydeen303).");
 
-  // 3. Seed Categories
-  const categoriesData = [
-    { name: "Pendidikan & Sekolah", slug: "pendidikan", icon: "📚", description: "Buku pelajaran, modul sekolah, dan panduan belajar" },
-    { name: "Pertanian & Peternakan", slug: "pertanian", icon: "🌾", description: "Panduan bercocok tanam, olah tanah, pupuk organik, dan ternak" },
-    { name: "Teknologi & Digital", slug: "teknologi", icon: "💻", description: "Literasi digital, penggunaan komputer, dan teknologi informasi" },
-    { name: "Kewirausahaan & UMKM", slug: "umkm", icon: "💼", description: "Manajemen usaha desa, pemasaran produk lokal, dan keuangan" },
-    { name: "Anak & Remaja", slug: "anak", icon: "👶", description: "Buku cerita anak, dongeng lokal, dan bacaan bergambar" },
-    { name: "Kesehatan & Gizi", slug: "kesehatan", icon: "🏥", description: "Panduan kesehatan keluarga, gizi, pencegahan stunting" },
-    { name: "Sejarah Desa", slug: "sejarah-desa", icon: "🏛️", description: "Dokumentasi asal-usul, tokoh, dan arsip sejarah desa" },
-    { name: "Seni & Budaya Lokal", slug: "budaya", icon: "🎨", description: "Tradisi lokal, kesenian, kerajinan tangan, dan sastra desa" },
-  ];
+  const user2 = await prisma.user.upsert({
+    where: { email: "8765432187654321" },
+    update: {},
+    create: {
+      email: "8765432187654321", // NIK
+      name: "Siti Nurhaliza",
+      password: hashedPassword,
+    },
+  });
 
-  const categoriesMap: Record<string, string> = {};
-  for (const cat of categoriesData) {
-    const c = await prisma.category.upsert({
-      where: { slug: cat.slug },
-      update: { name: cat.name, icon: cat.icon, description: cat.description },
-      create: cat,
-    });
-    categoriesMap[cat.slug] = c.id;
-  }
-  console.log("✅ Categories seeded.");
-
-  // 4. Seed Authors
-  const authorsData = [
-    { name: "Budi Santoso", bio: "Praktisi pertanian organik dan penyuluh tanaman desa." },
-    { name: "Dr. Ir. H. Hartono", bio: "Peneliti sejarah lokal dan dosen literasi pedesaan." },
-  ];
-
-  const authorsList = [];
-  for (const author of authorsData) {
-    let a = await prisma.author.findFirst({ where: { name: author.name } });
-    if (!a) {
-      a = await prisma.author.create({ data: author });
+  // Seed Books
+  await prisma.book.deleteMany({});
+  
+  const booksData = [
+    {
+      title: "Panduan Pertanian Modern Terpadu",
+      author: "Budi Santoso",
+      description: "Buku panduan lengkap tentang pertanian modern yang cocok diterapkan di Desa Pangkalan.",
+      category: "Pertanian",
+      coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBytu0Rn6l4EMfEJtl5t43Hr0IE1HRyrMvdvUJFF5Z1Ydrk8s7QsZEarM2-GBlJtKdfFBGpE7ey2o-e7_1gQyhn85NolAp_ag2ZTCPvKb52Pk-2yINxVZUasHpWKAn8XW1fU9G_ySlfnEb2gu0PCFajqkESUSvhzZKEXak9iyc7Jo5boGtBBuPbfvSJjKs8uf7lBUOYDjuR7Nb_cnXzevBg4Nk1NfeEphvkTGSYZpVjCw3GOoxIuQ10",
+      pages: 120,
+      rating: 4.8,
+    },
+    {
+      title: "Sejarah Desa Pangkalan",
+      author: "Tim Arsip Desa",
+      description: "Catatan sejarah dan asal-usul Desa Pangkalan dari masa ke masa.",
+      category: "Sejarah",
+      coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1Jh7mlFnbxuUKmHwAIlcTmy1ZzW9Q4eXBvFHqDTIOOkFJIHTSXG_hv3ygvYTGi4tialCKKPXU5Zvt1CNq3rSkHfdInOw8TYKqYdtSIJ4DXpEgc1iC05Y1sWAHaRIhf1uh8H-l0AvPaSHH_cehUn4IzvmxHJGD8FRfGRy4IZj0GhKMOdPcWC2OC6SHlOaSAX5qZQdudXFz-PiJUOr0BAkY3N8GP-LFILStI49Qu2pjapKYyU0IndmL",
+      pages: 85,
+      rating: 4.9,
+    },
+    {
+      title: "Manajemen Keuangan BUMDes",
+      author: "Dina Mariana",
+      description: "Panduan mengelola keuangan Badan Usaha Milik Desa agar transparan dan menguntungkan.",
+      category: "Ekonomi",
+      coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuAGVw_j51tG8zPZ9tXoUo9w47FfLzHw_h_zD5yTjGz7Z9rV9O99g_x2o9Q0-wzV0YtQjZ5e0QG7Dq0h8g8_9QG7Dq0h8g8_9QG7Dq0h8g8", // dummy
+      pages: 150,
+      rating: 4.5,
     }
-    authorsList.push(a.id);
-  }
-  console.log("✅ Authors seeded.");
-
-  // 5. Seed Sample Collections
-  const sampleBooks = [
-    {
-      title: "Belajar Bertani Organik Lengkap",
-      slug: "belajar-bertani-organik-lengkap",
-      description: "Panduan praktis pembuatan pupuk kompos cair, olah tanah ramah lingkungan, dan budidaya tanaman pangan hemat biaya.",
-      categoryId: categoriesMap["pertanian"],
-      authorId: authorsList[0],
-      contentType: ContentType.BOOK,
-      publicationYear: 2026,
-      coverUrl: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&q=80",
-      status: ContentStatus.PUBLISHED,
-      visibility: ContentVisibility.PUBLIC,
-      license: LicenseType.VILLAGE_OWNED,
-      pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    },
-    {
-      title: "Panduan Manajemen & Pemasaran UMKM Desa",
-      slug: "panduan-manajemen-pemasaran-umkm-desa",
-      description: "Langkah mudah mengelola keuangan usaha warga, pengemasan produk lokal, dan pemasaran lewat media sosial.",
-      categoryId: categoriesMap["umkm"],
-      authorId: authorsList[0],
-      contentType: ContentType.MODULE,
-      publicationYear: 2026,
-      coverUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=80",
-      status: ContentStatus.PUBLISHED,
-      visibility: ContentVisibility.PUBLIC,
-      license: LicenseType.OPEN_LICENSE,
-      pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    },
-    {
-      title: "Sejarah & Asal-Usul Desa Makmur",
-      slug: "sejarah-dan-asal-usul-desa-makmur",
-      description: "Dokumentasi perjalanan berdirinya desa, kisah perjuangan para pendiri desa, serta silsilah leluhur lokal.",
-      categoryId: categoriesMap["sejarah-desa"],
-      authorId: authorsList[1],
-      contentType: ContentType.LOCAL_HISTORY,
-      publicationYear: 2025,
-      coverUrl: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=400&q=80",
-      status: ContentStatus.PUBLISHED,
-      visibility: ContentVisibility.REGISTERED,
-      license: LicenseType.VILLAGE_OWNED,
-      pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    },
-    {
-      title: "Dasar-Dasar Literasi Digital Warga Desa",
-      slug: "dasar-dasar-literasi-digital-warga-desa",
-      description: "Modul edukasi penggunaan smartphone secara bijak, keamanan data pribadi, dan pencegahan penipuan online.",
-      categoryId: categoriesMap["teknologi"],
-      authorId: authorsList[1],
-      contentType: ContentType.MODULE,
-      publicationYear: 2026,
-      coverUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&q=80",
-      status: ContentStatus.PUBLISHED,
-      visibility: ContentVisibility.PUBLIC,
-      license: LicenseType.OPEN_LICENSE,
-      pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    },
   ];
 
-  for (const book of sampleBooks) {
-    const { pdfUrl, ...bookData } = book;
-    await prisma.content.create({
-      data: {
-        ...bookData,
-        digitalAssets: {
-          create: {
-            storageKey: `documents/${book.slug}.pdf`,
-            fileUrl: pdfUrl,
-            mimeType: "application/pdf",
-            fileSizeBytes: BigInt(2500000),
-          },
-        },
-      },
+  for (const book of booksData) {
+    const existing = await prisma.book.findFirst({
+      where: { title: book.title },
     });
+    if (!existing) {
+      const newBook = await prisma.book.create({
+        data: book,
+      });
+
+      // Tambahkan beberapa chapter dummy untuk setiap buku
+      await prisma.chapter.createMany({
+        data: [
+          {
+            bookId: newBook.id,
+            title: "Bab 1: Pendahuluan",
+            content: "Ini adalah isi dari Bab 1. Teks ini merupakan contoh paragraf pertama dalam bab ini yang mendeskripsikan pengenalan terhadap topik buku.\n\nParagraf kedua menjelaskan lebih lanjut mengenai latar belakang dan tujuan dari penulisan materi yang ada pada buku ini. Semua pembaca diharapkan dapat memahami dasar-dasarnya di bagian ini.",
+            order: 1,
+          },
+          {
+            bookId: newBook.id,
+            title: "Bab 2: Pembahasan Inti",
+            content: "Masuk ke Bab 2, di sini kita membahas inti dari topik secara mendalam. Terdapat banyak contoh dan kasus yang bisa dipelajari.\n\nDalam penerapan nyata, konsep-konsep ini sangat berguna untuk memecahkan masalah sehari-hari. Mari kita perhatikan skenario berikut...",
+            order: 2,
+          },
+          {
+            bookId: newBook.id,
+            title: "Bab 3: Kesimpulan",
+            content: "Bab 3 berisi kesimpulan dari seluruh materi yang telah dibahas. Dengan pemahaman yang kuat dari bab-bab sebelumnya, Anda sekarang siap untuk mempraktekkannya secara langsung.\n\nTerima kasih telah membaca buku ini.",
+            order: 3,
+          }
+        ]
+      });
+    }
   }
 
-  console.log("✅ Sample Collections & Digital Assets seeded successfully.");
+  console.log("Seeding selesai!");
 }
 
 main()
-  .catch((e) => {
-    console.error("❌ Seeding Error:", e);
-    process.exit(1);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
   });

@@ -1,26 +1,173 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-surface: #f6fbf2;
+  --color-surface-dim: #d7dbd3;
+  --color-surface-bright: #f6fbf2;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f0f5ed;
+  --color-surface-container: #ebefe7;
+  --color-surface-container-high: #e5eae1;
+  --color-surface-container-highest: #dfe4dc;
+  --color-on-surface: #181d18;
+  --color-on-surface-variant: #434840;
+  --color-inverse-surface: #2d322c;
+  --color-inverse-on-surface: #eef2ea;
+  --color-outline: #73796f;
+  --color-outline-variant: #c3c8bd;
+  --color-surface-tint: #486643;
+  --color-primary: #244021;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #3b5836;
+  --color-on-primary-container: #abcda2;
+  --color-inverse-primary: #aed0a5;
+  --color-secondary: #596059;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #dbe2d8;
+  --color-on-secondary-container: #5d645d;
+  --color-tertiary: #383b3a;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #4f5251;
+  --color-on-tertiary-container: #c2c5c3;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #caecbf;
+  --color-primary-fixed-dim: #aed0a5;
+  --color-on-primary-fixed: #052105;
+  --color-on-primary-fixed-variant: #314e2d;
+  --color-secondary-fixed: #dee4db;
+  --color-secondary-fixed-dim: #c1c8c0;
+  --color-on-secondary-fixed: #171d18;
+  --color-on-secondary-fixed-variant: #424842;
+  --color-tertiary-fixed: #e1e3e1;
+  --color-tertiary-fixed-dim: #c5c7c5;
+  --color-on-tertiary-fixed: #191c1b;
+  --color-on-tertiary-fixed-variant: #444746;
+  --color-background: #f6fbf2;
+  --color-on-background: #181d18;
+  
+  --font-plus-jakarta-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-sans: var(--font-plus-jakarta-sans);
+  --font-label-md: var(--font-plus-jakarta-sans);
+  --font-headline-lg-mobile: var(--font-plus-jakarta-sans);
+  --font-title-md: var(--font-plus-jakarta-sans);
+  --font-headline-lg: var(--font-plus-jakarta-sans);
+  --font-body-lg: var(--font-plus-jakarta-sans);
+  --font-display-lg: var(--font-plus-jakarta-sans);
+  --font-body-md: var(--font-plus-jakarta-sans);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --text-label-md: 12px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--font-weight: 500;
+  --text-label-md--letter-spacing: 0.05em;
+
+  --text-headline-lg-mobile: 24px;
+  --text-headline-lg-mobile--line-height: 32px;
+  --text-headline-lg-mobile--font-weight: 700;
+
+  --text-title-md: 18px;
+  --text-title-md--line-height: 24px;
+  --text-title-md--font-weight: 600;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--font-weight: 700;
+  --text-headline-lg--letter-spacing: -0.01em;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+  --text-body-lg--font-weight: 400;
+
+  --text-display-lg: 40px;
+  --text-display-lg--line-height: 48px;
+  --text-display-lg--font-weight: 700;
+  --text-display-lg--letter-spacing: -0.02em;
+
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-body-md--font-weight: 400;
+
+  --spacing-base: 4px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-gutter: 16px;
+  --spacing-margin: 20px;
+
+  --radius-sm: 0.25rem;
+  --radius-DEFAULT: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Dark Mode Theme */
+.dark {
+  --color-surface: #111611;
+  --color-surface-dim: #111611;
+  --color-surface-bright: #363a35;
+  --color-surface-container-lowest: #0b0f0b;
+  --color-surface-container-low: #191d18;
+  --color-surface-container: #1d211c;
+  --color-surface-container-high: #272b26;
+  --color-surface-container-highest: #323631;
+  --color-on-surface: #dfe4dc;
+  --color-on-surface-variant: #c3c8bd;
+  --color-inverse-surface: #dfe4dc;
+  --color-inverse-on-surface: #2d322c;
+  --color-outline: #8d9389;
+  --color-outline-variant: #434840;
+  --color-surface-tint: #aed0a5;
+  --color-primary: #aed0a5;
+  --color-on-primary: #1a361a;
+  --color-primary-container: #314e2d;
+  --color-on-primary-container: #caecbf;
+  --color-inverse-primary: #486643;
+  --color-secondary: #c1c8c0;
+  --color-on-secondary: #2b322c;
+  --color-secondary-container: #424842;
+  --color-on-secondary-container: #c1c8c0;
+  --color-tertiary: #c5c7c5;
+  --color-on-tertiary: #2e3130;
+  --color-tertiary-container: #444746;
+  --color-on-tertiary-container: #c5c7c5;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-primary-fixed: #caecbf;
+  --color-primary-fixed-dim: #aed0a5;
+  --color-on-primary-fixed: #052105;
+  --color-on-primary-fixed-variant: #314e2d;
+  --color-secondary-fixed: #dee4db;
+  --color-secondary-fixed-dim: #c1c8c0;
+  --color-on-secondary-fixed: #171d18;
+  --color-on-secondary-fixed-variant: #424842;
+  --color-tertiary-fixed: #e1e3e1;
+  --color-tertiary-fixed-dim: #c5c7c5;
+  --color-on-tertiary-fixed: #191c1b;
+  --color-on-tertiary-fixed-variant: #444746;
+  --color-background: #111611;
+  --color-on-background: #dfe4dc;
 }

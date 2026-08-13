@@ -1,107 +1,104 @@
-import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+"use client";
 
-export const revalidate = 0; // Dynamic server rendering
+import { useEffect, useState } from "react";
+import { User, Activity, Bookmark, ShieldAlert } from "lucide-react";
 
-export default async function AdminUsersPage() {
-  let usersList: any[] = [];
+export default function AdminUsersPage() {
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  try {
-    usersList = await prisma.user.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        role: true,
-      },
-    });
-  } catch (_) {}
-
-  // Fallback demo data if DB is empty
-  if (usersList.length === 0) {
-    usersList = [
-      {
-        id: "user-1",
-        name: "Admin Kai (Kaydeen303)",
-        phone: "081574627052",
-        email: "admin@desa.id",
-        role: { name: "ADMIN" },
-        createdAt: new Date(),
-      },
-      {
-        id: "user-2",
-        name: "Pak Ahmad Subagyo",
-        phone: "085211223344",
-        email: "ahmad@warga.desa.id",
-        role: { name: "USER" },
-        createdAt: new Date(),
-      },
-      {
-        id: "user-3",
-        name: "Ibu Nurhayati",
-        phone: "081399887766",
-        email: "nurhayati@warga.desa.id",
-        role: { name: "USER" },
-        createdAt: new Date(),
-      },
-    ];
-  }
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("/api/admin/users");
+        const data = await res.json();
+        if (res.ok) {
+          setUsers(data.users);
+        } else {
+          setError(data.error);
+        }
+      } catch (err) {
+        setError("Gagal memuat data pengguna");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   return (
-    <div className="space-y-8">
-      {/* Title & Actions */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Manajemen Anggota Warga Desa</h1>
-          <p className="text-sm text-slate-400">Daftar warga desa terdaftar dan status verifikasi akun</p>
-        </div>
-        <button
-          className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 shadow-lg shadow-emerald-900/30 transition-all"
-        >
-          <span>➕</span>
-          <span>Daftarkan Anggota Baru</span>
-        </button>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-on-surface">Data Pengguna</h1>
+        <p className="text-on-surface-variant mt-1">Daftar warga atau anggota yang terdaftar di sistem Pustaka.</p>
       </div>
 
-      {/* Users Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-slate-950 text-slate-400 uppercase text-xs border-b border-slate-800">
-              <tr>
-                <th className="px-4 py-3">Nama Lengkap</th>
-                <th className="px-4 py-3">Nomor Telepon / WhatsApp</th>
-                <th className="px-4 py-3">Email</th>
-                <th className="px-4 py-3">Peran / Role</th>
-                <th className="px-4 py-3">Status Verifikasi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800">
-              {usersList.map((user) => (
-                <tr key={user.id} className="hover:bg-slate-800/50">
-                  <td className="px-4 py-4 font-semibold text-white">{user.name}</td>
-                  <td className="px-4 py-4 text-emerald-400 font-mono">{user.phone}</td>
-                  <td className="px-4 py-4 text-slate-400">{user.email || "-"}</td>
-                  <td className="px-4 py-4">
-                    <span
-                      className={`text-xs px-2.5 py-1 rounded-full font-bold ${
-                        user.role?.name === "ADMIN"
-                          ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                          : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                      }`}
-                    >
-                      {user.role?.name || "MEMBER"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4">
-                    <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2.5 py-1 rounded-full border border-emerald-500/30 font-semibold">
-                      TERVERIFIKASI 🟢
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {error && (
+        <div className="bg-error-container text-on-error-container p-4 rounded-xl">
+          <p>{error}</p>
         </div>
-      </div>
+      )}
+
+      {loading ? (
+        <div className="text-center py-10 text-on-surface-variant">Memuat data pengguna...</div>
+      ) : (
+        <div className="bg-surface-container rounded-2xl border border-outline-variant/30 overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-container-high border-b border-outline-variant/30 text-on-surface-variant font-medium text-sm">
+                  <th className="p-4 w-16">Status</th>
+                  <th className="p-4">Nama Lengkap</th>
+                  <th className="p-4">NIK / ID Login</th>
+                  <th className="p-4">Aktivitas Baca</th>
+                  <th className="p-4">Buku Disimpan</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/30">
+                {users.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-on-surface-variant">Belum ada pengguna.</td>
+                  </tr>
+                ) : (
+                  users.map((user) => (
+                    <tr key={user.id} className="hover:bg-surface-container-high/50 transition-colors">
+                      <td className="p-4">
+                        {user.role === "ADMIN" ? (
+                          <div className="w-10 h-10 bg-error-container text-on-error-container rounded-full flex items-center justify-center" title="Administrator">
+                            <ShieldAlert className="w-5 h-5" />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center">
+                            <User className="w-5 h-5" />
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-4 font-bold text-on-surface">
+                        {user.name}
+                        {user.role === "ADMIN" && <span className="ml-2 text-xs bg-error-container text-on-error-container px-2 py-0.5 rounded-full font-medium">Admin</span>}
+                      </td>
+                      <td className="p-4 text-on-surface-variant font-mono text-sm">{user.email}</td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2 text-on-surface-variant">
+                          <Activity className="w-4 h-4" />
+                          <span className="text-sm font-medium">{user._count?.readers || 0} buku</span>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2 text-on-surface-variant">
+                          <Bookmark className="w-4 h-4" />
+                          <span className="text-sm font-medium">{user._count?.bookmarks || 0} buku</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

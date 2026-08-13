@@ -1,47 +1,40 @@
-import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from "next";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const viewport: Viewport = {
-  themeColor: "#2563eb",
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-};
+import TopAppBar from "@/components/layout/TopAppBar";
+import BottomNav from "@/components/layout/BottomNav";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "Pustaka Pangkalan — Perpustakaan Digital Desa",
-  description: "Platform Perpustakaan Digital Desa Pangkalan • Web Admin Portal & REST API untuk Pengelolaan Koleksi E-Book, Modul, Sejarah Desa, dan Arsip Digital.",
+  title: "Pustaka Pangkalan - Perpustakaan Digital Desa",
+  description: "Temukan ribuan koleksi buku digital untuk menunjang aktivitas membaca dan belajarmu.",
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Pustaka",
-  },
-  formatDetection: {
-    telephone: false,
-  },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="id"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        {children}
+    <html lang="id" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            var t = localStorage.getItem('theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+              document.documentElement.classList.add('dark');
+            }
+          })();
+        `}} />
+      </head>
+      <body className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden pb-24 md:pb-0" suppressHydrationWarning>
+        <Providers>
+          <TopAppBar />
+          <main className="flex-grow pt-[88px] md:pt-[104px] pb-[100px] md:pb-[40px] px-margin md:px-xl flex flex-col gap-xl w-full max-w-7xl mx-auto">
+            {children}
+          </main>
+          <BottomNav />
+        </Providers>
       </body>
     </html>
   );
