@@ -1,17 +1,21 @@
 "use client";
 
-import { BookOpen, Moon, WifiOff, Bell, HardDrive, Info, LogOut, ChevronRight, Bookmark } from "lucide-react";
+import { BookOpen, WifiOff, Bell, HardDrive, Info, LogOut, ChevronRight, Bookmark } from "lucide-react";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ThemeToggle from "@/components/ThemeToggle";
+import AboutModal from "@/components/AboutModal";
+import StorageModal from "@/components/StorageModal";
 
 export default function Profile() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [bookmarks, setBookmarks] = useState<any[]>([]);
   const [loadingBookmarks, setLoadingBookmarks] = useState(true);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -28,7 +32,21 @@ export default function Profile() {
           setLoadingBookmarks(false);
         });
     }
+    // Check current theme
+    setIsDark(document.documentElement.classList.contains("dark"));
   }, [status, router]);
+
+  const toggleDark = () => {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   if (status === "loading" || !session?.user) {
     return <div className="flex justify-center items-center h-64"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
@@ -123,18 +141,20 @@ export default function Profile() {
       {/* Account Settings */}
       <section className="space-y-sm bg-surface-container-lowest rounded-2xl p-2 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/10">
         
-        {/* Night Mode Toggle */}
-        <div className="flex items-center justify-between p-4 rounded-xl hover:bg-surface-container/50 transition-colors cursor-pointer group">
+        {/* Night Mode Toggle - Connected */}
+        <div 
+          onClick={toggleDark}
+          className="flex items-center justify-between p-4 rounded-xl hover:bg-surface-container/50 transition-colors cursor-pointer group"
+        >
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-              <Moon className="w-5 h-5" />
+              <ThemeToggle className="bg-transparent hover:bg-transparent text-on-surface-variant group-hover:text-primary" />
             </div>
             <span className="font-body-lg text-body-lg text-on-surface font-medium">Mode Malam</span>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input className="sr-only peer" type="checkbox" />
-            <div className="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
+          <div className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${isDark ? "bg-primary" : "bg-surface-variant"}`}>
+            <div className={`absolute top-[2px] left-[2px] w-5 h-5 rounded-full bg-white border border-outline-variant/20 shadow-sm transition-transform duration-300 ${isDark ? "translate-x-5" : ""}`}></div>
+          </div>
         </div>
         <div className="h-px bg-outline-variant/20 mx-4"></div>
 
@@ -151,7 +171,7 @@ export default function Profile() {
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
             <input defaultChecked className="sr-only peer" type="checkbox" />
-            <div className="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+            <div className="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline-variant/20 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
           </label>
         </div>
         <div className="h-px bg-outline-variant/20 mx-4"></div>
@@ -169,29 +189,20 @@ export default function Profile() {
         <div className="h-px bg-outline-variant/20 mx-4"></div>
 
         {/* Storage */}
-        <div className="flex items-center justify-between p-4 rounded-xl hover:bg-surface-container/50 transition-colors cursor-pointer group">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-              <HardDrive className="w-5 h-5" />
-            </div>
-            <span className="font-body-lg text-body-lg text-on-surface font-medium">Kelola Penyimpanan Offline</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-label-md text-label-md text-primary bg-primary-container/20 px-2.5 py-1 rounded-full">12.4 MB</span>
-            <ChevronRight className="w-5 h-5 text-on-surface-variant" />
-          </div>
+        <div className="p-2">
+          <StorageModal 
+            triggerText="Kelola Penyimpanan Offline" 
+            className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container/50 transition-colors text-left group" 
+          />
         </div>
         <div className="h-px bg-outline-variant/20 mx-4"></div>
 
         {/* About */}
-        <div className="flex items-center justify-between p-4 rounded-xl hover:bg-surface-container/50 transition-colors cursor-pointer group">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-              <Info className="w-5 h-5" />
-            </div>
-            <span className="font-body-lg text-body-lg text-on-surface font-medium">Tentang Aplikasi</span>
-          </div>
-          <ChevronRight className="w-5 h-5 text-on-surface-variant" />
+        <div className="p-2">
+          <AboutModal 
+            triggerText="Tentang Pustaka Pangkalan" 
+            className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container/50 transition-colors text-left group" 
+          />
         </div>
         <div className="h-px bg-outline-variant/20 mx-4"></div>
 

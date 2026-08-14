@@ -6,6 +6,8 @@ import Image from "next/image";
 import { BookOpen, BookmarkPlus, BookmarkCheck, ChevronLeft, Star, Users } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import BookReviews from "@/components/BookReviews";
+import ShareModal from "@/components/ShareModal";
 
 interface Chapter {
   id: string;
@@ -170,6 +172,7 @@ export default function BookDetailPage() {
             <button 
               onClick={handleBookmark}
               disabled={bookmarking}
+              title={book.isBookmarked ? "Hapus dari Simpanan" : "Simpan ke Rak Buku"}
               className={`w-full sm:w-14 h-14 border rounded-xl flex items-center justify-center transition-colors ${
                 book.isBookmarked 
                   ? "bg-primary-container border-primary-container text-on-primary-container" 
@@ -182,6 +185,7 @@ export default function BookDetailPage() {
                 <BookmarkPlus className="w-6 h-6" />
               )}
             </button>
+            <ShareModal bookTitle={book.title} bookAuthor={book.author} bookId={book.id} />
           </div>
         </div>
       </div>
@@ -222,6 +226,11 @@ export default function BookDetailPage() {
             </div>
           )}
         </div>
+      </div>
+      {/* Reviews Section */}
+      <div className="mt-8">
+        <h3 className="font-title-md text-title-md text-on-surface mb-4">Ulasan Pembaca</h3>
+        <BookReviews bookId={book.id} />
       </div>
     </div>
   );

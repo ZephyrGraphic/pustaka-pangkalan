@@ -96,3 +96,13 @@ model Review {
 
   @@unique([userId, bookId])
 }
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  category  String   @default("Warta Desa")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

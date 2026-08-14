@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
 
 @theme inline {
   --color-surface: #f6fbf2;
@@ -112,6 +112,24 @@ body {
   background-color: var(--color-background);
   color: var(--color-on-background);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* Override transitions for elements that should animate differently */
+a, button, input, textarea {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* Dark mode shadow adjustments */
+.dark [class*="shadow-"] {
+  --tw-shadow-color: rgba(0, 0, 0, 0.3);
 }
 
 .hide-scroll::-webkit-scrollbar {

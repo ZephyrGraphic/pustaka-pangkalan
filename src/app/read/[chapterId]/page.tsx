@@ -1,8 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, List, Settings, Type } from "lucide-react";
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  List, 
+  Type, 
+  Volume2, 
+  VolumeX, 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  Settings, 
+  X, 
+  Check,
+  Bookmark
+} from "lucide-react";
 import Link from "next/link";
 
 interface ChapterMeta {
@@ -23,15 +37,53 @@ interface ChapterRead {
   };
 }
 
+type ReaderTheme = "default" | "sepia" | "dark" | "oled";
+type ReaderFont = "sans" | "serif" | "mono";
+
 export default function ReadChapterPage() {
   const params = useParams();
   const router = useRouter();
   const [chapter, setChapter] = useState<ChapterRead | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // Reader preferences
-  const [fontSize, setFontSize] = useState<number>(18); // px
+  // Controls & Customization
   const [showControls, setShowControls] = useState<boolean>(true);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [showChapterList, setShowChapterList] = useState<boolean>(false);
+  const [fontSize, setFontSize] = useState<number>(18);
+  const [lineHeight, setLineHeight] = useState<number>(1.8);
+  const [readerTheme, setReaderTheme] = useState<ReaderTheme>("default");
+  const [readerFont, setReaderFont] = useState<ReaderFont>("sans");
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
+
+  // Text-to-Speech (TTS) Audio Reader State
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [speechRate, setSpeechRate] = useState<number>(1.0);
+  const [currentParagraphIndex, setCurrentParagraphIndex] = useState<number>(-1);
+  const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  const utterancesRef = useRef<SpeechSynthesisUtterance[]>([]);
+
+  useEffect(() => {
+    // Load saved reader preferences
+    const savedTheme = localStorage.getItem("reader_theme") as ReaderTheme;
+    const savedFont = localStorage.getItem("reader_font") as ReaderFont;
+    const savedFontSize = localStorage.getItem("reader_font_size");
+    if (savedTheme) setReaderTheme(savedTheme);
+    if (savedFont) setReaderFont(savedFont);
+    if (savedFontSize) setFontSize(Number(savedFontSize));
+
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      synthRef.current = window.speechSynthesis;
+    }
+
+    return () => {
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchChapter() {
@@ -41,7 +93,7 @@ export default function ReadChapterPage() {
           const data = await res.json();
           setChapter(data);
           
-          // Save reading progress in background
+          // Save reading progress
           fetch("/api/reading-progress", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -63,12 +115,18 @@ export default function ReadChapterPage() {
     }
   }, [params.chapterId]);
 
-  // Hide controls when scrolling down
+  // Scroll Progress and hide controls
   useEffect(() => {
     let lastScrollY = window.scrollY;
     
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(Math.min(100, Math.max(0, progress)));
+      }
+
+      if (window.scrollY > lastScrollY && window.scrollY > 120) {
         setShowControls(false);
       } else if (window.scrollY < lastScrollY) {
         setShowControls(true);
@@ -79,6 +137,90 @@ export default function ReadChapterPage() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Text to Speech logic
+  const paragraphs = chapter?.content ? chapter.content.split('\n\n').filter(p => p.trim()) : [];
+
+  const handleStartSpeech = () => {
+    if (!synthRef.current || paragraphs.length === 0) return;
+
+    synthRef.current.cancel();
+    utterancesRef.current = [];
+
+    const voices = synthRef.current.getVoices();
+    const idVoice = voices.find(v => v.lang.includes("id") || v.lang.includes("ID")) || null;
+
+    paragraphs.forEach((text, idx) => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = speechRate;
+      utterance.lang = "id-ID";
+      if (idVoice) utterance.voice = idVoice;
+
+      utterance.onstart = () => {
+        setCurrentParagraphIndex(idx);
+      };
+
+      utterance.onend = () => {
+        if (idx === paragraphs.length - 1) {
+          setIsSpeaking(false);
+          setIsPaused(false);
+          setCurrentParagraphIndex(-1);
+        }
+      };
+
+      utterancesRef.current.push(utterance);
+    });
+
+    setIsSpeaking(true);
+    setIsPaused(false);
+    setShowAudioBar(true);
+
+    utterancesRef.current.forEach(u => synthRef.current?.speak(u));
+  };
+
+  const handlePauseSpeech = () => {
+    if (synthRef.current) {
+      if (isPaused) {
+        synthRef.current.resume();
+        setIsPaused(false);
+      } else {
+        synthRef.current.pause();
+        setIsPaused(true);
+      }
+    }
+  };
+
+  const handleStopSpeech = () => {
+    if (synthRef.current) {
+      synthRef.current.cancel();
+      setIsSpeaking(false);
+      setIsPaused(false);
+      setCurrentParagraphIndex(-1);
+      setShowAudioBar(false);
+    }
+  };
+
+  const handleRateChange = (rate: number) => {
+    setSpeechRate(rate);
+    if (isSpeaking) {
+      handleStopSpeech();
+    }
+  };
+
+  const handleThemeChange = (theme: ReaderTheme) => {
+    setReaderTheme(theme);
+    localStorage.setItem("reader_theme", theme);
+  };
+
+  const handleFontChange = (font: ReaderFont) => {
+    setReaderFont(font);
+    localStorage.setItem("reader_font", font);
+  };
+
+  const handleFontSizeChange = (size: number) => {
+    setFontSize(size);
+    localStorage.setItem("reader_font_size", String(size));
+  };
 
   if (loading) {
     return (
@@ -101,13 +243,48 @@ export default function ReadChapterPage() {
   const prevChapter = currentIndex > 0 ? chapter.book.chapters[currentIndex - 1] : null;
   const nextChapter = currentIndex < chapter.book.chapters.length - 1 ? chapter.book.chapters[currentIndex + 1] : null;
 
+  // Reader styling based on custom theme
+  const getThemeClasses = () => {
+    switch (readerTheme) {
+      case "sepia":
+        return "bg-[#fbf0d9] text-[#433422] border-[#ecdcc2]";
+      case "dark":
+        return "bg-[#1d211c] text-[#dfe4dc] border-[#323631]";
+      case "oled":
+        return "bg-[#000000] text-[#e0e0e0] border-[#222222]";
+      default:
+        return "bg-surface-container-lowest text-on-surface border-outline-variant/30";
+    }
+  };
+
+  const getFontFamily = () => {
+    switch (readerFont) {
+      case "serif":
+        return "font-serif";
+      case "mono":
+        return "font-mono";
+      default:
+        return "font-sans";
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-surface md:bg-surface-container-lowest -mx-margin md:-mx-xl -mt-[88px] md:-mt-[104px] pt-[88px] md:pt-[104px] relative">
+    <div className={`min-h-screen -mx-margin md:-mx-xl -mt-[88px] md:-mt-[104px] pt-[88px] md:pt-[104px] transition-colors duration-300 ${
+      readerTheme === "sepia" ? "bg-[#f4ebd0]" : readerTheme === "oled" ? "bg-black" : "bg-surface"
+    }`}>
       
+      {/* Reading Progress Top Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-surface-container">
+        <div 
+          className="h-full bg-primary transition-all duration-150"
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
+      </div>
+
       {/* Top Reader Controls */}
-      <div className={`fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 transition-transform duration-300 ${showControls ? "translate-y-0" : "-translate-y-full"}`}>
+      <header className={`fixed top-1 left-0 right-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/20 transition-transform duration-300 ${showControls ? "translate-y-0" : "-translate-y-full"}`}>
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href={`/books/${chapter.book.id}`} className="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors">
+          <Link href={`/books/${chapter.book.id}`} className="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors" aria-label="Kembali ke Buku">
             <ChevronLeft className="w-6 h-6" />
           </Link>
           
@@ -117,42 +294,120 @@ export default function ReadChapterPage() {
           </div>
           
           <div className="flex items-center gap-1">
+            {/* Audio Reader Trigger */}
             <button 
-              onClick={() => setFontSize(prev => Math.min(prev + 2, 28))}
+              onClick={() => {
+                if (isSpeaking) {
+                  handlePauseSpeech();
+                } else {
+                  handleStartSpeech();
+                }
+              }}
+              className={`p-2 rounded-full transition-colors ${
+                isSpeaking ? "bg-primary text-on-primary" : "hover:bg-surface-variant/50 text-on-surface"
+              }`}
+              title="Dengarkan Buku (Audio Reader)"
+            >
+              <Volume2 className="w-5 h-5" />
+            </button>
+
+            {/* Customizer */}
+            <button 
+              onClick={() => setShowSettings(true)}
               className="p-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors"
+              title="Pengaturan Tampilan"
             >
               <Type className="w-5 h-5" />
             </button>
-            <button className="p-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors">
+
+            {/* Chapter List */}
+            <button 
+              onClick={() => setShowChapterList(true)}
+              className="p-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors"
+              title="Daftar Bab"
+            >
               <List className="w-5 h-5" />
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Reader Content */}
+      {/* Floating Audio Bar (when active) */}
+      {showAudioBar && (
+        <div className="fixed top-20 left-4 right-4 md:left-auto md:right-8 md:w-80 z-40 bg-surface-container/95 border border-outline-variant/30 rounded-2xl p-4 shadow-xl backdrop-blur-xl animate-fade-in-up">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              <span className="font-title-md text-xs text-on-surface font-semibold">Audio Reader (TTS)</span>
+            </div>
+            <button onClick={handleStopSpeech} className="text-on-surface-variant hover:text-on-surface">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <button 
+              onClick={handlePauseSpeech}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-on-primary rounded-xl text-xs font-medium"
+            >
+              {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+              <span>{isPaused ? "Lanjutkan" : "Jeda"}</span>
+            </button>
+            <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1">
+              {[0.75, 1.0, 1.25, 1.5].map((rate) => (
+                <button
+                  key={rate}
+                  onClick={() => handleRateChange(rate)}
+                  className={`px-2 py-0.5 rounded-lg text-xs font-semibold ${
+                    speechRate === rate ? "bg-primary text-on-primary" : "text-on-surface-variant"
+                  }`}
+                >
+                  {rate}x
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Chapter Reader Container */}
       <div 
-        className="max-w-3xl mx-auto px-6 py-12 md:py-16 min-h-[70vh] bg-surface-container-lowest shadow-sm rounded-xl md:my-6 transition-all duration-300"
-        style={{ fontSize: `${fontSize}px`, lineHeight: 1.8 }}
+        className={`max-w-3xl mx-auto px-6 py-12 md:py-16 min-h-[70vh] shadow-sm rounded-2xl md:my-6 transition-all duration-300 border ${getThemeClasses()} ${getFontFamily()}`}
+        style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
         onClick={() => setShowControls(prev => !prev)}
       >
-        <h1 className="font-headline-lg font-bold mb-10 text-center leading-snug text-on-surface" style={{ fontSize: `${fontSize * 1.5}px` }}>
-          {chapter.title}
-        </h1>
+        <div className="mb-10 text-center">
+          <span className="font-label-md text-xs opacity-70 uppercase tracking-widest">
+            Bab {chapter.order}
+          </span>
+          <h1 className="font-headline-lg font-bold mt-2 leading-snug" style={{ fontSize: `${fontSize * 1.45}px` }}>
+            {chapter.title}
+          </h1>
+          <div className="w-12 h-1 bg-primary/40 mx-auto mt-4 rounded-full"></div>
+        </div>
         
-        <div className="font-body-lg text-on-surface-variant/90 space-y-6 md:space-y-8" style={{ fontSize: `${fontSize}px` }}>
-          {chapter.content.split('\n\n').map((paragraph, index) => (
-            <p key={index} className="text-justify indent-8">{paragraph}</p>
-          ))}
+        <div className="space-y-6 md:space-y-8" style={{ fontSize: `${fontSize}px` }}>
+          {paragraphs.map((paragraph, index) => {
+            const isHighlight = currentParagraphIndex === index;
+            return (
+              <p 
+                key={index} 
+                className={`text-justify indent-8 transition-colors duration-300 rounded-lg p-1.5 ${
+                  isHighlight ? "bg-primary/15 font-medium ring-1 ring-primary/30" : ""
+                }`}
+              >
+                {paragraph}
+              </p>
+            );
+          })}
         </div>
       </div>
 
       {/* Bottom Navigation */}
-      <div className="max-w-3xl mx-auto px-6 pb-24 pt-8 flex items-center justify-between gap-4">
+      <div className="max-w-3xl mx-auto px-6 pb-28 pt-8 flex items-center justify-between gap-4">
         {prevChapter ? (
           <Link 
             href={`/read/${prevChapter.id}`}
-            className="flex-1 flex items-center justify-center gap-2 py-4 bg-surface-variant/30 hover:bg-surface-variant/60 rounded-xl text-on-surface font-title-md transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 py-4 bg-surface-container hover:bg-surface-container-high rounded-2xl text-on-surface font-title-md transition-colors border border-outline-variant/20 shadow-sm"
           >
             <ChevronLeft className="w-5 h-5" />
             <span className="hidden sm:inline">Bab Sebelumnya</span>
@@ -165,7 +420,7 @@ export default function ReadChapterPage() {
         {nextChapter ? (
           <Link 
             href={`/read/${nextChapter.id}`}
-            className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary hover:bg-primary/90 rounded-xl text-on-primary font-title-md transition-colors shadow-sm shadow-primary/20"
+            className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary hover:bg-primary/90 rounded-2xl text-on-primary font-title-md transition-colors shadow-md shadow-primary/20"
           >
             <span className="hidden sm:inline">Bab Selanjutnya</span>
             <span className="sm:hidden">Lanjut</span>
@@ -174,12 +429,153 @@ export default function ReadChapterPage() {
         ) : (
           <Link 
             href={`/books/${chapter.book.id}`}
-            className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary hover:bg-primary/90 rounded-xl text-on-primary font-title-md transition-colors shadow-sm shadow-primary/20"
+            className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary hover:bg-primary/90 rounded-2xl text-on-primary font-title-md transition-colors shadow-md shadow-primary/20"
           >
             Selesai Membaca
           </Link>
         )}
       </div>
+
+      {/* Reader Customizer Modal */}
+      {showSettings && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 animate-fade-in">
+          <div className="bg-surface-container w-full max-w-md rounded-3xl p-6 shadow-2xl border border-outline-variant/30 animate-fade-in-up">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-title-md text-lg text-on-surface font-bold">Pengaturan Tampilan</h3>
+              <button onClick={() => setShowSettings(false)} className="p-1 rounded-full text-on-surface-variant hover:text-on-surface">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Font Size */}
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-title-md text-sm text-on-surface">Ukuran Tulisan</span>
+                <span className="font-label-md text-xs text-primary font-bold">{fontSize}px</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => handleFontSizeChange(Math.max(14, fontSize - 2))}
+                  className="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface font-bold flex items-center justify-center hover:bg-primary/20"
+                >
+                  A-
+                </button>
+                <input 
+                  type="range" 
+                  min="14" 
+                  max="28" 
+                  step="2"
+                  value={fontSize} 
+                  onChange={(e) => handleFontSizeChange(Number(e.target.value))}
+                  className="flex-1 accent-primary"
+                />
+                <button 
+                  onClick={() => handleFontSizeChange(Math.min(28, fontSize + 2))}
+                  className="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface font-bold flex items-center justify-center hover:bg-primary/20"
+                >
+                  A+
+                </button>
+              </div>
+            </div>
+
+            {/* Font Family */}
+            <div className="mb-6">
+              <span className="font-title-md text-sm text-on-surface block mb-2">Gaya Huruf</span>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { key: "sans", label: "Sans Serif", sample: "Modern" },
+                  { key: "serif", label: "Serif", sample: "Klasik" },
+                  { key: "mono", label: "Monospace", sample: "Kode" },
+                ].map((f) => (
+                  <button
+                    key={f.key}
+                    onClick={() => handleFontChange(f.key as ReaderFont)}
+                    className={`p-3 rounded-xl border text-center transition-all ${
+                      readerFont === f.key
+                        ? "border-primary bg-primary-container/30 text-primary font-bold"
+                        : "border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high"
+                    }`}
+                  >
+                    <span className="block text-sm">{f.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Theme Background */}
+            <div className="mb-4">
+              <span className="font-title-md text-sm text-on-surface block mb-2">Warna Latar Membaca</span>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { key: "default", label: "Terang", bg: "bg-white text-gray-900 border-gray-300" },
+                  { key: "sepia", label: "Sepia", bg: "bg-[#fbf0d9] text-[#433422] border-[#d8caa8]" },
+                  { key: "dark", label: "Gelap", bg: "bg-[#1d211c] text-[#dfe4dc] border-[#444]" },
+                  { key: "oled", label: "Hitam", bg: "bg-black text-white border-zinc-800" },
+                ].map((t) => (
+                  <button
+                    key={t.key}
+                    onClick={() => handleThemeChange(t.key as ReaderTheme)}
+                    className={`p-3 rounded-xl border flex flex-col items-center gap-1 transition-all ${t.bg} ${
+                      readerTheme === t.key ? "ring-2 ring-primary ring-offset-2 ring-offset-surface" : ""
+                    }`}
+                  >
+                    <span className="text-xs font-semibold">{t.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowSettings(false)}
+              className="w-full mt-4 py-3 bg-primary text-on-primary rounded-xl font-title-md text-sm hover:bg-primary/90 transition-colors"
+            >
+              Terapkan
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Chapter List Modal */}
+      {showChapterList && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 animate-fade-in">
+          <div className="bg-surface-container w-full max-w-md rounded-3xl p-6 shadow-2xl border border-outline-variant/30 max-h-[80vh] flex flex-col animate-fade-in-up">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-title-md text-lg text-on-surface font-bold">Daftar Bab</h3>
+              <button onClick={() => setShowChapterList(false)} className="p-1 rounded-full text-on-surface-variant hover:text-on-surface">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="overflow-y-auto space-y-2 flex-1 pr-1">
+              {chapter.book.chapters.map((c) => {
+                const isCurrent = c.id === chapter.id;
+                return (
+                  <Link
+                    key={c.id}
+                    href={`/read/${c.id}`}
+                    onClick={() => setShowChapterList(false)}
+                    className={`flex items-center justify-between p-3.5 rounded-xl transition-all ${
+                      isCurrent
+                        ? "bg-primary text-on-primary font-bold shadow-sm"
+                        : "hover:bg-surface-container-high text-on-surface"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                        isCurrent ? "bg-white/20 text-white" : "bg-primary-container/20 text-primary"
+                      }`}>
+                        {c.order}
+                      </span>
+                      <span className="text-sm">{c.title}</span>
+                    </div>
+                    {isCurrent && <Check className="w-4 h-4" />}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

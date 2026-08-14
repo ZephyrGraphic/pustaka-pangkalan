@@ -183,7 +183,7 @@ export default function Login() {
                 </div>
 
                 <div className="flex flex-col gap-4 mt-4">
-                  <button disabled={loginLoading} type="submit" className="w-full h-14 bg-gradient-to-r from-primary-container to-[#4a6b44] hover:from-primary text-on-primary-container font-title-md rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 group">
+                  <button disabled={loginLoading} type="submit" className="w-full h-14 bg-primary hover:bg-primary/90 text-on-primary font-title-md rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 group">
                     <span>{loginLoading ? "Memproses..." : "Masuk Ke Perpustakaan"}</span>
                   </button>
                   <div className="relative flex items-center py-2 opacity-70">
@@ -234,7 +234,7 @@ export default function Login() {
                   </div>
                 </div>
 
-                <button disabled={regLoading} type="submit" className="w-full h-14 mt-6 bg-gradient-to-r from-primary-container to-[#4a6b44] hover:from-primary text-on-primary-container font-title-md rounded-2xl shadow-md flex items-center justify-center gap-2">
+                <button disabled={regLoading} type="submit" className="w-full h-14 mt-6 bg-primary hover:bg-primary/90 text-on-primary font-title-md rounded-2xl shadow-md flex items-center justify-center gap-2">
                   <span>{regLoading ? "Mendaftarkan..." : "Daftar Akun Baru"}</span>
                 </button>
                 <p className="text-center font-body-md text-xs text-on-surface-variant/80 mt-3">

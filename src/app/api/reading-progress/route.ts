@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     
     // We store the "page" as the chapter index, or actual page if using PDF
     // For text chapters, page = chapterIndex + 1
-    const chapterIndex = chapters.findIndex(c => c.id === chapterId);
+    const chapterIndex = chapters.findIndex((c: { id: string }) => c.id === chapterId);
     const pageNumber = chapterIndex !== -1 ? chapterIndex + 1 : (pageIndex || 1);
 
     const progress = await prisma.readingProgress.upsert({

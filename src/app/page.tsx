@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import SearchBar from "@/components/SearchBar";
+import AnnouncementCarousel from "@/components/AnnouncementCarousel";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -111,6 +112,9 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Warta & Kabar Desa Announcements */}
+      <AnnouncementCarousel />
+
       {/* Continue Reading */}
       {session && activeReading && activeReading.book && (
         <section>
@@ -166,7 +170,7 @@ export default async function Home() {
         </div>
         <div className="flex overflow-x-auto hide-scroll gap-md pb-4 -mx-margin px-margin md:mx-0 md:px-0 snap-x snap-mandatory">
           {featuredBooks.length > 0 ? (
-            featuredBooks.map((book) => (
+            featuredBooks.map((book: { id: string; title: string; author: string; coverUrl: string | null; category: string; rating: number; description: string; isOffline: boolean }) => (
               <Link href={`/books/${book.id}`} key={book.id} className="snap-center flex-shrink-0 w-[240px] bg-surface rounded-xl border border-outline-variant/20 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col group cursor-pointer">
                 <div className="relative h-40 w-full overflow-hidden">
                   <Image
@@ -201,7 +205,7 @@ export default async function Home() {
 
       {/* Local Heritage Banner */}
       <section className="mt-4">
-        <div className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-primary to-[#5b4636] p-lg flex flex-col justify-end min-h-[160px] shadow-md cursor-pointer group">
+        <div className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-primary to-primary-container p-lg flex flex-col justify-end min-h-[160px] shadow-md cursor-pointer group">
           <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", backgroundSize: "16px 16px" }}></div>
           <div className="relative z-10 w-2/3">
             <span className="inline-block px-2 py-1 bg-on-primary/20 backdrop-blur-sm text-on-primary rounded font-label-md text-[10px] uppercase mb-2 border border-on-primary/30">
