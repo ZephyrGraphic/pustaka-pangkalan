@@ -1,9 +1,21 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Book, Users, LayoutDashboard, LogOut, Bell, BarChart3, ExternalLink, MessageSquare, ShieldCheck } from "lucide-react";
+import { 
+  Book, 
+  Users, 
+  LayoutDashboard, 
+  LogOut, 
+  Bell, 
+  BarChart3, 
+  MessageSquare, 
+  ShieldCheck, 
+  Eye,
+  ArrowRight
+} from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -18,7 +30,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <aside className="w-64 bg-surface-container border-r border-outline-variant/30 flex flex-col shrink-0">
         <div className="p-6 border-b border-outline-variant/30 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-md shadow-primary/20">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -77,32 +89,60 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <span>Pengguna & Warga</span>
           </Link>
 
+          {/* Quick Switcher in Sidebar */}
           <div className="pt-3 mt-3 border-t border-outline-variant/20">
             <Link 
               href="/" 
-              target="_blank" 
-              className="flex items-center gap-3 px-3.5 py-2 rounded-2xl hover:bg-surface-container-high text-on-surface-variant transition-colors text-xs"
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-primary/10 hover:bg-primary/20 text-primary font-bold transition-all text-xs group"
+              title="Beralih ke Tampilan Warga"
             >
-              <ExternalLink className="w-4 h-4 shrink-0" />
-              <span>Lihat Halaman Warga</span>
+              <div className="flex items-center gap-2.5">
+                <Eye className="w-4 h-4 shrink-0" />
+                <span>Mode Warga</span>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
         </nav>
 
-        <div className="p-3 border-t border-outline-variant/30">
-          <LogoutButton className="w-full flex justify-center items-center gap-2 px-4 py-2.5 rounded-2xl text-error hover:bg-error/10 transition-colors text-xs font-semibold">
+        <div className="p-3 border-t border-outline-variant/30 flex items-center justify-between gap-2">
+          <LogoutButton className="flex-1 flex justify-center items-center gap-2 px-3 py-2.5 rounded-2xl text-error hover:bg-error/10 transition-colors text-xs font-semibold">
             <LogOut className="w-4 h-4" />
-            <span>Keluar Akun Admin</span>
+            <span>Keluar Admin</span>
           </LogoutButton>
+          <ThemeToggle />
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-6 md:p-8 max-w-6xl mx-auto pb-16">
-          {children}
-        </div>
-      </main>
+      {/* Main Content with Top Nav Header */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Top bar header */}
+        <header className="h-16 bg-surface-container border-b border-outline-variant/20 px-6 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+            <span className="font-semibold text-primary">Portal Administrasi</span>
+            <span>/</span>
+            <span>Pustaka Digital Desa Pangkalan</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary text-on-primary font-bold text-xs shadow-sm hover:scale-105 transition-all"
+              title="Beralih ke Tampilan Warga"
+            >
+              <Eye className="w-4 h-4" />
+              <span>Beralih ke Mode Warga</span>
+            </Link>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6 md:p-8 max-w-6xl mx-auto pb-16">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

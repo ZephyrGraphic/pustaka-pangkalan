@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, LogOut, ChevronRight, Bookmark } from "lucide-react";
+import { BookOpen, LogOut, ChevronRight, Bookmark, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -78,6 +78,7 @@ export default function Profile() {
   }
 
   const currentUser = profileUser || session.user;
+  const isAdmin = currentUser?.role === "ADMIN" || (session?.user as any)?.role === "ADMIN";
   const userAvatar = profileUser?.image || session.user.image || "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80";
   const userNik = profileUser?.email || session.user.email || "320220...";
   const userAddress = profileUser?.address || "Dusun I (Krajan Barat)";
@@ -209,6 +210,25 @@ export default function Profile() {
       {/* Account & System Settings Menu */}
       <section className="bg-surface-container rounded-3xl p-2 border border-outline-variant/20 shadow-sm divide-y divide-outline-variant/20">
         
+        {/* Admin Dashboard Quick Access */}
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className="flex items-center justify-between p-4 rounded-2xl bg-primary/10 hover:bg-primary/20 transition-colors group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="font-body-lg text-sm text-primary font-bold block">Dashboard Administrator</span>
+                <span className="text-[11px] text-on-surface-variant">Kelola buku, warga, ulasan, dan warta desa</span>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-primary" />
+          </Link>
+        )}
+
         {/* Dark Mode Toggle */}
         <div 
           onClick={toggleDark}

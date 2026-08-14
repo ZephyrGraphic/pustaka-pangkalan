@@ -1,6 +1,6 @@
 "use client";
 
-import { Signal, Home, BookOpen, Library } from "lucide-react";
+import { Signal, Home, BookOpen, Library, ShieldCheck } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -12,6 +12,8 @@ export default function TopAppBar() {
   const { data: session } = useSession();
   
   if (pathname === "/login") return null;
+
+  const isAdmin = (session?.user as any)?.role === "ADMIN";
 
   const navItems = [
     { path: "/", icon: Home, label: "Beranda" },
@@ -51,7 +53,19 @@ export default function TopAppBar() {
           })}
         </nav>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          {/* Admin 1-Click Switcher Button */}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary hover:bg-primary/90 text-on-primary font-bold text-xs shadow-md shadow-primary/20 hover:scale-105 transition-all"
+              title="Beralih ke Dashboard Admin"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Portal Admin</span>
+            </Link>
+          )}
+
           <Link href="/profile" className="flex items-center gap-2">
             {session?.user ? (
               <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-variant/30 flex items-center justify-center relative border border-outline-variant/20 hover:border-primary transition-colors">
