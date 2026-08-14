@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Plus, Trash2, Edit2, AlertCircle, Search, X, BookOpen, Cloud, Star } from "lucide-react";
-import Image from "next/image";
+import BookCover from "@/components/BookCover";
 
 interface BookItem {
   id: string;
@@ -214,12 +214,13 @@ export default function AdminBooksPage() {
                   filteredBooks.map((book) => (
                     <tr key={book.id} className="hover:bg-surface-container-high/50 transition-colors">
                       <td className="p-4">
-                        <div className="w-12 h-16 relative bg-surface-container-highest rounded-lg border border-outline-variant/20 overflow-hidden shadow-sm">
-                          {book.coverUrl ? (
-                            <Image src={book.coverUrl} alt={book.title} fill className="object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[10px] text-on-surface-variant">No Cover</div>
-                          )}
+                        <div className="w-12 h-16 relative rounded-xl overflow-hidden shadow-sm">
+                          <BookCover
+                            src={book.coverUrl}
+                            alt={book.title}
+                            title={book.title}
+                            category={book.category}
+                          />
                         </div>
                       </td>
                       <td className="p-4">
@@ -288,7 +289,8 @@ export default function AdminBooksPage() {
           onClick={() => setEditingBook(null)}
         >
           <div 
-            className="relative w-full max-w-lg bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto animate-fade-in-up my-auto"
+            className="relative bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto animate-fade-in-up my-auto"
+            style={{ width: "min(92vw, 520px)", maxWidth: "520px", minWidth: "300px" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">

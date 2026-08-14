@@ -194,7 +194,8 @@ export default function AdminAnnouncementsPage() {
           onClick={() => setShowModal(false)}
         >
           <div 
-            className="relative w-full max-w-lg bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
+            className="relative bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
+            style={{ width: "min(92vw, 520px)", maxWidth: "520px", minWidth: "300px" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">

@@ -208,6 +208,9 @@ export default async function AdminDashboard() {
               <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
               <h3 className="font-title-md text-base text-on-surface font-bold">Ulasan Warga Terbaru</h3>
             </div>
+            <Link href="/admin/reviews" className="text-xs text-primary font-medium hover:underline">
+              Kelola Moderasi
+            </Link>
           </div>
 
           {recentReviews.length === 0 ? (

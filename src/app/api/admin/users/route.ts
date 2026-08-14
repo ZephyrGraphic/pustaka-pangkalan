@@ -2,29 +2,61 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import bcrypt from "bcryptjs";
 
-export async function GET() {
+export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
   
   if (!session || (session.user as any).role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search") || "";
+  const dusun = searchParams.get("dusun") || "";
+  const role = searchParams.get("role") || "";
+
   try {
+    const where: any = {};
+
+    if (role && ["USER", "ADMIN"].includes(role)) {
+      where.role = role;
+    }
+
+    if (dusun && dusun !== "ALL") {
+      where.address = { contains: dusun, mode: "insensitive" };
+    }
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+        { phone: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
     const users = await prisma.user.findMany({
-      orderBy: { id: 'desc' },
+      where,
+      orderBy: { id: "desc" },
       select: {
         id: true,
         name: true,
         email: true, // NIK
+        phone: true,
+        address: true,
+        occupation: true,
+        image: true,
         role: true,
+        isProfileComplete: true,
         _count: {
-          select: { bookmarks: true, readers: true }
+          select: { bookmarks: true, readers: true, reviews: true }
         }
       }
     });
+
     return NextResponse.json({ users });
   } catch (error) {
+    console.error("Fetch users error:", error);
     return NextResponse.json({ error: "Gagal mengambil data pengguna" }, { status: 500 });
   }
 }
@@ -51,5 +83,59 @@ export async function PATCH(request: Request) {
   } catch (error) {
     console.error("Role update error:", error);
     return NextResponse.json({ error: "Gagal memperbarui peran pengguna" }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session || (session.user as any).role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const body = await request.json();
+    const { userId, newPin, name, phone, address, occupation } = body;
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID wajib disertakan" }, { status: 400 });
+    }
+
+    const dataToUpdate: any = {};
+
+    if (name !== undefined) dataToUpdate.name = name.trim();
+    if (phone !== undefined) dataToUpdate.phone = phone.trim();
+    if (address !== undefined) dataToUpdate.address = address;
+    if (occupation !== undefined) dataToUpdate.occupation = occupation;
+
+    if (newPin) {
+      if (newPin.length !== 6 || !/^\d+$/.test(newPin)) {
+        return NextResponse.json({ error: "PIN baru harus 6 digit angka" }, { status: 400 });
+      }
+      dataToUpdate.password = await bcrypt.hash(newPin, 10);
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: userId },
+      data: dataToUpdate,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        address: true,
+        occupation: true,
+        role: true,
+        isProfileComplete: true,
+      },
+    });
+
+    return NextResponse.json({ 
+      success: true, 
+      message: newPin ? "PIN pengguna berhasil di-reset!" : "Data pengguna berhasil diperbarui!",
+      user: updated 
+    });
+  } catch (error) {
+    console.error("Admin user update error:", error);
+    return NextResponse.json({ error: "Gagal memperbarui data pengguna" }, { status: 500 });
   }
 }
