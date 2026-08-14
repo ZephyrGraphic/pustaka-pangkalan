@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Plus, Trash2, Edit2, AlertCircle, Search, X, BookOpen, Cloud, Star } from "lucide-react";
 import Image from "next/image";
@@ -280,15 +281,19 @@ export default function AdminBooksPage() {
       )}
 
       {/* Edit Book Modal */}
-      {editingBook && (
-        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
+      {editingBook && typeof document !== "undefined" && createPortal(
+        <div 
+          className="fixed inset-0 z-[999999] bg-black/75 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in"
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh" }}
+          onClick={() => setEditingBook(null)}
+        >
           <div 
-            className="relative w-full max-w-lg min-w-[300px] sm:min-w-[420px] bg-surface-container rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto animate-fade-in-up my-auto"
+            className="relative w-full max-w-lg bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto animate-fade-in-up my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-title-md text-lg text-on-surface font-bold">Edit Informasi Buku</h3>
-              <button onClick={() => setEditingBook(null)} className="p-1 rounded-full text-on-surface-variant hover:text-on-surface">
+              <button onClick={() => setEditingBook(null)} className="p-1 rounded-full text-on-surface-variant hover:text-on-surface" aria-label="Tutup">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -324,33 +329,32 @@ export default function AdminBooksPage() {
                     className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
                   >
                     <option value="Pertanian">Pertanian</option>
-                    <option value="Sejarah">Sejarah & Budaya</option>
-                    <option value="Ekonomi">Ekonomi UMKM</option>
+                    <option value="Sejarah & Budaya">Sejarah & Budaya</option>
+                    <option value="Kewirausahaan">Kewirausahaan</option>
                     <option value="Kesehatan">Kesehatan</option>
-                    <option value="Teknologi">Teknologi</option>
                     <option value="Umum">Umum</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">URL Gambar Sampul</label>
-                <input
-                  type="url"
-                  value={editCoverUrl}
-                  onChange={(e) => setEditCoverUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Deskripsi / Sinopsis</label>
+                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Deskripsi Singkat</label>
                 <textarea
                   rows={3}
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
                   className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">URL Gambar Sampul (Opsional)</label>
+                <input
+                  type="url"
+                  value={editCoverUrl}
+                  onChange={(e) => setEditCoverUrl(e.target.value)}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
                 />
               </div>
 
@@ -385,7 +389,8 @@ export default function AdminBooksPage() {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

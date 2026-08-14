@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { 
   User, 
   X, 
@@ -58,6 +59,11 @@ export default function EditProfileModal({
   onProfileUpdated,
 }: EditProfileModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Form fields
   const [name, setName] = useState(currentName);
@@ -148,6 +154,229 @@ export default function EditProfileModal({
 
   const displayAvatar = showCustomAvatar && customAvatarUrl ? customAvatarUrl : selectedAvatar;
 
+  const modalContent = isOpen && mounted ? (
+    <div 
+      className="fixed inset-0 z-[999999] bg-black/75 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+      style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh" }}
+      onClick={() => setIsOpen(false)}
+    >
+      <div 
+        className="relative w-full max-w-lg bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto my-auto animate-fade-in-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3 mb-6">
+          <div>
+            <h3 className="font-title-md text-xl font-bold text-on-surface">
+              Kostumisasi Foto & Data Diri
+            </h3>
+            <p className="font-body-md text-xs text-on-surface-variant mt-1">
+              Perbarui informasi profil dan kartu anggota digital Anda.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="p-2 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors"
+            aria-label="Tutup"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {error && (
+          <div className="mb-4 p-3.5 rounded-2xl bg-error-container text-on-error-container text-xs font-medium">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSave} className="space-y-5">
+          
+          {/* Avatar Selector */}
+          <div>
+            <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-2">
+              Foto Profil / Avatar
+            </label>
+
+            {/* Avatar Preview */}
+            <div className="flex items-center gap-4 p-3.5 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 mb-3">
+              <div className="w-16 h-16 rounded-full relative overflow-hidden border-2 border-primary shadow-sm shrink-0">
+                <Image src={displayAvatar} alt="Preview" fill className="object-cover" />
+              </div>
+              <div>
+                <p className="font-bold text-on-surface text-sm">{name || "Warga Desa"}</p>
+                <button
+                  type="button"
+                  onClick={() => setShowCustomAvatar(!showCustomAvatar)}
+                  className="text-xs text-primary font-medium hover:underline mt-0.5 inline-block"
+                >
+                  {showCustomAvatar ? "Pilih dari Karakter Avatar" : "Gunakan Link Foto Sendiri"}
+                </button>
+              </div>
+            </div>
+
+            {showCustomAvatar ? (
+              <input
+                type="url"
+                placeholder="https://link-foto-anda.jpg"
+                value={customAvatarUrl}
+                onChange={(e) => setCustomAvatarUrl(e.target.value)}
+                className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-xs text-on-surface focus:outline-none focus:border-primary"
+              />
+            ) : (
+              <div className="grid grid-cols-6 gap-2">
+                {AVATAR_PRESETS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => setSelectedAvatar(preset.url)}
+                    className={`relative aspect-square rounded-full overflow-hidden border-2 transition-all ${
+                      selectedAvatar === preset.url
+                        ? "border-primary ring-2 ring-primary/40 scale-105"
+                        : "border-transparent opacity-70 hover:opacity-100"
+                    }`}
+                    title={preset.label}
+                  >
+                    <Image src={preset.url} alt={preset.label} fill className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Nama Lengkap */}
+          <div>
+            <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
+              Nama Lengkap
+            </label>
+            <div className="relative">
+              <User className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary"
+              />
+            </div>
+          </div>
+
+          {/* WhatsApp */}
+          <div>
+            <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
+              Nomor WhatsApp / HP
+            </label>
+            <div className="relative">
+              <Phone className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="tel"
+                placeholder="0812..."
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary"
+              />
+            </div>
+          </div>
+
+          {/* Dusun */}
+          <div>
+            <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
+              Dusun / Wilayah Desa
+            </label>
+            <div className="relative">
+              <MapPin className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <select
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary appearance-none cursor-pointer"
+              >
+                {DUSUN_OPTIONS.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Minat */}
+          <div>
+            <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
+              Minat Baca Utama
+            </label>
+            <div className="relative">
+              <BookOpen className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <select
+                value={occupation}
+                onChange={(e) => setOccupation(e.target.value)}
+                className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary appearance-none cursor-pointer"
+              >
+                {MINAT_OPTIONS.map((m) => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Change PIN Toggle */}
+          <div className="pt-2 border-t border-outline-variant/20">
+            <button
+              type="button"
+              onClick={() => setShowChangePin(!showChangePin)}
+              className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
+            >
+              <KeyRound className="w-4 h-4" />
+              <span>{showChangePin ? "Batal Ubah PIN" : "Ganti PIN 6-Digit"}</span>
+            </button>
+
+            {showChangePin && (
+              <div className="grid grid-cols-2 gap-3 mt-3 animate-fade-in">
+                <div>
+                  <label className="block text-[11px] font-semibold text-on-surface-variant mb-1">PIN Baru (6 Angka)</label>
+                  <input
+                    type="password"
+                    maxLength={6}
+                    value={newPin}
+                    onChange={(e) => setNewPin(e.target.value)}
+                    placeholder="••••••"
+                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-2.5 text-center font-mono text-sm text-on-surface focus:outline-none focus:border-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-on-surface-variant mb-1">Konfirmasi PIN Baru</label>
+                  <input
+                    type="password"
+                    maxLength={6}
+                    value={confirmNewPin}
+                    onChange={(e) => setConfirmNewPin(e.target.value)}
+                    placeholder="••••••"
+                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-2.5 text-center font-mono text-sm text-on-surface focus:outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="flex-1 py-3.5 bg-surface-container-highest text-on-surface rounded-xl font-title-md text-sm font-semibold hover:bg-surface-variant transition-colors"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex-1 py-3.5 bg-primary text-on-primary rounded-xl font-title-md text-sm font-bold hover:bg-primary/90 transition-colors shadow-md shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {saving ? "Menyimpan..." : "Simpan Perubahan"}
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
       <button
@@ -159,225 +388,7 @@ export default function EditProfileModal({
         <span>Ubah Profil</span>
       </button>
 
-      {isOpen && (
-        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
-          <div 
-            className="relative w-full max-w-lg min-w-[300px] sm:min-w-[420px] bg-surface-container rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto animate-fade-in-up my-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            
-            <div className="flex items-start justify-between gap-3 mb-6">
-              <div>
-                <h3 className="font-title-md text-lg font-bold text-on-surface">
-                  Kostumisasi Foto & Data Diri
-                </h3>
-                <p className="font-label-md text-xs text-on-surface-variant mt-0.5">
-                  Perbarui informasi profil dan kartu anggota digital Anda.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="p-2 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors"
-                aria-label="Tutup"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-3.5 rounded-2xl bg-error-container text-on-error-container text-xs font-medium">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSave} className="space-y-5">
-              
-              {/* Avatar Selector */}
-              <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-2">
-                  Foto Profil / Avatar
-                </label>
-
-                {/* Avatar Preview */}
-                <div className="flex items-center gap-4 p-3.5 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 mb-3">
-                  <div className="w-16 h-16 rounded-full relative overflow-hidden border-2 border-primary shadow-sm shrink-0">
-                    <Image src={displayAvatar} alt="Preview" fill className="object-cover" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-on-surface text-sm">{name || "Warga Desa"}</p>
-                    <button
-                      type="button"
-                      onClick={() => setShowCustomAvatar(!showCustomAvatar)}
-                      className="text-xs text-primary font-medium hover:underline mt-0.5 inline-block"
-                    >
-                      {showCustomAvatar ? "Pilih dari Karakter Avatar" : "Gunakan Link Foto Sendiri"}
-                    </button>
-                  </div>
-                </div>
-
-                {showCustomAvatar ? (
-                  <input
-                    type="url"
-                    placeholder="https://link-foto-anda.jpg"
-                    value={customAvatarUrl}
-                    onChange={(e) => setCustomAvatarUrl(e.target.value)}
-                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-xs text-on-surface focus:outline-none focus:border-primary"
-                  />
-                ) : (
-                  <div className="grid grid-cols-6 gap-2">
-                    {AVATAR_PRESETS.map((preset) => (
-                      <button
-                        key={preset.id}
-                        type="button"
-                        onClick={() => setSelectedAvatar(preset.url)}
-                        className={`relative aspect-square rounded-full overflow-hidden border-2 transition-all ${
-                          selectedAvatar === preset.url
-                            ? "border-primary ring-2 ring-primary/40 scale-105"
-                            : "border-transparent opacity-70 hover:opacity-100"
-                        }`}
-                        title={preset.label}
-                      >
-                        <Image src={preset.url} alt={preset.label} fill className="object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Nama Lengkap */}
-              <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
-                  Nama Lengkap
-                </label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary"
-                  />
-                </div>
-              </div>
-
-              {/* WhatsApp */}
-              <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
-                  Nomor WhatsApp / HP
-                </label>
-                <div className="relative">
-                  <Phone className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="tel"
-                    placeholder="0812..."
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary"
-                  />
-                </div>
-              </div>
-
-              {/* Dusun */}
-              <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
-                  Dusun / Wilayah Desa
-                </label>
-                <div className="relative">
-                  <MapPin className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <select
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary appearance-none cursor-pointer"
-                  >
-                    {DUSUN_OPTIONS.map((d) => (
-                      <option key={d} value={d}>{d}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Minat */}
-              <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1">
-                  Minat Baca Utama
-                </label>
-                <div className="relative">
-                  <BookOpen className="w-4 h-4 text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <select
-                    value={occupation}
-                    onChange={(e) => setOccupation(e.target.value)}
-                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary appearance-none cursor-pointer"
-                  >
-                    {MINAT_OPTIONS.map((m) => (
-                      <option key={m} value={m}>{m}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Change PIN Toggle */}
-              <div className="pt-2 border-t border-outline-variant/20">
-                <button
-                  type="button"
-                  onClick={() => setShowChangePin(!showChangePin)}
-                  className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
-                >
-                  <KeyRound className="w-4 h-4" />
-                  <span>{showChangePin ? "Batal Ubah PIN" : "Ganti PIN 6-Digit"}</span>
-                </button>
-
-                {showChangePin && (
-                  <div className="grid grid-cols-2 gap-3 mt-3 animate-fade-in">
-                    <div>
-                      <label className="block text-[11px] font-semibold text-on-surface-variant mb-1">PIN Baru (6 Angka)</label>
-                      <input
-                        type="password"
-                        maxLength={6}
-                        value={newPin}
-                        onChange={(e) => setNewPin(e.target.value)}
-                        placeholder="••••••"
-                        className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-2.5 text-center font-mono text-sm text-on-surface focus:outline-none focus:border-primary"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-semibold text-on-surface-variant mb-1">Konfirmasi PIN Baru</label>
-                      <input
-                        type="password"
-                        maxLength={6}
-                        value={confirmNewPin}
-                        onChange={(e) => setConfirmNewPin(e.target.value)}
-                        placeholder="••••••"
-                        className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-2.5 text-center font-mono text-sm text-on-surface focus:outline-none focus:border-primary"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="flex-1 py-3.5 bg-surface-container-highest text-on-surface rounded-xl font-title-md text-sm font-semibold hover:bg-surface-variant transition-colors"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="flex-1 py-3.5 bg-primary text-on-primary rounded-xl font-title-md text-sm font-bold hover:bg-primary/90 transition-colors shadow-md shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {saving ? "Menyimpan..." : "Simpan Perubahan"}
-                </button>
-              </div>
-            </form>
-
-          </div>
-        </div>
-      )}
+      {mounted && typeof document !== "undefined" && createPortal(modalContent, document.body)}
     </>
   );
 }

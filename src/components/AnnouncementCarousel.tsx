@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Bell, ChevronRight, X, Sparkles } from "lucide-react";
 
 interface Announcement {
@@ -85,10 +86,14 @@ export default function AnnouncementCarousel() {
       </section>
 
       {/* Detail Modal */}
-      {selectedAnnouncement && (
-        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
+      {selectedAnnouncement && typeof document !== "undefined" && createPortal(
+        <div 
+          className="fixed inset-0 z-[999999] bg-black/75 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in"
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh" }}
+          onClick={() => setSelectedAnnouncement(null)}
+        >
           <div 
-            className="relative w-full max-w-lg min-w-[300px] sm:min-w-[420px] bg-surface-container rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
+            className="relative w-full max-w-lg bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-3 mb-4">
@@ -110,12 +115,13 @@ export default function AnnouncementCarousel() {
               <button
                 onClick={() => setSelectedAnnouncement(null)}
                 className="p-1.5 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest"
+                aria-label="Tutup"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/20 max-h-60 overflow-y-auto mb-6">
+            <div className="bg-surface-container-lowest p-4 sm:p-5 rounded-2xl border border-outline-variant/20 max-h-60 overflow-y-auto mb-6">
               <p className="font-body-lg text-sm text-on-surface-variant whitespace-pre-line leading-relaxed">
                 {selectedAnnouncement.content}
               </p>
@@ -123,12 +129,13 @@ export default function AnnouncementCarousel() {
 
             <button
               onClick={() => setSelectedAnnouncement(null)}
-              className="w-full py-3 bg-primary text-on-primary rounded-xl font-title-md text-sm hover:bg-primary/90 transition-colors"
+              className="w-full py-3 bg-primary text-on-primary rounded-xl font-title-md text-sm hover:bg-primary/90 transition-colors font-bold shadow-md shadow-primary/20 text-center"
             >
               Tutup Warta
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

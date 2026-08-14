@@ -180,13 +180,22 @@ export default function Profile() {
           <div className="flex overflow-x-auto hide-scroll gap-4 pb-2 -mx-margin px-margin md:mx-0 md:px-0">
             {bookmarks.map((bookmark) => (
               <Link key={bookmark.id} href={`/books/${bookmark.book.id}`} className="flex-shrink-0 w-32 group cursor-pointer">
-                <div className="relative w-32 h-44 rounded-2xl overflow-hidden shadow-sm border border-outline-variant/20 mb-2 group-hover:-translate-y-1 transition-transform">
-                  <Image 
-                    src={bookmark.book.coverUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuAGVw_j51tG8zPZ9tXoUo9w47FfLzHw_h_zD5yTjGz7Z9rV9O99g_x2o9Q0-wzV0YtQjZ5e0QG7Dq0h8g8_9QG7Dq0h8g8_9QG7Dq0h8g8"} 
-                    alt={bookmark.book.title} 
-                    fill 
-                    className="object-cover" 
-                  />
+                <div className="relative w-32 h-44 rounded-2xl overflow-hidden shadow-sm border border-outline-variant/20 mb-2 group-hover:-translate-y-1 transition-transform bg-surface-container-high flex flex-col justify-end">
+                  {bookmark.book.coverUrl && !bookmark.book.coverUrl.includes("aida-public") ? (
+                    <img 
+                      src={bookmark.book.coverUrl} 
+                      alt={bookmark.book.title} 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col justify-between p-3.5 bg-gradient-to-br from-primary/30 to-primary-container/40 border border-primary/20">
+                      <BookOpen className="w-6 h-6 text-primary" />
+                      <div>
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-primary opacity-80 block">{bookmark.book.category}</span>
+                        <span className="text-xs font-bold text-on-surface line-clamp-3 leading-snug">{bookmark.book.title}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <h4 className="font-title-md text-xs font-bold text-on-surface line-clamp-2 leading-tight group-hover:text-primary transition-colors">
                   {bookmark.book.title}

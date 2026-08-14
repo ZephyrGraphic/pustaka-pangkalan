@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Plus, Bell, Trash2, Edit2, Check, X } from "lucide-react";
 
 interface Announcement {
@@ -186,10 +187,14 @@ export default function AdminAnnouncementsPage() {
       </div>
 
       {/* Modal Form */}
-      {showModal && (
-        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
+      {showModal && typeof document !== "undefined" && createPortal(
+        <div 
+          className="fixed inset-0 z-[999999] bg-black/75 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in"
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, width: "100vw", height: "100vh" }}
+          onClick={() => setShowModal(false)}
+        >
           <div 
-            className="relative w-full max-w-lg min-w-[300px] sm:min-w-[420px] bg-surface-container rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
+            className="relative w-full max-w-lg bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
@@ -199,6 +204,7 @@ export default function AdminAnnouncementsPage() {
               <button
                 onClick={() => setShowModal(false)}
                 className="p-1.5 rounded-full text-on-surface-variant hover:text-on-surface"
+                aria-label="Tutup"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -214,12 +220,12 @@ export default function AdminAnnouncementsPage() {
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Contoh: Sosialisasi Pupuk Organik Cair"
+                  placeholder="Misal: Pembagian Bibit Padi Unggul..."
                   className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1.5">
                     Kategori
@@ -230,31 +236,29 @@ export default function AdminAnnouncementsPage() {
                     className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
                   >
                     <option value="Warta Desa">Warta Desa</option>
+                    <option value="Kegiatan">Kegiatan</option>
                     <option value="Pertanian">Pertanian</option>
-                    <option value="Perpustakaan">Perpustakaan</option>
-                    <option value="Ekonomi">Ekonomi UMKM</option>
-                    <option value="Kesehatan">Kesehatan</option>
+                    <option value="Bansos & Layanan">Bansos & Layanan</option>
+                    <option value="Umum">Umum</option>
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1.5">
-                    Status Tampil
+                <div className="flex flex-col justify-end">
+                  <label className="flex items-center gap-2 p-3 bg-surface-container-lowest border border-outline-variant/30 rounded-xl cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={active}
+                      onChange={(e) => setActive(e.target.checked)}
+                      className="w-4 h-4 accent-primary rounded"
+                    />
+                    <span className="text-xs font-medium text-on-surface">Publikasikan</span>
                   </label>
-                  <select
-                    value={active ? "true" : "false"}
-                    onChange={(e) => setActive(e.target.value === "true")}
-                    className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary"
-                  >
-                    <option value="true">Aktif (Tampil)</option>
-                    <option value="false">Draf (Disembunyikan)</option>
-                  </select>
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-on-surface-variant uppercase mb-1.5">
-                  Isi Pengumuman / Kabar
+                  Isi Pengumuman
                 </label>
                 <textarea
                   required
@@ -284,7 +288,8 @@ export default function AdminAnnouncementsPage() {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
