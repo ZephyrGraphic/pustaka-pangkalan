@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, WifiOff, Bell, HardDrive, Info, LogOut, ChevronRight, Bookmark, Sparkles, User, ShieldCheck } from "lucide-react";
+import { BookOpen, LogOut, ChevronRight, Bookmark } from "lucide-react";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import AboutModal from "@/components/AboutModal";
 import StorageModal from "@/components/StorageModal";
 import EditProfileModal from "@/components/EditProfileModal";
+import BookCover from "@/components/BookCover";
 
 export default function Profile() {
   const { data: session, status, update } = useSession();
@@ -82,7 +83,7 @@ export default function Profile() {
   const userAddress = profileUser?.address || "Dusun I (Krajan Barat)";
 
   return (
-    <div className="max-w-[560px] mx-auto w-full space-y-6 pb-12 animate-fade-in">
+    <div className="max-w-[580px] mx-auto w-full space-y-6 md:space-y-8 pb-16 animate-fade-in">
       
       {/* Digital Member Card */}
       <section className="animate-fade-in-up">
@@ -106,7 +107,7 @@ export default function Profile() {
           <div className="relative z-10 flex justify-between items-start mb-6">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <BookOpen className="w-5 h-5 text-primary-fixed" />
+                <BookOpen className="w-5 h-5 text-[#caecbf]" />
                 <span className="font-title-md text-base tracking-tight font-bold">Pustaka Pangkalan</span>
               </div>
               <p className="font-label-md text-[10px] uppercase tracking-widest text-white/80">
@@ -126,7 +127,7 @@ export default function Profile() {
           {/* User Avatar & Info Row */}
           <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-18 h-18 rounded-full border-2 border-white/40 p-0.5 bg-white/10 flex-shrink-0 shadow-lg relative overflow-hidden">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full border-2 border-white/40 p-0.5 bg-white/10 shrink-0 shadow-lg relative overflow-hidden">
                 <Image 
                   className="rounded-full object-cover" 
                   src={userAvatar}
@@ -137,7 +138,7 @@ export default function Profile() {
               <div>
                 <h2 className="font-title-md text-lg font-bold leading-tight">{currentUser.name}</h2>
                 <p className="font-mono text-xs text-white/80 tracking-wider mt-0.5">NIK: {userNik}</p>
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex flex-wrap items-center gap-2 mt-2">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 text-white font-label-md text-[10px] uppercase font-bold backdrop-blur-sm border border-white/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-400 mr-1.5 animate-pulse"></span>
                     Warga Aktif
@@ -164,10 +165,10 @@ export default function Profile() {
       </section>
 
       {/* Saved Books */}
-      <section>
-        <div className="flex items-center justify-between mb-3 px-1">
+      <section className="space-y-3">
+        <div className="flex items-center justify-between px-1">
           <h3 className="font-title-md text-base font-bold text-on-surface">Buku Disimpan</h3>
-          <span className="bg-primary-container/30 text-primary font-bold text-xs px-2.5 py-0.5 rounded-full">
+          <span className="bg-primary-container text-on-primary-container font-bold text-xs px-2.5 py-0.5 rounded-full">
             {bookmarks.length} Koleksi
           </span>
         </div>
@@ -181,21 +182,12 @@ export default function Profile() {
             {bookmarks.map((bookmark) => (
               <Link key={bookmark.id} href={`/books/${bookmark.book.id}`} className="flex-shrink-0 w-32 group cursor-pointer">
                 <div className="relative w-32 h-44 rounded-2xl overflow-hidden shadow-sm border border-outline-variant/20 mb-2 group-hover:-translate-y-1 transition-transform bg-surface-container-high flex flex-col justify-end">
-                  {bookmark.book.coverUrl && !bookmark.book.coverUrl.includes("aida-public") ? (
-                    <img 
-                      src={bookmark.book.coverUrl} 
-                      alt={bookmark.book.title} 
-                      className="w-full h-full object-cover" 
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col justify-between p-3.5 bg-gradient-to-br from-primary/30 to-primary-container/40 border border-primary/20">
-                      <BookOpen className="w-6 h-6 text-primary" />
-                      <div>
-                        <span className="text-[10px] uppercase font-bold tracking-wider text-primary opacity-80 block">{bookmark.book.category}</span>
-                        <span className="text-xs font-bold text-on-surface line-clamp-3 leading-snug">{bookmark.book.title}</span>
-                      </div>
-                    </div>
-                  )}
+                  <BookCover
+                    src={bookmark.book.coverUrl}
+                    alt={bookmark.book.title}
+                    title={bookmark.book.title}
+                    category={bookmark.book.category}
+                  />
                 </div>
                 <h4 className="font-title-md text-xs font-bold text-on-surface line-clamp-2 leading-tight group-hover:text-primary transition-colors">
                   {bookmark.book.title}
@@ -204,10 +196,10 @@ export default function Profile() {
             ))}
           </div>
         ) : (
-          <div className="bg-surface-container rounded-3xl p-6 border border-outline-variant/20 text-center shadow-sm">
-            <Bookmark className="w-8 h-8 text-outline-variant mx-auto mb-2" />
+          <div className="bg-surface-container rounded-3xl p-6 border border-outline-variant/20 text-center shadow-sm space-y-2">
+            <Bookmark className="w-8 h-8 text-outline-variant mx-auto mb-1" />
             <p className="font-body-md text-xs text-on-surface-variant">Belum ada buku yang disimpan ke rak.</p>
-            <Link href="/explore" className="inline-block mt-3 text-primary font-title-md text-xs font-bold hover:underline">
+            <Link href="/explore" className="inline-block text-primary font-title-md text-xs font-bold hover:underline">
               Jelajahi Katalog Buku
             </Link>
           </div>

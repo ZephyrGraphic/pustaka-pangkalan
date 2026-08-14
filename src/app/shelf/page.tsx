@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Book, Clock, CloudDownload, Bookmark, ArrowRight, BookOpen, AlertCircle } from "lucide-react";
-import Image from "next/image";
+import { Book, Clock, CloudDownload, Bookmark, ArrowRight, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import BookCover from "@/components/BookCover";
 
 type ShelfTab = "reading" | "offline" | "bookmarks";
 
@@ -37,31 +37,31 @@ export default function ShelfPage() {
   const progressPercent = Math.min(100, Math.round((stats.totalRead / monthlyGoal) * 100));
 
   return (
-    <div className="w-full space-y-6 animate-fade-in">
+    <div className="w-full space-y-6 md:space-y-8 animate-fade-in pb-12">
       
       {/* Header Stats Card */}
-      <section className="bg-surface rounded-2xl border border-outline-variant/20 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+      <section className="bg-surface-container rounded-3xl border border-outline-variant/20 shadow-sm p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
         <div className="z-10 flex flex-col gap-2 text-center md:text-left">
           <span className="font-label-md text-xs uppercase tracking-widest text-primary font-bold">
             Pustaka Pribadi
           </span>
-          <h1 className="font-headline-lg-mobile md:font-headline-lg text-primary font-bold">
+          <h1 className="font-headline-lg-mobile md:font-headline-lg text-2xl md:text-3xl font-bold text-on-surface">
             Rak Buku Saya
           </h1>
-          <p className="font-body-md text-sm text-on-surface-variant max-w-md">
-            Pantau progres membaca, simpanan favorit, dan buku yang siap dibaca tanpa jaringan internet.
+          <p className="font-body-md text-xs sm:text-sm text-on-surface-variant max-w-md">
+            Pantau progres membaca, simpanan favorit, dan buku yang siap dibaca tanpa jaringan internet di Desa Pangkalan.
           </p>
           
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-2">
-            <div className="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl text-xs font-medium text-on-surface">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-2">
+            <div className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/20 px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface shadow-sm">
               <Book className="text-primary w-4 h-4" />
               <span>{stats.totalRead} Buku Dibaca</span>
             </div>
-            <div className="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl text-xs font-medium text-on-surface">
+            <div className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/20 px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface shadow-sm">
               <Clock className="text-primary w-4 h-4" />
               <span>{stats.totalHours} Jam Membaca</span>
             </div>
-            <div className="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl text-xs font-medium text-on-surface">
+            <div className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/20 px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface shadow-sm">
               <CloudDownload className="text-primary w-4 h-4" />
               <span>{stats.offlineCount} Buku Offline</span>
             </div>
@@ -95,7 +95,7 @@ export default function ShelfPage() {
         <div className="flex overflow-x-auto hide-scroll gap-2">
           <button 
             onClick={() => setActiveTab("reading")}
-            className={`py-3 px-5 border-b-2 font-title-md text-sm transition-all whitespace-nowrap ${
+            className={`py-3 px-5 border-b-2 font-title-md text-xs sm:text-sm transition-all whitespace-nowrap ${
               activeTab === "reading"
                 ? "border-primary text-primary font-bold"
                 : "border-transparent text-on-surface-variant hover:text-primary"
@@ -105,7 +105,7 @@ export default function ShelfPage() {
           </button>
           <button 
             onClick={() => setActiveTab("offline")}
-            className={`py-3 px-5 border-b-2 font-title-md text-sm transition-all whitespace-nowrap ${
+            className={`py-3 px-5 border-b-2 font-title-md text-xs sm:text-sm transition-all whitespace-nowrap ${
               activeTab === "offline"
                 ? "border-primary text-primary font-bold"
                 : "border-transparent text-on-surface-variant hover:text-primary"
@@ -115,7 +115,7 @@ export default function ShelfPage() {
           </button>
           <button 
             onClick={() => setActiveTab("bookmarks")}
-            className={`py-3 px-5 border-b-2 font-title-md text-sm transition-all whitespace-nowrap ${
+            className={`py-3 px-5 border-b-2 font-title-md text-xs sm:text-sm transition-all whitespace-nowrap ${
               activeTab === "bookmarks"
                 ? "border-primary text-primary font-bold"
                 : "border-transparent text-on-surface-variant hover:text-primary"
@@ -138,13 +138,13 @@ export default function ShelfPage() {
           {activeTab === "reading" && (
             <>
               {readingList.length === 0 ? (
-                <div className="bg-surface-container rounded-2xl p-10 text-center border border-outline-variant/20">
-                  <BookOpen className="w-10 h-10 text-outline-variant mx-auto mb-3" />
+                <div className="bg-surface-container rounded-3xl p-10 text-center border border-outline-variant/20 space-y-3">
+                  <BookOpen className="w-10 h-10 text-outline-variant mx-auto mb-2" />
                   <h3 className="font-title-md text-base font-bold text-on-surface">Belum ada buku yang sedang dibaca</h3>
-                  <p className="font-body-md text-sm text-on-surface-variant mt-1 mb-4">
-                    Jelajahi katalog dan pilih buku untuk mulai membaca.
+                  <p className="font-body-md text-xs text-on-surface-variant max-w-sm mx-auto">
+                    Jelajahi katalog dan pilih buku untuk mulai membaca artikel atau modul belajar.
                   </p>
-                  <Link href="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl font-title-md text-sm hover:bg-primary/90 transition-colors shadow-sm">
+                  <Link href="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl font-title-md text-xs font-bold hover:bg-primary/90 transition-colors shadow-sm">
                     <span>Jelajahi Katalog</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -158,13 +158,13 @@ export default function ShelfPage() {
                     const nextChapter = item.book?.chapters?.[currentPage - 1] || item.book?.chapters?.[0];
 
                     return (
-                      <div key={item.id} className="bg-surface rounded-2xl border border-outline-variant/20 p-4 flex gap-4 items-center shadow-sm hover:shadow-md transition-all">
-                        <Link href={`/books/${item.book.id}`} className="relative w-20 h-28 rounded-xl overflow-hidden shrink-0 shadow-sm border border-outline-variant/20">
-                          <Image
-                            src={item.book.coverUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuAGVw_j51tG8zPZ9tXoUo9w47FfLzHw_h_zD5yTjGz7Z9rV9O99g_x2o9Q0-wzV0YtQjZ5e0QG7Dq0h8g8_9QG7Dq0h8g8_9QG7Dq0h8g8"}
-                            alt={item.book.title}
-                            fill
-                            className="object-cover"
+                      <div key={item.id} className="bg-surface-container rounded-3xl border border-outline-variant/20 p-4 sm:p-5 flex gap-4 items-center shadow-sm hover:shadow-md transition-all">
+                        <Link href={`/books/${item.book.id}`} className="relative w-20 h-28 rounded-2xl overflow-hidden shrink-0 shadow-sm border border-outline-variant/20 block">
+                          <BookCover 
+                            src={item.book.coverUrl} 
+                            alt={item.book.title} 
+                            title={item.book.title} 
+                            category={item.book.category} 
                           />
                         </Link>
                         <div className="flex-1 flex flex-col justify-between h-full py-0.5">
@@ -196,7 +196,7 @@ export default function ShelfPage() {
                             {nextChapter ? (
                               <Link 
                                 href={`/read/${nextChapter.id}`} 
-                                className="px-4 py-1.5 bg-primary text-on-primary rounded-xl text-xs font-semibold hover:bg-primary/90 transition-colors shadow-sm"
+                                className="px-4 py-1.5 bg-primary text-on-primary rounded-xl text-xs font-bold hover:bg-primary/90 transition-colors shadow-sm"
                               >
                                 Lanjutkan
                               </Link>
@@ -220,22 +220,22 @@ export default function ShelfPage() {
 
           {/* 2. Tersimpan Offline Tab */}
           {activeTab === "offline" && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {offlineBooks.map((book: any) => (
                 <Link key={book.id} href={`/books/${book.id}`} className="group">
-                  <div className="bg-surface rounded-2xl border border-outline-variant/20 overflow-hidden shadow-sm hover:-translate-y-1 transition-transform p-3 flex flex-col h-full">
-                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden mb-2 bg-surface-container">
-                      <Image
-                        src={book.coverUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuD6hj057i0fwYl3EGb2BLnSblxWu4ZG3GsRrxqr6Vr6AhTp_qTyjmgo4imyp2z_DlHCQUxOw3kRSzSalRSjHt9yL7jj1a8A0krkXafj7hBbFyG73tJCKfSh91Wgg2eU3kbxcH6GTtrNZchgmp3T7Bm0cjTS0ZmazTA19cc40-7t-5Y_CcS2cczY3vbgusmiAcUEEADU4WJdPQv6Wpw0laChMTzX2XnevXn-DdfunR7Mjn-r25Q5WGPC"}
-                        alt={book.title}
-                        fill
-                        className="object-cover"
+                  <div className="bg-surface-container rounded-3xl border border-outline-variant/20 overflow-hidden shadow-sm hover:-translate-y-1.5 transition-all p-3 flex flex-col h-full">
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-2.5">
+                      <BookCover 
+                        src={book.coverUrl} 
+                        alt={book.title} 
+                        title={book.title} 
+                        category={book.category} 
                       />
                       <div className="absolute top-2 right-2 bg-primary text-on-primary rounded-full p-1 shadow-sm">
                         <CloudDownload className="w-3.5 h-3.5" />
                       </div>
                     </div>
-                    <h4 className="font-title-md text-xs font-bold text-on-surface line-clamp-2 group-hover:text-primary transition-colors">
+                    <h4 className="font-title-md text-xs sm:text-sm font-bold text-on-surface line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                       {book.title}
                     </h4>
                     <p className="font-label-md text-[11px] text-on-surface-variant mt-1 line-clamp-1">
@@ -251,31 +251,31 @@ export default function ShelfPage() {
           {activeTab === "bookmarks" && (
             <>
               {bookmarks.length === 0 ? (
-                <div className="bg-surface-container rounded-2xl p-10 text-center border border-outline-variant/20">
-                  <Bookmark className="w-10 h-10 text-outline-variant mx-auto mb-3" />
+                <div className="bg-surface-container rounded-3xl p-10 text-center border border-outline-variant/20 space-y-3">
+                  <Bookmark className="w-10 h-10 text-outline-variant mx-auto mb-2" />
                   <h3 className="font-title-md text-base font-bold text-on-surface">Belum ada buku favorit</h3>
-                  <p className="font-body-md text-sm text-on-surface-variant mt-1 mb-4">
+                  <p className="font-body-md text-xs text-on-surface-variant max-w-sm mx-auto">
                     Tandai buku favorit Anda dengan tombol bookmark di halaman detail buku.
                   </p>
-                  <Link href="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl font-title-md text-sm hover:bg-primary/90 transition-colors shadow-sm">
+                  <Link href="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl font-title-md text-xs font-bold hover:bg-primary/90 transition-colors shadow-sm">
                     <span>Jelajahi Buku</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {bookmarks.map((b: any) => (
                     <Link key={b.id} href={`/books/${b.book.id}`} className="group">
-                      <div className="bg-surface rounded-2xl border border-outline-variant/20 overflow-hidden shadow-sm hover:-translate-y-1 transition-transform p-3 flex flex-col h-full">
-                        <div className="relative aspect-[3/4] rounded-xl overflow-hidden mb-2 bg-surface-container">
-                          <Image
-                            src={b.book.coverUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuAGVw_j51tG8zPZ9tXoUo9w47FfLzHw_h_zD5yTjGz7Z9rV9O99g_x2o9Q0-wzV0YtQjZ5e0QG7Dq0h8g8_9QG7Dq0h8g8_9QG7Dq0h8g8"}
-                            alt={b.book.title}
-                            fill
-                            className="object-cover"
+                      <div className="bg-surface-container rounded-3xl border border-outline-variant/20 overflow-hidden shadow-sm hover:-translate-y-1.5 transition-all p-3 flex flex-col h-full">
+                        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-2.5">
+                          <BookCover 
+                            src={b.book.coverUrl} 
+                            alt={b.book.title} 
+                            title={b.book.title} 
+                            category={b.book.category} 
                           />
                         </div>
-                        <h4 className="font-title-md text-xs font-bold text-on-surface line-clamp-2 group-hover:text-primary transition-colors">
+                        <h4 className="font-title-md text-xs sm:text-sm font-bold text-on-surface line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                           {b.book.title}
                         </h4>
                         <p className="font-label-md text-[11px] text-on-surface-variant mt-1 line-clamp-1">
