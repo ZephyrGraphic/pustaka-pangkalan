@@ -50,7 +50,8 @@ export default function StorageModal({ triggerText = "Kelola Penyimpanan Offline
       onClick={() => setIsOpen(false)}
     >
       <div 
-        className="relative w-full max-w-md bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
+        className="relative bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
+        style={{ width: "min(92vw, 480px)", maxWidth: "480px", minWidth: "300px" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3 mb-5">

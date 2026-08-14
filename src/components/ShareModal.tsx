@@ -50,7 +50,8 @@ export default function ShareModal({ bookTitle, bookAuthor, bookId }: ShareModal
       onClick={() => setIsOpen(false)}
     >
       <div 
-        className="relative w-full max-w-sm bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center animate-fade-in-up my-auto"
+        className="relative bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center animate-fade-in-up my-auto"
+        style={{ width: "min(92vw, 420px)", maxWidth: "420px", minWidth: "300px" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full flex justify-between items-center mb-4">

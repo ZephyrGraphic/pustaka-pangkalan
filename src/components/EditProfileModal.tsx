@@ -161,7 +161,8 @@ export default function EditProfileModal({
       onClick={() => setIsOpen(false)}
     >
       <div 
-        className="relative w-full max-w-lg bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto my-auto animate-fade-in-up"
+        className="relative bg-surface-container text-on-surface rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto my-auto animate-fade-in-up"
+        style={{ width: "min(92vw, 520px)", maxWidth: "520px", minWidth: "300px" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3 mb-6">
