@@ -14,6 +14,7 @@ export async function GET(
           select: {
             title: true,
             id: true,
+            category: true,
             chapters: {
               select: { id: true, order: true, title: true },
               orderBy: { order: 'asc' }

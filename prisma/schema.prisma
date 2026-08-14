@@ -21,6 +21,8 @@ model User {
   phone             String?
   address           String?
   occupation        String?
+  points            Int      @default(0)
+  badge             String   @default("Warga Pembelajar")
   isProfileComplete Boolean  @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt

@@ -18,6 +18,7 @@ import {
   Bookmark
 } from "lucide-react";
 import Link from "next/link";
+import ChapterQuiz from "@/components/ChapterQuiz";
 
 interface ChapterMeta {
   id: string;
@@ -33,6 +34,7 @@ interface ChapterRead {
   book: {
     id: string;
     title: string;
+    category?: string;
     chapters: ChapterMeta[];
   };
 }
@@ -400,6 +402,13 @@ export default function ReadChapterPage() {
             );
           })}
         </div>
+
+        {/* Interactive Comprehension Quiz & Gamification Reward */}
+        <ChapterQuiz
+          chapterId={chapter.id}
+          chapterTitle={chapter.title}
+          category={chapter.book.category}
+        />
       </div>
 
       {/* Bottom Navigation */}

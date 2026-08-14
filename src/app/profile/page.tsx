@@ -140,12 +140,14 @@ export default function Profile() {
                 <h2 className="font-title-md text-lg font-bold leading-tight">{currentUser.name}</h2>
                 <p className="font-mono text-xs text-white/80 tracking-wider mt-0.5">NIK: {userNik}</p>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 text-white font-label-md text-[10px] uppercase font-bold backdrop-blur-sm border border-white/20">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 mr-1.5 animate-pulse"></span>
-                    Warga Aktif
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-amber-400/25 text-amber-300 font-label-md text-[10px] uppercase font-bold backdrop-blur-sm border border-amber-400/40">
+                    ⭐ {currentUser.points || 0} Poin Literasi
                   </span>
-                  <span className="text-[11px] text-white/70">{userAddress}</span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 text-white font-label-md text-[10px] uppercase font-bold backdrop-blur-sm border border-white/20">
+                    🏆 {currentUser.badge || "Warga Pembelajar"}
+                  </span>
                 </div>
+                <p className="text-[11px] text-white/70 mt-1.5">{userAddress}</p>
               </div>
             </div>
 

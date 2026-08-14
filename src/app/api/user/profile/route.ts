@@ -24,6 +24,8 @@ export async function GET() {
         phone: true,
         address: true,
         occupation: true,
+        points: true,
+        badge: true,
         isProfileComplete: true,
         createdAt: true,
         _count: {
