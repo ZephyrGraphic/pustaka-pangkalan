@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     const reviews = await prisma.review.findMany({
       where: { bookId },
       include: {
-        user: { select: { name: true } },
+        user: { select: { name: true, image: true } },
       },
       orderBy: { createdAt: "desc" },
     });

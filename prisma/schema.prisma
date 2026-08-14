@@ -12,13 +12,18 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String
+  password          String
+  role              Role     @default(USER)
+  image             String?
+  phone             String?
+  address           String?
+  occupation        String?
+  isProfileComplete Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   
   bookmarks Bookmark[]
   readers   ReadingProgress[]

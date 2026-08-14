@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HardDrive, X, Trash2, CheckCircle2, CloudDownload, RefreshCw } from "lucide-react";
+import { HardDrive, X, Trash2, CheckCircle2, CloudDownload, ChevronRight } from "lucide-react";
 
 export default function StorageModal({ triggerText = "Kelola Penyimpanan Offline", className = "" }: { triggerText?: string; className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +10,6 @@ export default function StorageModal({ triggerText = "Kelola Penyimpanan Offline
   const [cleared, setCleared] = useState(false);
 
   useEffect(() => {
-    // Estimate Cache Storage API if available
     if (typeof window !== "undefined" && "storage" in navigator && "estimate" in navigator.storage) {
       navigator.storage.estimate().then(({ usage }) => {
         if (usage) {
@@ -43,52 +42,66 @@ export default function StorageModal({ triggerText = "Kelola Penyimpanan Offline
       <button 
         type="button"
         onClick={() => setIsOpen(true)}
-        className={className || "flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-sm"}
+        className={className || "w-full flex items-center justify-between p-4 rounded-xl hover:bg-surface-container/50 transition-colors text-left group"}
       >
-        <HardDrive className="w-5 h-5" />
-        <span>{triggerText}</span>
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:bg-primary/10 group-hover:text-primary transition-colors shrink-0">
+            <HardDrive className="w-5 h-5" />
+          </div>
+          <span className="font-body-lg text-body-lg text-on-surface font-medium">{triggerText}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="font-label-md text-label-md text-primary bg-primary-container/20 px-2.5 py-1 rounded-full text-xs font-bold">{cacheSize}</span>
+          <ChevronRight className="w-5 h-5 text-on-surface-variant" />
+        </div>
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-surface-container w-full max-w-md rounded-3xl p-6 shadow-2xl border border-outline-variant/30 animate-fade-in-up">
-            
-            <div className="flex items-start justify-between mb-4">
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
+          <div 
+            className="relative w-full max-w-md min-w-[300px] sm:min-w-[380px] bg-surface-container border border-outline-variant/30 rounded-3xl p-6 sm:p-8 shadow-2xl animate-fade-in-up my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3 mb-5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center">
-                  <HardDrive className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                  <HardDrive className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-headline-lg-mobile text-base font-bold text-on-surface">
+                  <h3 className="font-title-md text-lg font-bold text-on-surface">
                     Penyimpanan Offline
                   </h3>
-                  <p className="font-label-md text-xs text-on-surface-variant">Cache PWA & Data Buku</p>
+                  <p className="font-label-md text-xs text-on-surface-variant">Cache PWA & Data Bacaan</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="p-1 rounded-full text-on-surface-variant hover:text-on-surface">
+              <button 
+                onClick={() => setIsOpen(false)} 
+                className="p-2 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors"
+                aria-label="Tutup"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 my-4">
-              <div className="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/20 flex items-center justify-between">
+            <div className="space-y-4 my-5">
+              <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/20 flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Total Ruang Digunakan</p>
-                  <p className="text-2xl font-bold text-on-surface mt-1">{cacheSize}</p>
+                  <p className="text-[11px] text-on-surface-variant uppercase tracking-wider font-bold">Total Ruang Digunakan</p>
+                  <p className="text-3xl font-bold text-on-surface mt-1">{cacheSize}</p>
                 </div>
-                <div className="p-3 bg-primary-container/20 text-primary rounded-xl">
-                  <CloudDownload className="w-6 h-6" />
+                <div className="p-3.5 bg-primary-container/20 text-primary rounded-2xl">
+                  <CloudDownload className="w-7 h-7" />
                 </div>
               </div>
 
               <p className="text-xs text-on-surface-variant leading-relaxed">
-                Data offline menyimpan halaman buku, gambar sampul, dan modul yang telah Anda buka agar dapat dibaca kembali saat tidak ada jaringan internet.
+                Data offline menyimpan halaman buku, modul, dan sampul yang telah Anda buka agar dapat dibaca kembali saat tidak ada jaringan internet di desa.
               </p>
 
               {cleared && (
-                <div className="p-3 bg-primary-container/30 text-primary rounded-xl text-xs flex items-center gap-2 font-medium animate-fade-in">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Cache berhasil dibersihkan!</span>
+                <div className="p-3.5 bg-primary-container/30 text-primary rounded-xl text-xs flex items-center gap-2 font-medium animate-fade-in">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>Cache penyimpanan berhasil dibersihkan!</span>
                 </div>
               )}
             </div>
@@ -98,15 +111,15 @@ export default function StorageModal({ triggerText = "Kelola Penyimpanan Offline
                 type="button"
                 onClick={handleClearCache}
                 disabled={clearing}
-                className="flex-1 py-3 bg-error-container/30 hover:bg-error-container/50 text-error rounded-xl font-title-md text-sm transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-3.5 px-4 bg-error-container/30 hover:bg-error-container/50 text-error rounded-xl font-title-md text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 border border-error/20"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-4 h-4 shrink-0" />
                 <span>{clearing ? "Membersihkan..." : "Bersihkan Cache"}</span>
               </button>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="flex-1 py-3 bg-primary text-on-primary rounded-xl font-title-md text-sm hover:bg-primary/90 transition-colors"
+                className="flex-1 py-3.5 px-4 bg-primary text-on-primary rounded-xl font-title-md text-xs sm:text-sm hover:bg-primary/90 transition-colors shadow-md shadow-primary/20 text-center font-bold"
               >
                 Selesai
               </button>

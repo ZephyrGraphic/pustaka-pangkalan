@@ -189,8 +189,12 @@ export default function BookReviews({ bookId }: { bookId: string }) {
             <div key={review.id} className="bg-surface-container-low rounded-2xl p-4 border border-outline-variant/20 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container font-bold text-xs flex items-center justify-center">
-                    {initials}
+                  <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container font-bold text-xs flex items-center justify-center relative overflow-hidden shrink-0 border border-outline-variant/30">
+                    {(review.user as any).image ? (
+                      <img src={(review.user as any).image} alt={review.user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      initials
+                    )}
                   </div>
                   <div>
                     <p className="font-title-md text-sm font-semibold text-on-surface">{review.user.name}</p>

@@ -56,7 +56,7 @@ export default function TopAppBar() {
             {session?.user ? (
               <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-variant/30 flex items-center justify-center relative border border-outline-variant/20 hover:border-primary transition-colors">
                 <Image 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPnlcvsNlF59sn0UvCKdq_PIG0wupiF1Ut6zdxk127qawRRDqFYkPYBwKB_DEzr28_c7343ueh6bUErMf5jMllZzjeOjBmHGSi0956GhfpC6Dq5914WGFKCh-vYvhSdvupj1mbNz2wuODz8h3_KpRZDtbUNIup5keBSV6V54TrPbBWkWK0WOC2DW9Dv3ukDXBGPpgKeuHjZVSwianbZnHWmrCOtOfQ_QqHo7k9oWyi0MCNqphM7o35" 
+                  src={session.user.image || "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80"} 
                   alt={session.user.name || "User"}
                   fill
                   className="object-cover"

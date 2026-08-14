@@ -50,8 +50,11 @@ export default function ShareModal({ bookTitle, bookAuthor, bookId }: ShareModal
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-surface-container w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center animate-fade-in-up">
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+          <div 
+            className="relative w-full max-w-sm min-w-[300px] sm:min-w-[360px] bg-surface-container rounded-3xl p-6 sm:p-7 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center animate-fade-in-up my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="w-full flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                 <QrCode className="w-5 h-5 text-primary" />

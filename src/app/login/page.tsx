@@ -46,43 +46,24 @@ export default function Login() {
     }
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     setRegError("");
-    setRegSuccess("");
-    setRegLoading(true);
 
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: regName,
-          nik: regNik,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setRegError(data.message || "Gagal mendaftar");
-      } else {
-        setRegSuccess("Berhasil mendaftar! PIN/Password Anda adalah NIK Anda.");
-        setTimeout(() => {
-          setTab("login");
-          setLoginNik(regNik);
-          setRegName("");
-          setRegNik("");
-          setRegSuccess("");
-        }, 3000);
-      }
-    } catch (err) {
-      setRegError("Terjadi kesalahan jaringan.");
-    } finally {
-      setRegLoading(false);
+    if (!regName.trim() || !regNik.trim()) {
+      setRegError("Nama Lengkap dan NIK wajib diisi.");
+      return;
     }
+
+    if (regNik.trim().length !== 16 || !/^\d+$/.test(regNik.trim())) {
+      setRegError("NIK harus terdiri dari 16 digit angka.");
+      return;
+    }
+
+    // Redirect to onboarding steps: Set PIN -> Verify PIN -> Data Diri -> Digital Card
+    router.push(
+      `/onboarding?name=${encodeURIComponent(regName.trim())}&nik=${encodeURIComponent(regNik.trim())}`
+    );
   };
 
   return (

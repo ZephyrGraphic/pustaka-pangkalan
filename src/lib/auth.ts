@@ -43,6 +43,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           email: user.email, // NIK
           role: user.role,
+          image: user.image,
         };
       },
     }),
@@ -55,6 +56,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
+        token.picture = (user as any).image;
       }
       return token;
     },
@@ -62,7 +64,7 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role;
-        // Kita juga bisa memasukkan NIK (email)
+        session.user.image = token.picture as string | null;
       }
       return session;
     },

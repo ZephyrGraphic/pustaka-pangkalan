@@ -86,8 +86,11 @@ export default function AnnouncementCarousel() {
 
       {/* Detail Modal */}
       {selectedAnnouncement && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-surface-container w-full max-w-lg rounded-3xl p-6 shadow-2xl border border-outline-variant/30 animate-fade-in-up">
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
+          <div 
+            className="relative w-full max-w-lg min-w-[300px] sm:min-w-[420px] bg-surface-container rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 animate-fade-in-up my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-start justify-between gap-3 mb-4">
               <div>
                 <span className="font-label-md text-xs uppercase font-bold px-2.5 py-1 rounded-md bg-primary-container/30 text-primary">

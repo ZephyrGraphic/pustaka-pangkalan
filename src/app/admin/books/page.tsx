@@ -281,8 +281,11 @@ export default function AdminBooksPage() {
 
       {/* Edit Book Modal */}
       {editingBook && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-surface-container w-full max-w-lg rounded-3xl p-6 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto animate-fade-in-up">
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
+          <div 
+            className="relative w-full max-w-lg min-w-[300px] sm:min-w-[420px] bg-surface-container rounded-3xl p-6 sm:p-8 shadow-2xl border border-outline-variant/30 max-h-[90vh] overflow-y-auto animate-fade-in-up my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-title-md text-lg text-on-surface font-bold">Edit Informasi Buku</h3>
               <button onClick={() => setEditingBook(null)} className="p-1 rounded-full text-on-surface-variant hover:text-on-surface">
