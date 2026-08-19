@@ -19,6 +19,7 @@ export async function GET(
             id: true,
             title: true,
             order: true,
+            content: true,
           },
           orderBy: {
             order: 'asc'
