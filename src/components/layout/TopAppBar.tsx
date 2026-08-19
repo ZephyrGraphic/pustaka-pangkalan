@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Signal, Home, BookOpen, Library, ShieldCheck } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { usePathname } from "next/navigation";
@@ -11,9 +12,42 @@ export default function TopAppBar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   
+  const [userAvatar, setUserAvatar] = useState<string | null>(
+    session?.user?.image || null
+  );
+
+  useEffect(() => {
+    if (session?.user?.image) {
+      setUserAvatar(session.user.image);
+    }
+
+    // Always fetch latest profile data from database to ensure 100% sync
+    if (session?.user) {
+      fetch("/api/user/profile")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user?.image) {
+            setUserAvatar(data.user.image);
+          }
+        })
+        .catch(() => {});
+    }
+
+    // Listen to real-time profile update broadcast
+    const handleProfileUpdate = (e: any) => {
+      if (e.detail?.image) {
+        setUserAvatar(e.detail.image);
+      }
+    };
+
+    window.addEventListener("user-profile-updated", handleProfileUpdate);
+    return () => window.removeEventListener("user-profile-updated", handleProfileUpdate);
+  }, [session]);
+
   if (pathname === "/login") return null;
 
   const isAdmin = (session?.user as any)?.role === "ADMIN";
+  const defaultAvatar = "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80";
 
   const navItems = [
     { path: "/", icon: Home, label: "Beranda" },
@@ -70,7 +104,7 @@ export default function TopAppBar() {
             {session?.user ? (
               <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-variant/30 flex items-center justify-center relative border border-outline-variant/20 hover:border-primary transition-colors">
                 <Image 
-                  src={session.user.image || "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80"} 
+                  src={userAvatar || defaultAvatar} 
                   alt={session.user.name || "User"}
                   fill
                   className="object-cover"

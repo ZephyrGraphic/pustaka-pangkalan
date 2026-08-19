@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useSession } from "next-auth/react";
 import { 
   User, 
   X, 
@@ -58,6 +59,7 @@ export default function EditProfileModal({
   currentOccupation = "",
   onProfileUpdated,
 }: EditProfileModalProps) {
+  const { update } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -143,6 +145,15 @@ export default function EditProfileModal({
       }
 
       onProfileUpdated(data.user);
+      
+      // Update NextAuth session and broadcast global event
+      if (update) {
+        update({ image: data.user.image, name: data.user.name });
+      }
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("user-profile-updated", { detail: data.user }));
+      }
+
       setIsOpen(false);
     } catch (err) {
       console.error(err);
