@@ -249,11 +249,11 @@ export default function ReadChapterPage() {
   const getThemeClasses = () => {
     switch (readerTheme) {
       case "sepia":
-        return "bg-[#fbf0d9] text-[#433422] border-[#ecdcc2]";
+        return "bg-[#fbf0d9] text-[#332415] border-[#ecdcc2]";
       case "dark":
-        return "bg-[#1d211c] text-[#dfe4dc] border-[#323631]";
+        return "bg-[#171e17] text-[#f5f7f3] border-[#2c372b]";
       case "oled":
-        return "bg-[#000000] text-[#e0e0e0] border-[#222222]";
+        return "bg-[#000000] text-[#ffffff] border-[#282828]";
       default:
         return "bg-surface-container-lowest text-on-surface border-outline-variant/30";
     }

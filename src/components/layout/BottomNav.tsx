@@ -29,8 +29,8 @@ export default function BottomNav() {
                 href={item.path}
                 className={`flex flex-col items-center justify-center px-5 py-2 rounded-full active:scale-90 transition-all duration-300 ease-out group ${
                   isActive
-                    ? "bg-primary-container text-on-primary-container"
-                    : "text-secondary dark:text-secondary-fixed-dim hover:bg-secondary-container/30"
+                    ? "bg-primary-container text-on-primary-container font-bold"
+                    : "text-on-surface-variant hover:text-primary hover:bg-surface-container-high"
                 }`}
               >
                 <Icon
