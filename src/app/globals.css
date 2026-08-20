@@ -1,53 +1,53 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-@theme inline {
-  --color-surface: #f6fbf2;
-  --color-surface-dim: #d7dbd3;
-  --color-surface-bright: #f6fbf2;
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f0f5ed;
-  --color-surface-container: #ebefe7;
-  --color-surface-container-high: #e5eae1;
-  --color-surface-container-highest: #dfe4dc;
-  --color-on-surface: #181d18;
-  --color-on-surface-variant: #434840;
-  --color-inverse-surface: #2d322c;
-  --color-inverse-on-surface: #eef2ea;
-  --color-outline: #73796f;
-  --color-outline-variant: #c3c8bd;
-  --color-surface-tint: #486643;
-  --color-primary: #244021;
-  --color-on-primary: #ffffff;
-  --color-primary-container: #3b5836;
-  --color-on-primary-container: #abcda2;
-  --color-inverse-primary: #aed0a5;
-  --color-secondary: #596059;
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: #dbe2d8;
-  --color-on-secondary-container: #5d645d;
-  --color-tertiary: #383b3a;
-  --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #4f5251;
-  --color-on-tertiary-container: #c2c5c3;
-  --color-error: #ba1a1a;
-  --color-on-error: #ffffff;
-  --color-error-container: #ffdad6;
-  --color-on-error-container: #93000a;
-  --color-primary-fixed: #caecbf;
-  --color-primary-fixed-dim: #aed0a5;
-  --color-on-primary-fixed: #052105;
-  --color-on-primary-fixed-variant: #314e2d;
-  --color-secondary-fixed: #dee4db;
-  --color-secondary-fixed-dim: #c1c8c0;
-  --color-on-secondary-fixed: #171d18;
-  --color-on-secondary-fixed-variant: #424842;
-  --color-tertiary-fixed: #e1e3e1;
-  --color-tertiary-fixed-dim: #c5c7c5;
-  --color-on-tertiary-fixed: #191c1b;
-  --color-on-tertiary-fixed-variant: #444746;
-  --color-background: #f6fbf2;
-  --color-on-background: #181d18;
+@theme {
+  --color-surface: var(--color-surface);
+  --color-surface-dim: var(--color-surface-dim);
+  --color-surface-bright: var(--color-surface-bright);
+  --color-surface-container-lowest: var(--color-surface-container-lowest);
+  --color-surface-container-low: var(--color-surface-container-low);
+  --color-surface-container: var(--color-surface-container);
+  --color-surface-container-high: var(--color-surface-container-high);
+  --color-surface-container-highest: var(--color-surface-container-highest);
+  --color-on-surface: var(--color-on-surface);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-inverse-surface: var(--color-inverse-surface);
+  --color-inverse-on-surface: var(--color-inverse-on-surface);
+  --color-outline: var(--color-outline);
+  --color-outline-variant: var(--color-outline-variant);
+  --color-surface-tint: var(--color-surface-tint);
+  --color-primary: var(--color-primary);
+  --color-on-primary: var(--color-on-primary);
+  --color-primary-container: var(--color-primary-container);
+  --color-on-primary-container: var(--color-on-primary-container);
+  --color-inverse-primary: var(--color-inverse-primary);
+  --color-secondary: var(--color-secondary);
+  --color-on-secondary: var(--color-on-secondary);
+  --color-secondary-container: var(--color-secondary-container);
+  --color-on-secondary-container: var(--color-on-secondary-container);
+  --color-tertiary: var(--color-tertiary);
+  --color-on-tertiary: var(--color-on-tertiary);
+  --color-tertiary-container: var(--color-tertiary-container);
+  --color-on-tertiary-container: var(--color-on-tertiary-container);
+  --color-error: var(--color-error);
+  --color-on-error: var(--color-on-error);
+  --color-error-container: var(--color-error-container);
+  --color-on-error-container: var(--color-on-error-container);
+  --color-primary-fixed: var(--color-primary-fixed);
+  --color-primary-fixed-dim: var(--color-primary-fixed-dim);
+  --color-on-primary-fixed: var(--color-on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--color-on-primary-fixed-variant);
+  --color-secondary-fixed: var(--color-secondary-fixed);
+  --color-secondary-fixed-dim: var(--color-secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--color-on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--color-on-secondary-fixed-variant);
+  --color-tertiary-fixed: var(--color-tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--color-tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--color-on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--color-on-tertiary-fixed-variant);
+  --color-background: var(--color-background);
+  --color-on-background: var(--color-on-background);
   
   --font-plus-jakarta-sans: 'Plus Jakarta Sans', sans-serif;
   --font-sans: var(--font-plus-jakarta-sans);
@@ -122,37 +122,54 @@
   --radius-full: 9999px;
 }
 
-body {
-  -webkit-tap-highlight-color: transparent;
-  background-color: var(--color-background);
-  color: var(--color-on-background);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-*, *::before, *::after {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-  transition-duration: 0.2s;
-  transition-timing-function: ease;
-}
-
-/* Override transitions for elements that should animate differently */
-a, button, input, textarea {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
-  transition-duration: 0.2s;
-  transition-timing-function: ease;
-}
-
-/* Dark mode shadow adjustments */
-.dark [class*="shadow-"] {
-  --tw-shadow-color: rgba(0, 0, 0, 0.3);
-}
-
-.hide-scroll::-webkit-scrollbar {
-  display: none;
-}
-.hide-scroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* Light Theme Variables (Default) */
+:root {
+  --color-surface: #f6fbf2;
+  --color-surface-dim: #d7dbd3;
+  --color-surface-bright: #f6fbf2;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f0f5ed;
+  --color-surface-container: #ebefe7;
+  --color-surface-container-high: #e5eae1;
+  --color-surface-container-highest: #dfe4dc;
+  --color-on-surface: #181d18;
+  --color-on-surface-variant: #434840;
+  --color-inverse-surface: #2d322c;
+  --color-inverse-on-surface: #eef2ea;
+  --color-outline: #73796f;
+  --color-outline-variant: #c3c8bd;
+  --color-surface-tint: #486643;
+  --color-primary: #244021;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #3b5836;
+  --color-on-primary-container: #abcda2;
+  --color-inverse-primary: #aed0a5;
+  --color-secondary: #596059;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #dbe2d8;
+  --color-on-secondary-container: #5d645d;
+  --color-tertiary: #383b3a;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #4f5251;
+  --color-on-tertiary-container: #c2c5c3;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #caecbf;
+  --color-primary-fixed-dim: #aed0a5;
+  --color-on-primary-fixed: #052105;
+  --color-on-primary-fixed-variant: #314e2d;
+  --color-secondary-fixed: #dee4db;
+  --color-secondary-fixed-dim: #c1c8c0;
+  --color-on-secondary-fixed: #171d18;
+  --color-on-secondary-fixed-variant: #424842;
+  --color-tertiary-fixed: #e1e3e1;
+  --color-tertiary-fixed-dim: #c5c7c5;
+  --color-on-tertiary-fixed: #191c1b;
+  --color-on-tertiary-fixed-variant: #444746;
+  --color-background: #f6fbf2;
+  --color-on-background: #181d18;
 }
 
 /* Dark Mode Theme - High Contrast & Crystal Clear Legibility */
@@ -213,6 +230,39 @@ a, button, input, textarea {
   
   --color-background: #0e130e;
   --color-on-background: #f5f8f3;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* Override transitions for elements that should animate differently */
+a, button, input, textarea {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* Dark mode shadow adjustments */
+.dark [class*="shadow-"] {
+  --tw-shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Dark mode inputs and form controls readability enhancements */

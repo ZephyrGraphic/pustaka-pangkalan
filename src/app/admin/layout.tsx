@@ -125,6 +125,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </div>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle className="bg-surface-container-high hover:bg-surface-container-highest text-on-surface shadow-sm border border-outline-variant/20" />
             <Link
               href="/"
               className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary text-on-primary font-bold text-xs shadow-sm hover:scale-105 transition-all"
