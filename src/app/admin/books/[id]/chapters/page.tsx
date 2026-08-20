@@ -11,11 +11,12 @@ import {
   Edit2, 
   BookOpen, 
   AlertCircle, 
-  CheckCircle2, 
   X, 
   Eye,
   FileText
 } from "lucide-react";
+import { useToast } from "@/components/ToastProvider";
+import ConfirmModal from "@/components/ConfirmModal";
 
 interface ChapterItem {
   id: string;
@@ -34,10 +35,9 @@ interface BookDetail {
 
 export default function ChaptersManagementPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: bookId } = use(params);
+  const toast = useToast();
   const [book, setBook] = useState<BookDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   // New Chapter Form State
   const [newTitle, setNewTitle] = useState("");
@@ -50,11 +50,15 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
   const [editContent, setEditContent] = useState("");
   const [updating, setUpdating] = useState(false);
 
+  // Confirm Delete Modal State
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
   const fetchBook = async () => {
     try {
       const res = await fetch(`/api/books/${bookId}`);
       if (!res.ok) {
-        setError("Gagal memuat informasi buku");
+        toast.error("Gagal memuat informasi buku");
         return;
       }
       const data = await res.json();
@@ -62,7 +66,7 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
       setBook(bookObj);
     } catch (err) {
       console.error(err);
-      setError("Terjadi kesalahan saat memuat data buku");
+      toast.error("Terjadi kesalahan saat memuat data buku");
     } finally {
       setLoading(false);
     }
@@ -72,32 +76,34 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
     fetchBook();
   }, [bookId]);
 
-  const handleDelete = async (chapterId: string, chapterTitle: string) => {
-    if (!confirm(`Hapus ${chapterTitle}? Tindakan ini tidak dapat dibatalkan.`)) return;
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
     
     try {
-      const res = await fetch(`/api/admin/chapters/${chapterId}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/chapters/${deleteTarget.id}`, { method: "DELETE" });
       if (res.ok) {
-        setSuccessMsg("Bab berhasil dihapus.");
-        setTimeout(() => setSuccessMsg(""), 3000);
+        toast.success(`Bab "${deleteTarget.title}" berhasil dihapus.`);
+        setDeleteTarget(null);
         fetchBook();
       } else {
-        alert("Gagal menghapus bab.");
+        toast.error("Gagal menghapus bab.");
       }
     } catch (err) {
-      alert("Terjadi kesalahan saat menghapus bab.");
+      toast.error("Terjadi kesalahan saat menghapus bab.");
+    } finally {
+      setDeleting(false);
     }
   };
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim() || !newContent.trim()) {
-      alert("Judul dan isi bacaan bab wajib diisi.");
+      toast.warning("Judul dan isi bacaan bab wajib diisi.");
       return;
     }
 
     setSubmitting(true);
-    setError("");
     
     try {
       const res = await fetch(`/api/admin/chapters`, {
@@ -113,15 +119,14 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
       if (res.ok) {
         setNewTitle("");
         setNewContent("");
-        setSuccessMsg("Bab baru berhasil ditambahkan!");
-        setTimeout(() => setSuccessMsg(""), 3000);
+        toast.success("Bab baru berhasil ditambahkan!");
         fetchBook();
       } else {
         const d = await res.json();
-        setError(d.error || "Gagal menambah bab baru.");
+        toast.error(d.error || "Gagal menambah bab baru.");
       }
     } catch (err) {
-      setError("Terjadi kesalahan jaringan.");
+      toast.error("Terjadi kesalahan jaringan.");
     } finally {
       setSubmitting(false);
     }
@@ -150,14 +155,13 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
 
       if (res.ok) {
         setEditingChapter(null);
-        setSuccessMsg("Perubahan bab berhasil disimpan!");
-        setTimeout(() => setSuccessMsg(""), 3000);
+        toast.success("Perubahan bab berhasil disimpan!");
         fetchBook();
       } else {
-        alert("Gagal memperbarui bab.");
+        toast.error("Gagal memperbarui bab.");
       }
     } catch (err) {
-      alert("Terjadi kesalahan jaringan.");
+      toast.error("Terjadi kesalahan jaringan.");
     } finally {
       setUpdating(false);
     }
@@ -227,21 +231,6 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
         </Link>
       </div>
 
-      {/* Notifications */}
-      {successMsg && (
-        <div className="bg-green-500/15 border border-green-500/30 text-green-800 dark:text-green-200 px-4 py-3 rounded-2xl flex items-center gap-2.5 text-xs sm:text-sm animate-fade-in">
-          <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-          <span>{successMsg}</span>
-        </div>
-      )}
-
-      {error && (
-        <div className="bg-error-container text-on-error-container p-4 rounded-2xl flex items-center gap-3 text-xs sm:text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <p>{error}</p>
-        </div>
-      )}
-
       {/* Chapter List Table */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
@@ -299,7 +288,7 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={() => handleDelete(chapter.id, chapter.title)} 
+                          onClick={() => setDeleteTarget({ id: chapter.id, title: chapter.title })} 
                           className="p-2 rounded-xl bg-surface-container-high hover:bg-error/15 text-on-surface-variant hover:text-error transition-colors"
                           title="Hapus Bab"
                         >
@@ -459,6 +448,19 @@ export default function ChaptersManagementPage({ params }: { params: Promise<{ i
         </div>,
         document.body
       )}
+
+      {/* Custom Confirmation Modal for Deleting Chapter */}
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Hapus Bab Bacaan?"
+        message={`Apakah Anda yakin ingin menghapus "${deleteTarget?.title}"? Tindakan ini akan menghapus materi bacaan bab ini secara permanen.`}
+        confirmLabel="Hapus Bab"
+        cancelLabel="Batal"
+        isDestructive={true}
+        isLoading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

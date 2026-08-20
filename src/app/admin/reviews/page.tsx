@@ -1,18 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MessageSquare, Star, Trash2, Search, ArrowUpDown, X, BookOpen, User, AlertCircle, CheckCircle2 } from "lucide-react";
+import { MessageSquare, Star, Trash2, Search, X, BookOpen, User, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import BookCover from "@/components/BookCover";
+import { useToast } from "@/components/ToastProvider";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function AdminReviewsPage() {
+  const toast = useToast();
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterRating, setFilterRating] = useState<string>("ALL");
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Confirm delete modal state
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; bookTitle: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchReviews = async () => {
     setLoading(true);
@@ -25,9 +30,12 @@ export default function AdminReviewsPage() {
       const data = await res.json();
       if (res.ok) {
         setReviews(data.reviews || []);
+      } else {
+        toast.error("Gagal memuat daftar ulasan");
       }
     } catch (err) {
       console.error(err);
+      toast.error("Gagal memuat ulasan");
     } finally {
       setLoading(false);
     }
@@ -37,29 +45,27 @@ export default function AdminReviewsPage() {
     fetchReviews();
   }, [filterRating, search]);
 
-  const handleDeleteReview = async (reviewId: string, bookTitle: string) => {
-    if (!confirm(`Hapus ulasan ini untuk buku "${bookTitle}"? Tindakan ini akan memperbarui rata-rata rating buku secara otomatis.`)) {
-      return;
-    }
+  const confirmDeleteReview = async () => {
+    if (!deleteTarget) return;
 
-    setDeletingId(reviewId);
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/reviews?id=${reviewId}`, {
+      const res = await fetch(`/api/admin/reviews?id=${deleteTarget.id}`, {
         method: "DELETE",
       });
       const data = await res.json();
 
       if (res.ok) {
-        setToastMessage("Ulasan berhasil dihapus.");
-        setTimeout(() => setToastMessage(null), 4000);
+        toast.success(`Ulasan untuk buku "${deleteTarget.bookTitle}" berhasil dihapus.`);
+        setDeleteTarget(null);
         fetchReviews();
       } else {
-        alert(data.error || "Gagal menghapus ulasan.");
+        toast.error(data.error || "Gagal menghapus ulasan.");
       }
     } catch (err) {
-      console.error(err);
+      toast.error("Terjadi kesalahan jaringan.");
     } finally {
-      setDeletingId(null);
+      setDeleting(false);
     }
   };
 
@@ -69,15 +75,7 @@ export default function AdminReviewsPage() {
     : "0.0";
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-fade-in">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-primary text-on-primary px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-fade-in-up">
-          <CheckCircle2 className="w-5 h-5 shrink-0" />
-          <span className="text-sm font-semibold">{toastMessage}</span>
-        </div>
-      )}
-
+    <div className="space-y-6 md:space-y-8 animate-fade-in pb-12">
       {/* Page Header & Stats */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -88,7 +86,7 @@ export default function AdminReviewsPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-on-surface">Moderasi Ulasan Pembaca</h1>
           </div>
           <p className="text-on-surface-variant text-xs sm:text-sm mt-1">
-            Pantau dan bersihkan ulasan/komentar warga untuk menjaga etika ruang baca digital Desa Pangkalan.
+            Pantau dan kelola ulasan warga untuk menjaga etika ruang baca digital Desa Pangkalan.
           </p>
         </div>
 
@@ -98,7 +96,7 @@ export default function AdminReviewsPage() {
             <span className="text-lg font-bold text-primary">{totalReviewsCount}</span>
           </div>
           <div className="bg-surface-container rounded-2xl p-3 border border-outline-variant/30 text-center px-4">
-            <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Rata-rata Rating</span>
+            <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Rata-Rata</span>
             <span className="text-lg font-bold text-amber-500 flex items-center justify-center gap-1">
               <Star className="w-4 h-4 fill-amber-500" />
               {avgRating}
@@ -108,92 +106,87 @@ export default function AdminReviewsPage() {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-surface-container rounded-3xl p-4 sm:p-5 border border-outline-variant/20 space-y-4 shadow-sm">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 relative flex items-center bg-surface-container-high rounded-2xl px-4 py-2.5 border border-outline-variant/30 focus-within:border-primary">
-            <Search className="w-4 h-4 text-on-surface-variant mr-3 shrink-0" />
-            <input
-              type="text"
-              placeholder="Cari komentar, nama warga, atau judul buku..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent border-none outline-none text-xs sm:text-sm text-on-surface w-full placeholder:text-on-surface-variant/70"
-            />
-            {search && (
-              <button onClick={() => setSearch("")} className="text-on-surface-variant hover:text-on-surface p-1">
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+      <div className="bg-surface-container rounded-3xl p-4 sm:p-5 border border-outline-variant/20 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="relative flex-1 w-full">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
+          <input
+            type="text"
+            placeholder="Cari komentar, judul buku, atau nama warga..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-surface-container-high rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-on-surface border border-outline-variant/30 focus:outline-none focus:border-primary shadow-inner"
+          />
+          {search && (
+            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
 
-          {/* Rating Filter Pills */}
-          <div className="flex overflow-x-auto hide-scroll gap-1.5 shrink-0">
-            {["ALL", "5", "4", "3", "2", "1"].map((r) => (
-              <button
-                key={r}
-                onClick={() => setFilterRating(r)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border ${
-                  filterRating === r
-                    ? "bg-primary text-on-primary border-primary shadow-sm"
-                    : "bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:bg-surface-container-highest"
-                }`}
-              >
-                {r === "ALL" ? "Semua Bintang" : `${r} ⭐`}
-              </button>
-            ))}
-          </div>
+        {/* Rating Filter Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto hide-scroll w-full md:w-auto">
+          {["ALL", "5", "4", "3", "2", "1"].map((star) => (
+            <button
+              key={star}
+              onClick={() => setFilterRating(star)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border ${
+                filterRating === star
+                  ? "bg-primary text-on-primary border-primary shadow-sm"
+                  : "bg-surface-container-high text-on-surface-variant border-outline-variant/20 hover:bg-surface-container-highest"
+              }`}
+            >
+              {star === "ALL" ? "Semua Bintang" : `⭐ ${star}`}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Reviews List */}
       {loading ? (
-        <div className="flex justify-center p-12">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <div className="p-12 text-center text-on-surface-variant text-sm">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          Memuat data ulasan pembaca...
         </div>
       ) : reviews.length === 0 ? (
-        <div className="bg-surface-container rounded-3xl p-12 text-center border border-outline-variant/20 space-y-3">
+        <div className="bg-surface-container rounded-3xl p-12 text-center border border-outline-variant/20 space-y-2">
           <MessageSquare className="w-10 h-10 text-outline-variant mx-auto mb-2" />
-          <h3 className="text-base font-bold text-on-surface">Tidak ada ulasan yang sesuai</h3>
-          <p className="text-xs text-on-surface-variant max-w-sm mx-auto">
-            Belum ada ulasan dari pembaca untuk filter atau kata kunci pencarian saat ini.
-          </p>
+          <h3 className="text-base font-bold text-on-surface">Tidak ada ulasan yang ditemukan</h3>
+          <p className="text-xs text-on-surface-variant">Belum ada ulasan atau tidak ada yang sesuai dengan filter saat ini.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {reviews.map((review) => {
             const formattedDate = new Date(review.createdAt).toLocaleDateString("id-ID", {
               day: "numeric",
               month: "short",
               year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
             });
 
             return (
               <div
                 key={review.id}
-                className="bg-surface-container rounded-3xl p-4 sm:p-5 border border-outline-variant/20 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-start justify-between gap-4"
+                className="bg-surface-container rounded-3xl p-5 border border-outline-variant/20 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
               >
-                {/* Book & User Information */}
                 <div className="flex items-start gap-4 flex-1">
-                  <Link href={`/books/${review.book.id}`} className="relative w-16 h-22 rounded-2xl overflow-hidden shrink-0 shadow-sm border border-outline-variant/20 block">
-                    <BookCover
-                      src={review.book.coverUrl}
-                      alt={review.book.title}
-                      title={review.book.title}
-                      category={review.book.category}
-                    />
+                  {/* Book Cover Thumbnail */}
+                  <Link href={`/books/${review.book.id}`} className="shrink-0 group">
+                    <div className="w-12 h-16 rounded-xl overflow-hidden shadow-sm border border-outline-variant/30 group-hover:scale-105 transition-transform">
+                      <BookCover
+                        src={review.book.coverUrl}
+                        alt={review.book.title}
+                        title={review.book.title}
+                        category={review.book.category}
+                      />
+                    </div>
                   </Link>
 
+                  {/* Review Detail */}
                   <div className="space-y-1.5 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Link 
-                        href={`/books/${review.book.id}`}
-                        className="text-xs sm:text-sm font-bold text-on-surface hover:text-primary transition-colors line-clamp-1"
-                      >
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Link href={`/books/${review.book.id}`} className="font-bold text-sm text-on-surface hover:text-primary transition-colors">
                         {review.book.title}
                       </Link>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-primary-container text-on-primary-container font-bold uppercase">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-semibold">
                         {review.book.category}
                       </span>
                     </div>
@@ -237,12 +230,11 @@ export default function AdminReviewsPage() {
                 {/* Actions */}
                 <div className="self-end md:self-center shrink-0">
                   <button
-                    onClick={() => handleDeleteReview(review.id, review.book.title)}
-                    disabled={deletingId === review.id}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-error/10 hover:bg-error/20 text-error text-xs font-bold transition-colors disabled:opacity-50"
+                    onClick={() => setDeleteTarget({ id: review.id, bookTitle: review.book.title })}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-error/10 hover:bg-error/20 text-error text-xs font-bold transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>{deletingId === review.id ? "Menghapus..." : "Hapus Ulasan"}</span>
+                    <span>Hapus Ulasan</span>
                   </button>
                 </div>
               </div>
@@ -250,6 +242,19 @@ export default function AdminReviewsPage() {
           })}
         </div>
       )}
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Hapus Ulasan Pembaca?"
+        message={`Apakah Anda yakin ingin menghapus ulasan untuk buku "${deleteTarget?.bookTitle}"? Tindakan ini akan menghitung ulang rata-rata rating buku secara otomatis.`}
+        confirmLabel="Hapus Ulasan"
+        cancelLabel="Batal"
+        isDestructive={true}
+        isLoading={deleting}
+        onConfirm={confirmDeleteReview}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

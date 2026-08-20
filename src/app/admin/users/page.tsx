@@ -20,7 +20,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+import { useToast } from "@/components/ToastProvider";
+import ConfirmModal from "@/components/ConfirmModal";
+
 export default function AdminUsersPage() {
+  const toast = useToast();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -28,7 +32,10 @@ export default function AdminUsersPage() {
   const [filterRole, setFilterRole] = useState<"ALL" | "USER" | "ADMIN">("ALL");
   const [filterDusun, setFilterDusun] = useState<string>("ALL");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Role toggle confirm modal state
+  const [roleToggleTarget, setRoleToggleTarget] = useState<any | null>(null);
+  const [togglingRole, setTogglingRole] = useState(false);
 
   // Reset PIN modal state
   const [resetPinModalUser, setResetPinModalUser] = useState<any | null>(null);
@@ -57,10 +64,10 @@ export default function AdminUsersPage() {
       if (res.ok) {
         setUsers(data.users || []);
       } else {
-        setError(data.error);
+        toast.error(data.error || "Gagal memuat data pengguna");
       }
     } catch (err) {
-      setError("Gagal memuat data pengguna");
+      toast.error("Gagal memuat data pengguna");
     } finally {
       setLoading(false);
     }
@@ -70,32 +77,31 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, [filterRole, filterDusun, search]);
 
-  const handleToggleRole = async (user: any) => {
-    const nextRole = user.role === "ADMIN" ? "USER" : "ADMIN";
-    const confirmMsg = user.role === "ADMIN"
-      ? `Cabut hak akses Admin dari "${user.name}"? Pengguna akan menjadi Warga biasa.`
-      : `Jadikan "${user.name}" sebagai Administrator Pustaka?`;
+  const confirmToggleRole = async () => {
+    if (!roleToggleTarget) return;
 
-    if (!confirm(confirmMsg)) return;
+    const nextRole = roleToggleTarget.role === "ADMIN" ? "USER" : "ADMIN";
+    setTogglingRole(true);
+    setUpdatingId(roleToggleTarget.id);
 
-    setUpdatingId(user.id);
     try {
       const res = await fetch("/api/admin/users", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, role: nextRole }),
+        body: JSON.stringify({ userId: roleToggleTarget.id, role: nextRole }),
       });
 
       if (res.ok) {
-        setToastMessage(`Hak akses ${user.name} berhasil diubah menjadi ${nextRole}`);
-        setTimeout(() => setToastMessage(null), 4000);
+        toast.success(`Hak akses ${roleToggleTarget.name} berhasil diubah menjadi ${nextRole}`);
+        setRoleToggleTarget(null);
         fetchUsers();
       } else {
-        alert("Gagal mengubah peran pengguna.");
+        toast.error("Gagal mengubah peran pengguna.");
       }
     } catch (err) {
-      console.error(err);
+      toast.error("Terjadi kesalahan jaringan.");
     } finally {
+      setTogglingRole(false);
       setUpdatingId(null);
     }
   };
@@ -129,8 +135,7 @@ export default function AdminUsersPage() {
 
       const data = await res.json();
       if (res.ok) {
-        setToastMessage(`PIN untuk ${resetPinModalUser.name} berhasil di-reset menjadi "${newPin}"!`);
-        setTimeout(() => setToastMessage(null), 5000);
+        toast.success(`PIN untuk ${resetPinModalUser.name} berhasil di-reset menjadi "${newPin}"!`);
         setResetPinModalUser(null);
       } else {
         setPinError(data.error || "Gagal mereset PIN.");
@@ -170,15 +175,14 @@ export default function AdminUsersPage() {
 
       const data = await res.json();
       if (res.ok) {
-        setToastMessage(`Data profil ${editName} berhasil diperbarui.`);
-        setTimeout(() => setToastMessage(null), 4000);
+        toast.success(`Data profil ${editName} berhasil diperbarui.`);
         setEditModalUser(null);
         fetchUsers();
       } else {
-        alert(data.error || "Gagal memperbarui data pengguna.");
+        toast.error(data.error || "Gagal memperbarui data pengguna.");
       }
     } catch (err) {
-      console.error(err);
+      toast.error("Terjadi kesalahan jaringan.");
     } finally {
       setEditSubmitting(false);
     }
@@ -198,13 +202,6 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in pb-12">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-primary text-on-primary px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-fade-in-up">
-          <CheckCircle2 className="w-5 h-5 shrink-0" />
-          <span className="text-sm font-semibold">{toastMessage}</span>
-        </div>
-      )}
 
       {/* Header & Stats */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -387,7 +384,7 @@ export default function AdminUsersPage() {
 
                 {/* Role Switcher */}
                 <button
-                  onClick={() => handleToggleRole(user)}
+                  onClick={() => setRoleToggleTarget(user)}
                   disabled={updatingId === user.id}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
                     user.role === "ADMIN"
@@ -586,6 +583,23 @@ export default function AdminUsersPage() {
           </div>
         </div>
       )}
+
+      {/* Custom Confirm Modal for Role Toggle */}
+      <ConfirmModal
+        isOpen={!!roleToggleTarget}
+        title={roleToggleTarget?.role === "ADMIN" ? "Cabut Hak Akses Administrator?" : "Jadikan Sebagai Administrator?"}
+        message={
+          roleToggleTarget?.role === "ADMIN"
+            ? `Apakah Anda yakin ingin mencabut hak akses admin dari "${roleToggleTarget?.name}"? Pengguna akan kembali menjadi akun Warga biasa.`
+            : `Apakah Anda yakin ingin memberikan hak akses Administrator kepada "${roleToggleTarget?.name}"? Pengguna akan dapat mengelola buku, bab, ulasan, dan pengguna lain.`
+        }
+        confirmLabel={roleToggleTarget?.role === "ADMIN" ? "Cabut Admin" : "Jadikan Admin"}
+        cancelLabel="Batal"
+        isDestructive={roleToggleTarget?.role === "ADMIN"}
+        isLoading={togglingRole}
+        onConfirm={confirmToggleRole}
+        onCancel={() => setRoleToggleTarget(null)}
+      />
     </div>
   );
 }
