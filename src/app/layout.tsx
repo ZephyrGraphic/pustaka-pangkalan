@@ -3,6 +3,7 @@ import "./globals.css";
 import TopAppBar from "@/components/layout/TopAppBar";
 import BottomNav from "@/components/layout/BottomNav";
 import Providers from "@/components/Providers";
+import BroadcastBanner from "@/components/BroadcastBanner";
 
 export const metadata: Metadata = {
   title: "Pustaka Pangkalan - Perpustakaan Digital Desa",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden pb-24 md:pb-0" suppressHydrationWarning>
         <Providers>
           <TopAppBar />
+          <BroadcastBanner />
           <main className="flex-grow pt-[88px] md:pt-[104px] pb-[100px] md:pb-[40px] px-margin md:px-xl flex flex-col gap-xl w-full max-w-7xl mx-auto">
             {children}
           </main>

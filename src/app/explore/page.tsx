@@ -10,6 +10,7 @@ import BookCover from "@/components/BookCover";
 type SortOption = "latest" | "rating" | "readers" | "title";
 
 import AksaraSundaConverter from "@/components/AksaraSundaConverter";
+import KalkulatorTani from "@/components/KalkulatorTani";
 
 function ExploreContent() {
   const { data: session } = useSession();
@@ -218,6 +219,9 @@ function ExploreContent() {
           })}
         </div>
       )}
+
+      {/* Kalkulator Tani & Bioflok Pintar */}
+      <KalkulatorTani />
 
       {/* Aksara Sunda Converter & Educational Widget */}
       <AksaraSundaConverter />
