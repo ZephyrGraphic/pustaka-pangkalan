@@ -11,6 +11,7 @@ import AboutModal from "@/components/AboutModal";
 import StorageModal from "@/components/StorageModal";
 import EditProfileModal from "@/components/EditProfileModal";
 import BookCover from "@/components/BookCover";
+import RewardRedemption from "@/components/RewardRedemption";
 
 export default function Profile() {
   const { data: session, status, update } = useSession();
@@ -99,73 +100,82 @@ export default function Profile() {
           <div 
             className="absolute inset-0 opacity-20 pointer-events-none"
             style={{
-              backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
-              backgroundSize: "16px 16px"
+              backgroundImage: "radial-gradient(#ffffff 1.2px, transparent 1.2px)",
+              backgroundSize: "20px 20px"
             }}
-          ></div>
+          />
 
-          {/* Top Row: Card Title & QR Code */}
-          <div className="relative z-10 flex justify-between items-start mb-6">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <BookOpen className="w-5 h-5 text-[#caecbf]" />
-                <span className="font-title-md text-base tracking-tight font-bold">Pustaka Pangkalan</span>
+          <div className="relative z-10 flex flex-col justify-between min-h-[220px] gap-6">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner">
+                  <BookOpen className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-headline-md font-bold text-sm tracking-wide text-white">Kartu Anggota Digital</h3>
+                  <p className="font-label-md text-[11px] text-white/70">Perpustakaan Desa Pangkalan</p>
+                </div>
               </div>
-              <p className="font-label-md text-[10px] uppercase tracking-widest text-white/80">
-                Kartu Anggota Digital Desa
-              </p>
+              <span className="text-[10px] uppercase font-bold tracking-widest bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-white shadow-sm">
+                {currentUser?.role === "ADMIN" ? "Administrator" : "Warga Aktif"}
+              </span>
             </div>
-            
-            <div className="bg-white p-1.5 rounded-2xl shadow-inner flex-shrink-0">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(userNik)}`}
-                alt="QR Code Anggota"
-                className="w-11 h-11 object-contain rounded-lg"
-              />
-            </div>
-          </div>
 
-          {/* User Avatar & Info Row */}
-          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full border-2 border-white/40 p-0.5 bg-white/10 shrink-0 shadow-lg relative overflow-hidden">
-                <Image 
-                  className="rounded-full object-cover" 
-                  src={userAvatar}
-                  alt={currentUser.name || "Foto Profil"}
-                  fill
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/40 shrink-0 bg-white/10 shadow-md">
+                  <Image 
+                    src={userAvatar} 
+                    alt="Profile" 
+                    fill 
+                    className="object-cover" 
+                  />
+                </div>
+                <div className="space-y-0.5">
+                  <h2 className="font-title-lg font-bold text-lg leading-tight text-white">{currentUser?.name || "Warga Desa"}</h2>
+                  <p className="font-mono text-xs text-white/80 font-medium tracking-wider">NIK: {userNik}</p>
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-white font-bold text-[10px] tracking-wide border border-white/25">
+                      🏆 {currentUser?.badge || "Warga Pembelajar"}
+                    </span>
+                    <span className="inline-block px-2 py-0.5 rounded-full bg-amber-400/30 text-amber-200 font-bold text-[10px] border border-amber-400/40">
+                      ⭐ {currentUser?.points || 0} Poin
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Profile Button Modal */}
+              <div className="self-end sm:self-center shrink-0">
+                <EditProfileModal
+                  currentName={currentUser.name || ""}
+                  currentImage={profileUser?.image || null}
+                  currentPhone={profileUser?.phone || null}
+                  currentAddress={profileUser?.address || null}
+                  currentOccupation={profileUser?.occupation || null}
+                  onProfileUpdated={handleProfileUpdated}
                 />
               </div>
+            </div>
+
+            <div className="flex justify-between items-end pt-3 border-t border-white/15 text-[11px] text-white/80">
               <div>
-                <h2 className="font-title-md text-lg font-bold leading-tight">{currentUser.name}</h2>
-                <p className="font-mono text-xs text-white/80 tracking-wider mt-0.5">NIK: {userNik}</p>
-                <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-amber-400/25 text-amber-300 font-label-md text-[10px] uppercase font-bold backdrop-blur-sm border border-amber-400/40">
-                    ⭐ {currentUser.points || 0} Poin Literasi
-                  </span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 text-white font-label-md text-[10px] uppercase font-bold backdrop-blur-sm border border-white/20">
-                    🏆 {currentUser.badge || "Warga Pembelajar"}
-                  </span>
-                </div>
-                <p className="text-[11px] text-white/70 mt-1.5">{userAddress}</p>
+                <span className="block text-[10px] uppercase tracking-wider text-white/60">Wilayah / Dusun</span>
+                <span className="font-semibold text-white">{userAddress}</span>
               </div>
             </div>
-
-            {/* Edit Profile Button Modal */}
-            <div className="self-end sm:self-center shrink-0">
-              <EditProfileModal
-                currentName={currentUser.name || ""}
-                currentImage={profileUser?.image || null}
-                currentPhone={profileUser?.phone || null}
-                currentAddress={profileUser?.address || null}
-                currentOccupation={profileUser?.occupation || null}
-                onProfileUpdated={handleProfileUpdated}
-              />
-            </div>
           </div>
-
         </div>
       </section>
+
+      {/* Rewards & Certificate Redemption */}
+      <RewardRedemption
+        userPoints={currentUser.points || 0}
+        userName={currentUser.name || "Warga Desa"}
+        userNik={userNik}
+        userAddress={userAddress}
+        userBadge={currentUser.badge || "Warga Pembelajar"}
+      />
 
       {/* Saved Books */}
       <section className="space-y-3">

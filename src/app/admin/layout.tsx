@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { 
   Book, 
+  BookMarked,
   Users, 
   LayoutDashboard, 
   LogOut, 
@@ -79,6 +80,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           >
             <BarChart3 className="w-4 h-4 text-primary shrink-0" />
             <span>Statistik Literasi</span>
+          </Link>
+
+          <Link 
+            href="/admin/circulation" 
+            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl hover:bg-surface-container-high text-on-surface transition-colors font-medium text-xs sm:text-sm"
+          >
+            <BookMarked className="w-4 h-4 text-primary shrink-0" />
+            <span>Sirkulasi Buku Fisik</span>
           </Link>
 
           <Link 
