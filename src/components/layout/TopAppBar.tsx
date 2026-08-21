@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Signal, Home, BookOpen, Library, ShieldCheck } from "lucide-react";
+import { Signal, Home, BookOpen, Library, ShieldCheck, Languages } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function TopAppBar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { language, setLanguage, t } = useLanguage();
   
   const [userAvatar, setUserAvatar] = useState<string | null>(
     session?.user?.image || null
@@ -50,9 +52,9 @@ export default function TopAppBar() {
   const defaultAvatar = "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80";
 
   const navItems = [
-    { path: "/", icon: Home, label: "Beranda" },
-    { path: "/explore", icon: BookOpen, label: "Katalog" },
-    { path: "/shelf", icon: Library, label: "Rak Buku" },
+    { path: "/", icon: Home, labelKey: "nav_home" },
+    { path: "/explore", icon: BookOpen, labelKey: "nav_catalog" },
+    { path: "/shelf", icon: Library, labelKey: "nav_shelf" },
   ];
 
   return (
@@ -81,13 +83,23 @@ export default function TopAppBar() {
                 }`}
               >
                 <Icon className="w-4 h-4" />
-                <span className="font-title-md text-sm">{item.label}</span>
+                <span className="font-title-md text-sm">{t(item.labelKey)}</span>
               </Link>
             );
           })}
         </nav>
         
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Language Switcher (ID / SU) */}
+          <button
+            onClick={() => setLanguage(language === "id" ? "su" : "id")}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-bold border border-outline-variant/20 transition-all shadow-sm"
+            title={language === "id" ? "Gentos ka Basa Sunda" : "Ganti ke Bahasa Indonesia"}
+          >
+            <Languages className="w-3.5 h-3.5 text-primary" />
+            <span>{language === "id" ? "ID" : "SU"}</span>
+          </button>
+
           {/* Admin 1-Click Switcher Button */}
           {isAdmin && (
             <Link
@@ -96,7 +108,7 @@ export default function TopAppBar() {
               title="Beralih ke Dashboard Admin"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Portal Admin</span>
+              <span className="hidden sm:inline">{t("nav_admin")}</span>
             </Link>
           )}
 

@@ -3,17 +3,19 @@
 import { Home, BookOpen, Library, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   if (pathname === "/login") return null;
 
   const navItems = [
-    { path: "/", icon: Home, label: "Beranda" },
-    { path: "/explore", icon: BookOpen, label: "Katalog" },
-    { path: "/shelf", icon: Library, label: "Rak Buku" },
-    { path: "/profile", icon: User, label: "Profil" },
+    { path: "/", icon: Home, labelKey: "nav_home" },
+    { path: "/explore", icon: BookOpen, labelKey: "nav_catalog" },
+    { path: "/shelf", icon: Library, labelKey: "nav_shelf" },
+    { path: "/profile", icon: User, labelKey: "nav_profile" },
   ];
 
   return (
@@ -27,7 +29,7 @@ export default function BottomNav() {
             <li key={item.path}>
               <Link
                 href={item.path}
-                className={`flex flex-col items-center justify-center px-5 py-2 rounded-full active:scale-90 transition-all duration-300 ease-out group ${
+                className={`flex flex-col items-center justify-center px-4 py-2 rounded-full active:scale-90 transition-all duration-300 ease-out group ${
                   isActive
                     ? "bg-primary-container text-on-primary-container font-bold"
                     : "text-on-surface-variant hover:text-primary hover:bg-surface-container-high"
@@ -43,7 +45,7 @@ export default function BottomNav() {
                     isActive ? "font-bold" : "group-hover:text-primary transition-colors"
                   }`}
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                 </span>
               </Link>
             </li>

@@ -1,4 +1,4 @@
-import { MapPin, ArrowRight, Play, Flame, Wheat, BookOpen, Briefcase, HeartPulse, Star } from "lucide-react";
+import { MapPin, ArrowRight, Play, Flame, Wheat, BookOpen, Briefcase, HeartPulse, Star, Trophy } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
@@ -7,6 +7,8 @@ import prisma from "@/lib/prisma";
 import SearchBar from "@/components/SearchBar";
 import AnnouncementCarousel from "@/components/AnnouncementCarousel";
 import BookCover from "@/components/BookCover";
+import DusunLeaderboard from "@/components/DusunLeaderboard";
+import TanyaPustakaAI from "@/components/TanyaPustakaAI";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -51,7 +53,7 @@ export default async function Home() {
   const defaultAvatar = "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80";
 
   return (
-    <div className="space-y-8 md:space-y-10 animate-fade-in pb-8">
+    <div className="space-y-8 md:space-y-10 animate-fade-in pb-12">
       {/* Header Section: Greeting & Streak */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
@@ -241,6 +243,9 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Dusun Literacy League Leaderboard */}
+      <DusunLeaderboard />
+
       {/* Local Heritage Banner */}
       <section className="pt-2">
         <div className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-primary via-[#1f381c] to-[#122410] p-6 sm:p-8 text-on-primary shadow-lg border border-white/10 flex flex-col justify-end min-h-[160px] group">
@@ -263,6 +268,9 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Floating Tanya Pustaka AI Assistant */}
+      <TanyaPustakaAI />
     </div>
   );
 }
