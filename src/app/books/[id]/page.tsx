@@ -2,17 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { BookOpen, BookmarkPlus, BookmarkCheck, ChevronLeft, Star, Users } from "lucide-react";
+import { BookOpen, BookmarkPlus, BookmarkCheck, ChevronLeft, Star, Users, Download, Check, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import BookReviews from "@/components/BookReviews";
+import BookDiscussion from "@/components/BookDiscussion";
 import ShareModal from "@/components/ShareModal";
 import BookCover from "@/components/BookCover";
+import { saveBookOffline, removeBookOffline, isBookDownloaded, OfflineBook } from "@/lib/offlineStorage";
+import { useToast } from "@/components/ToastProvider";
 
 interface Chapter {
   id: string;
   title: string;
   order: number;
+  content?: string;
 }
 
 interface BookDetail {
@@ -33,10 +37,13 @@ interface BookDetail {
 export default function BookDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const toast = useToast();
   const { data: session } = useSession();
   const [book, setBook] = useState<BookDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [bookmarking, setBookmarking] = useState(false);
+  const [isDownloaded, setIsDownloaded] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     async function fetchBook() {
@@ -55,6 +62,7 @@ export default function BookDetailPage() {
     
     if (params.id) {
       fetchBook();
+      isBookDownloaded(params.id as string).then(setIsDownloaded);
     }
   }, [params.id]);
 
@@ -77,11 +85,57 @@ export default function BookDetailPage() {
       if (res.ok) {
         const data = await res.json();
         setBook(prev => prev ? { ...prev, isBookmarked: data.bookmarked } : prev);
+        toast.success(data.bookmarked ? "Disimpan ke rak buku Anda!" : "Dihapus dari rak buku.");
       }
     } catch (error) {
       console.error(error);
+      toast.error("Terjadi kesalahan jaringan.");
     } finally {
       setBookmarking(false);
+    }
+  };
+
+  const handleToggleOfflineDownload = async () => {
+    if (!book) return;
+
+    if (isDownloaded) {
+      await removeBookOffline(book.id);
+      setIsDownloaded(false);
+      toast.info(`Buku "${book.title}" dihapus dari memori offline perangkat.`);
+      return;
+    }
+
+    setDownloading(true);
+    try {
+      // Fetch full book with all chapter contents for offline storage
+      const res = await fetch(`/api/books/${book.id}`);
+      const fullData = await res.json();
+      const bookData = fullData.book || fullData;
+
+      const offlinePayload: OfflineBook = {
+        id: bookData.id,
+        title: bookData.title,
+        author: bookData.author,
+        category: bookData.category,
+        description: bookData.description,
+        coverUrl: bookData.coverUrl,
+        downloadedAt: Date.now(),
+        chapters: (bookData.chapters || []).map((c: any) => ({
+          id: c.id,
+          title: c.title,
+          content: c.content || "",
+          order: c.order,
+        })),
+      };
+
+      await saveBookOffline(offlinePayload);
+      setIsDownloaded(true);
+      toast.success(`Buku "${book.title}" berhasil diunduh! Siap dibaca tanpa internet.`);
+    } catch (err) {
+      console.error(err);
+      toast.error("Gagal mengunduh isi buku.");
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -108,17 +162,27 @@ export default function BookDetailPage() {
   return (
     <div className="w-full pb-16 space-y-8 animate-fade-in">
       {/* Header with back button */}
-      <div className="flex items-center gap-3">
-        <button 
-          onClick={() => router.back()} 
-          className="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors border border-outline-variant/20 shadow-sm"
-          aria-label="Kembali"
-        >
-          <ChevronLeft className="w-5 h-5 text-on-surface" />
-        </button>
-        <span className="font-title-md text-sm font-bold text-on-surface truncate">
-          Detail Buku
-        </span>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => router.back()} 
+            className="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors border border-outline-variant/20 shadow-sm"
+            aria-label="Kembali"
+          >
+            <ChevronLeft className="w-5 h-5 text-on-surface" />
+          </button>
+          <span className="font-title-md text-sm font-bold text-on-surface truncate">
+            Detail Buku
+          </span>
+        </div>
+
+        {/* Offline Download Status Badge */}
+        {isDownloaded && (
+          <span className="text-[11px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 flex items-center gap-1.5">
+            <Check className="w-3.5 h-3.5" />
+            <span>Tersimpan Offline</span>
+          </span>
+        )}
       </div>
 
       {/* Book Cover and Info */}
@@ -155,7 +219,7 @@ export default function BookDetailPage() {
             <div className="w-px h-5 bg-outline-variant/30"></div>
             <div className="flex items-center gap-1.5 text-on-surface-variant">
               <Users className="w-4 h-4 text-primary" />
-              <span className="font-body-md text-xs font-semibold text-on-surface">{book._count.readers} Pembaca</span>
+              <span className="font-body-md text-xs font-semibold text-on-surface">{book._count?.readers || 0} Pembaca</span>
             </div>
             <div className="w-px h-5 bg-outline-variant/30"></div>
             <div className="flex items-center gap-1.5 text-on-surface-variant">
@@ -177,6 +241,29 @@ export default function BookDetailPage() {
                 Belum Ada Isi Bab
               </button>
             )}
+
+            {/* Offline Download Button */}
+            <button
+              onClick={handleToggleOfflineDownload}
+              disabled={downloading}
+              title={isDownloaded ? "Hapus dari Penyimpanan Offline" : "Unduh untuk Dibaca Tanpa Internet"}
+              className={`w-12 h-12 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                isDownloaded
+                  ? "bg-emerald-700 text-white border-emerald-700 hover:bg-red-600 hover:border-red-600"
+                  : "bg-surface-container border-outline-variant/30 text-on-surface hover:bg-surface-container-high"
+              }`}
+              aria-label="Unduh Offline"
+            >
+              {downloading ? (
+                <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              ) : isDownloaded ? (
+                <Check className="w-5 h-5" />
+              ) : (
+                <Download className="w-5 h-5" />
+              )}
+            </button>
+
+            {/* Bookmark Button */}
             <button 
               onClick={handleBookmark}
               disabled={bookmarking}
@@ -236,6 +323,9 @@ export default function BookDetailPage() {
           )}
         </div>
       </section>
+
+      {/* Community Discussions & Practical Tips */}
+      <BookDiscussion bookId={book.id} />
 
       {/* Reviews Section */}
       <section className="space-y-3">

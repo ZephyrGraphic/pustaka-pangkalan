@@ -9,6 +9,8 @@ import BookCover from "@/components/BookCover";
 
 type SortOption = "latest" | "rating" | "readers" | "title";
 
+import AksaraSundaConverter from "@/components/AksaraSundaConverter";
+
 function ExploreContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
@@ -86,185 +88,130 @@ function ExploreContent() {
     }
   };
 
-  const categories = ["Semua", "Pertanian", "Sejarah", "Ekonomi", "Kesehatan", "Teknologi"];
+  const categories = ["Semua", "Pertanian", "Sejarah", "Ekonomi", "Kesehatan"];
 
-  // Filter & Sort
-  const processedBooks = [...books]
-    .filter((b) => !offlineOnly || b.isOffline)
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "rating":
-          return (b.rating || 0) - (a.rating || 0);
-        case "readers":
-          return (b._count?.readers || 0) - (a._count?.readers || 0);
-        case "title":
-          return a.title.localeCompare(b.title);
-        case "latest":
-        default:
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      }
-    });
+  const filteredBooks = books.filter((book) => {
+    if (offlineOnly && !book.isOffline) return false;
+    return true;
+  });
+
+  const sortedBooks = [...filteredBooks].sort((a, b) => {
+    if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
+    if (sortBy === "readers") return (b._count?.readers || 0) - (a._count?.readers || 0);
+    if (sortBy === "title") return a.title.localeCompare(b.title);
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-fade-in pb-12">
-      
-      {/* Header Search & Filter Bar */}
-      <section className="space-y-4 pt-1">
-        
-        {/* Search Input Box */}
-        <div className="relative flex items-center bg-surface-container rounded-2xl px-4 py-3 border border-outline-variant/30 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 shadow-sm transition-all">
-          <Search className="text-on-surface-variant w-5 h-5 mr-3 shrink-0" />
+    <div className="space-y-8 animate-fade-in pb-16">
+      {/* Header */}
+      <div className="space-y-1">
+        <h1 className="font-headline-lg-mobile md:font-headline-lg text-2xl md:text-3xl font-bold text-on-surface">
+          Katalog Pengetahuan Desa
+        </h1>
+        <p className="font-body-md text-xs sm:text-sm text-on-surface-variant">
+          Temukan e-book pertanian, wirausaha desa, kesehatan, dan sastra budaya Sunda.
+        </p>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="space-y-3">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
           <input
-            className="flex-1 bg-transparent border-none focus:ring-0 text-on-surface font-body-md placeholder:text-on-surface-variant/70 text-sm outline-none"
-            placeholder="Cari judul buku, modul pertanian, atau penulis..."
             type="text"
+            placeholder="Cari judul, penulis, atau kata kunci modul..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-surface-container border border-outline-variant/30 rounded-2xl pl-11 pr-10 py-3 text-xs sm:text-sm text-on-surface focus:outline-none focus:border-primary shadow-sm"
           />
           {search && (
-            <button 
-              onClick={() => setSearch("")} 
-              className="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-container-highest transition-colors"
-              aria-label="Hapus Pencarian"
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface p-1"
             >
               <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Category Pills & Offline Filter */}
+        {/* Categories Bar */}
         <div className="flex overflow-x-auto hide-scroll gap-2 pb-1 -mx-margin px-margin md:mx-0 md:px-0">
-          {categories.map((cat) => {
-            const isSelected = category === cat || (cat === "Semua" && !category);
-            return (
-              <button 
-                key={cat}
-                onClick={() => setCategory(cat === "Semua" ? "" : cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shadow-sm ${
-                  isSelected 
-                    ? "bg-primary text-on-primary border-primary shadow-md shadow-primary/20 scale-105"
-                    : "bg-surface-container hover:bg-surface-container-high text-on-surface-variant border-outline-variant/20"
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-          <button 
-            onClick={() => setOfflineOnly(!offlineOnly)}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border flex items-center gap-1.5 shadow-sm ${
-              offlineOnly
-                ? "bg-primary text-on-primary border-primary shadow-md shadow-primary/20 scale-105"
-                : "bg-surface-container hover:bg-surface-container-high text-on-surface-variant border-outline-variant/20"
-            }`}
-          >
-            <Cloud className="w-3.5 h-3.5" />
-            <span>Tersedia Offline</span>
-          </button>
+          {categories.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(c === "Semua" ? "" : c)}
+              className={`px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all border ${
+                (c === "Semua" && !category) || category === c
+                  ? "bg-primary text-on-primary border-primary shadow-sm"
+                  : "bg-surface-container hover:bg-surface-container-high text-on-surface-variant border-outline-variant/20"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* Results Count & Sort Dropdown Bar */}
-      <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-1 border-t border-outline-variant/15">
-        <p className="font-body-md text-xs sm:text-sm text-on-surface-variant">
-          {loading ? (
-            "Memuat koleksi buku..."
-          ) : (
-            <>
-              Menampilkan <span className="font-bold text-on-surface">{processedBooks.length}</span> koleksi buku
-            </>
-          )}
-        </p>
-
-        {/* Sort Selector */}
-        <div className="flex items-center gap-2 self-end sm:self-center">
-          <ArrowUpDown className="w-4 h-4 text-on-surface-variant" />
-          <span className="text-xs text-on-surface-variant font-medium">Urutkan:</span>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="bg-surface-container border border-outline-variant/30 rounded-xl px-3 py-1.5 text-xs text-on-surface font-semibold focus:outline-none focus:border-primary cursor-pointer"
-          >
-            <option value="latest">Terbaru</option>
-            <option value="rating">Rating Tertinggi</option>
-            <option value="readers">Paling Populer</option>
-            <option value="title">Judul (A-Z)</option>
-          </select>
-        </div>
-      </section>
-
-      {/* Grid Layout */}
-      {!loading && processedBooks.length === 0 ? (
-        <div className="text-center py-16 bg-surface-container rounded-3xl border border-outline-variant/20 p-8 space-y-2">
-          <p className="font-title-md text-base text-on-surface font-bold">Tidak ada buku yang ditemukan</p>
-          <p className="font-body-md text-xs text-on-surface-variant">Coba gunakan kata kunci lain atau pilih kategori Semua.</p>
+      {/* Books Grid */}
+      {loading ? (
+        <div className="p-12 text-center text-xs text-on-surface-variant">Memuat koleksi buku...</div>
+      ) : sortedBooks.length === 0 ? (
+        <div className="bg-surface-container rounded-3xl p-10 text-center border border-outline-variant/20 space-y-2">
+          <p className="font-bold text-sm text-on-surface">Tidak ada buku yang sesuai</p>
+          <p className="text-xs text-on-surface-variant">Coba gunakan kata kunci pencarian atau kategori lain.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
-          {processedBooks.map((book) => {
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {sortedBooks.map((book) => {
             const isSaved = bookmarkedIds.includes(book.id);
-
             return (
-              <Link href={`/books/${book.id}`} key={book.id} className="group">
-                <article className="bg-surface-container rounded-3xl shadow-sm hover:shadow-lg border border-outline-variant/20 overflow-hidden flex flex-col group-hover:-translate-y-1.5 transition-all duration-300 h-full">
-                  
-                  {/* Book Cover Container */}
-                  <div className="relative w-full aspect-[3/4] p-3 pb-0">
-                    <BookCover 
-                      src={book.coverUrl} 
-                      alt={book.title} 
-                      title={book.title} 
-                      category={book.category} 
-                      className="shadow-sm"
+              <Link key={book.id} href={`/books/${book.id}`} className="group">
+                <article className="bg-surface-container rounded-3xl border border-outline-variant/20 overflow-hidden shadow-sm hover:-translate-y-1.5 transition-all p-3 flex flex-col h-full">
+                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-2.5">
+                    <BookCover
+                      src={book.coverUrl}
+                      alt={book.title}
+                      title={book.title}
+                      category={book.category}
                     />
-
-                    <div className="absolute top-5 left-5">
-                      <span className="bg-surface/90 backdrop-blur-md text-on-surface font-bold px-2 py-0.5 rounded-md shadow-sm text-[10px] uppercase border border-outline-variant/20">
-                        {book.category}
-                      </span>
-                    </div>
-
                     {book.isOffline && (
-                      <div className="absolute top-5 right-5 bg-primary-container text-on-primary-container rounded-full p-1 shadow-sm">
+                      <div className="absolute top-2 left-2 bg-primary-container text-on-primary-container p-1 rounded-full shadow-sm">
                         <Cloud className="w-3.5 h-3.5" />
                       </div>
                     )}
                   </div>
-
-                  {/* Book Info */}
-                  <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between gap-2">
+                  <div className="flex-1 flex flex-col justify-between">
                     <div>
-                      <h3 className="font-title-md text-xs sm:text-sm text-on-surface line-clamp-2 leading-snug font-bold group-hover:text-primary transition-colors">
+                      <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{book.category}</span>
+                      <h3 className="font-title-md text-xs sm:text-sm font-bold text-on-surface line-clamp-2 leading-snug group-hover:text-primary transition-colors mt-0.5">
                         {book.title}
                       </h3>
                       <p className="font-body-md text-[11px] text-on-surface-variant line-clamp-1 mt-0.5">
                         {book.author}
                       </p>
                     </div>
-                    
-                    <div className="flex justify-between items-center pt-2 border-t border-outline-variant/20 mt-auto">
+
+                    <div className="flex justify-between items-center pt-2 border-t border-outline-variant/20 mt-2">
                       <div className="flex items-center gap-1 text-on-surface">
                         <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                         <span className="font-label-md text-xs font-bold">
                           {book.rating ? Number(book.rating).toFixed(1) : "0.0"}
                         </span>
                       </div>
-                      
-                      <button 
+                      <button
                         className={`p-1.5 rounded-xl transition-all active:scale-90 ${
-                          isSaved 
-                            ? "text-primary bg-primary-container/30" 
+                          isSaved
+                            ? "text-primary bg-primary-container/30"
                             : "text-on-surface-variant hover:text-primary hover:bg-surface-container-high"
                         }`}
                         onClick={(e) => handleToggleBookmark(e, book.id)}
                         title={isSaved ? "Tersimpan di Rak" : "Simpan ke Rak"}
-                        aria-label="Simpan Buku"
                       >
                         {isSaved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
                       </button>
                     </div>
                   </div>
-
                 </article>
               </Link>
             );
@@ -272,6 +219,8 @@ function ExploreContent() {
         </div>
       )}
 
+      {/* Aksara Sunda Converter & Educational Widget */}
+      <AksaraSundaConverter />
     </div>
   );
 }

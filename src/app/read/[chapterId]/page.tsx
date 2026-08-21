@@ -87,6 +87,8 @@ export default function ReadChapterPage() {
     };
   }, []);
 
+  const [isOfflineLoaded, setIsOfflineLoaded] = useState<boolean>(false);
+
   useEffect(() => {
     async function fetchChapter() {
       try {
@@ -94,8 +96,9 @@ export default function ReadChapterPage() {
         if (res.ok) {
           const data = await res.json();
           setChapter(data);
+          setIsOfflineLoaded(false);
           
-          // Save reading progress
+          // Save reading progress to server
           fetch("/api/reading-progress", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -104,9 +107,33 @@ export default function ReadChapterPage() {
               chapterId: data.id 
             }),
           }).catch(console.error);
+          return;
         }
       } catch (err) {
-        console.error(err);
+        console.warn("Jaringan offline, mencoba memuat dari penyimpanan lokal IndexedDB...", err);
+      }
+
+      // Offline IndexedDB Fallback
+      try {
+        const { getOfflineChapter } = await import("@/lib/offlineStorage");
+        const cached = await getOfflineChapter(params.chapterId as string);
+        if (cached) {
+          setChapter({
+            id: cached.chapter.id,
+            title: cached.chapter.title,
+            content: cached.chapter.content,
+            order: cached.chapter.order,
+            book: {
+              id: cached.book.id,
+              title: cached.book.title,
+              category: cached.book.category,
+              chapters: cached.book.chapters.map(c => ({ id: c.id, title: c.title, order: c.order })),
+            },
+          });
+          setIsOfflineLoaded(true);
+        }
+      } catch (storageErr) {
+        console.error("Gagal memuat dari penyimpanan offline:", storageErr);
       } finally {
         setLoading(false);
       }

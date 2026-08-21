@@ -1,18 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Book, Clock, CloudDownload, Bookmark, ArrowRight, BookOpen } from "lucide-react";
+import { Book, Clock, CloudDownload, Bookmark, ArrowRight, BookOpen, Trash2, Check, Download } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import BookCover from "@/components/BookCover";
+import { getAllOfflineBooks, removeBookOffline, OfflineBook } from "@/lib/offlineStorage";
+import { useToast } from "@/components/ToastProvider";
+import ConfirmModal from "@/components/ConfirmModal";
 
 type ShelfTab = "reading" | "offline" | "bookmarks";
 
 export default function ShelfPage() {
   const { data: session } = useSession();
+  const toast = useToast();
   const [activeTab, setActiveTab] = useState<ShelfTab>("reading");
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [localOfflineBooks, setLocalOfflineBooks] = useState<OfflineBook[]>([]);
+  const [deleteOfflineTarget, setDeleteOfflineTarget] = useState<OfflineBook | null>(null);
+
+  const fetchLocalOffline = async () => {
+    try {
+      const offlineList = await getAllOfflineBooks();
+      setLocalOfflineBooks(offlineList);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     fetch("/api/shelf")
@@ -25,12 +40,22 @@ export default function ShelfPage() {
         console.error(err);
         setLoading(false);
       });
+
+    fetchLocalOffline();
   }, [session]);
+
+  const confirmDeleteOffline = async () => {
+    if (!deleteOfflineTarget) return;
+    await removeBookOffline(deleteOfflineTarget.id);
+    toast.info(`Buku "${deleteOfflineTarget.title}" dihapus dari penyimpanan offline.`);
+    setDeleteOfflineTarget(null);
+    fetchLocalOffline();
+  };
 
   const stats = data?.stats || { totalRead: 0, totalHours: 0, offlineCount: 0 };
   const readingList = data?.readingList || [];
   const bookmarks = data?.bookmarks || [];
-  const offlineBooks = data?.offlineBooks || [];
+  const totalOfflineCount = Math.max(localOfflineBooks.length, stats.offlineCount);
 
   // Monthly target percentage (e.g. 5 books goal)
   const monthlyGoal = 5;
@@ -63,7 +88,7 @@ export default function ShelfPage() {
             </div>
             <div className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/20 px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface shadow-sm">
               <CloudDownload className="text-primary w-4 h-4" />
-              <span>{stats.offlineCount} Buku Offline</span>
+              <span>{totalOfflineCount} Buku Offline</span>
             </div>
           </div>
         </div>
@@ -104,14 +129,17 @@ export default function ShelfPage() {
             Sedang Dibaca ({readingList.length})
           </button>
           <button 
-            onClick={() => setActiveTab("offline")}
+            onClick={() => {
+              setActiveTab("offline");
+              fetchLocalOffline();
+            }}
             className={`py-3 px-5 border-b-2 font-title-md text-xs sm:text-sm transition-all whitespace-nowrap ${
               activeTab === "offline"
                 ? "border-primary text-primary font-bold"
                 : "border-transparent text-on-surface-variant hover:text-primary"
             }`}
           >
-            Tersimpan Offline ({offlineBooks.length})
+            Tersimpan Offline ({localOfflineBooks.length})
           </button>
           <button 
             onClick={() => setActiveTab("bookmarks")}
@@ -218,33 +246,76 @@ export default function ShelfPage() {
             </>
           )}
 
-          {/* 2. Tersimpan Offline Tab */}
+          {/* 2. Tersimpan Offline Tab (IndexedDB Full Engine) */}
           {activeTab === "offline" && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {offlineBooks.map((book: any) => (
-                <Link key={book.id} href={`/books/${book.id}`} className="group">
-                  <div className="bg-surface-container rounded-3xl border border-outline-variant/20 overflow-hidden shadow-sm hover:-translate-y-1.5 transition-all p-3 flex flex-col h-full">
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-2.5">
-                      <BookCover 
-                        src={book.coverUrl} 
-                        alt={book.title} 
-                        title={book.title} 
-                        category={book.category} 
-                      />
-                      <div className="absolute top-2 right-2 bg-primary text-on-primary rounded-full p-1 shadow-sm">
-                        <CloudDownload className="w-3.5 h-3.5" />
+            <>
+              {localOfflineBooks.length === 0 ? (
+                <div className="bg-surface-container rounded-3xl p-10 text-center border border-outline-variant/20 space-y-3">
+                  <CloudDownload className="w-10 h-10 text-outline-variant mx-auto mb-2" />
+                  <h3 className="font-title-md text-base font-bold text-on-surface">Belum ada buku yang diunduh ke perangkat</h3>
+                  <p className="font-body-md text-xs text-on-surface-variant max-w-sm mx-auto">
+                    Klik tombol unduh (📥) pada halaman detail buku untuk menyimpannya ke memori HP agar dapat dibaca di area sawah/kebun tanpa sinyal.
+                  </p>
+                  <Link href="/explore" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl font-title-md text-xs font-bold hover:bg-primary/90 transition-colors shadow-sm">
+                    <span>Cari Buku untuk Diunduh</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {localOfflineBooks.map((book) => (
+                    <div 
+                      key={book.id} 
+                      className="bg-surface-container rounded-3xl border border-outline-variant/20 p-4 flex gap-4 items-start shadow-sm hover:shadow-md transition-all"
+                    >
+                      <Link href={`/books/${book.id}`} className="relative w-20 h-28 rounded-2xl overflow-hidden shrink-0 shadow-sm border border-outline-variant/20 block">
+                        <BookCover 
+                          src={book.coverUrl} 
+                          alt={book.title} 
+                          title={book.title} 
+                          category={book.category} 
+                        />
+                      </Link>
+                      <div className="flex-1 flex flex-col justify-between h-full py-0.5 space-y-2">
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-primary-container text-on-primary-container">
+                              {book.category}
+                            </span>
+                            <button
+                              onClick={() => setDeleteOfflineTarget(book)}
+                              className="p-1 text-on-surface-variant hover:text-error transition-colors"
+                              title="Hapus dari Memori Offline"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                          <Link href={`/books/${book.id}`}>
+                            <h3 className="font-title-md text-sm font-bold text-on-surface line-clamp-2 mt-1 hover:text-primary transition-colors">
+                              {book.title}
+                            </h3>
+                          </Link>
+                          <p className="font-label-md text-xs text-on-surface-variant line-clamp-1 mt-0.5">
+                            {book.author} • {book.chapters.length} Bab Lengkap
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 pt-1">
+                          {book.chapters.length > 0 && (
+                            <Link
+                              href={`/read/${book.chapters[0].id}`}
+                              className="flex-1 text-center py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors shadow-sm"
+                            >
+                              ⚡ Baca Offline
+                            </Link>
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <h4 className="font-title-md text-xs sm:text-sm font-bold text-on-surface line-clamp-2 leading-snug group-hover:text-primary transition-colors">
-                      {book.title}
-                    </h4>
-                    <p className="font-label-md text-[11px] text-on-surface-variant mt-1 line-clamp-1">
-                      {book.author}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
 
           {/* 3. Favorit / Bookmarks Tab */}
@@ -292,6 +363,17 @@ export default function ShelfPage() {
         </section>
       )}
 
+      {/* Confirm Delete Offline Modal */}
+      <ConfirmModal
+        isOpen={!!deleteOfflineTarget}
+        title="Hapus dari Penyimpanan Offline?"
+        message={`Apakah Anda yakin ingin menghapus buku "${deleteOfflineTarget?.title}" dari memori offline perangkat ini? Anda tetap dapat mengunduhnya kembali saat terhubung internet.`}
+        confirmLabel="Hapus dari Memori"
+        cancelLabel="Batal"
+        isDestructive={true}
+        onConfirm={confirmDeleteOffline}
+        onCancel={() => setDeleteOfflineTarget(null)}
+      />
     </div>
   );
 }
