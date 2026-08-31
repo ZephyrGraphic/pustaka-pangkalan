@@ -11,7 +11,6 @@ import AboutModal from "@/components/AboutModal";
 import StorageModal from "@/components/StorageModal";
 import EditProfileModal from "@/components/EditProfileModal";
 import BookCover from "@/components/BookCover";
-import RewardRedemption from "@/components/RewardRedemption";
 
 export default function Profile() {
   const { data: session, status, update } = useSession();
@@ -167,15 +166,6 @@ export default function Profile() {
           </div>
         </div>
       </section>
-
-      {/* Rewards & Certificate Redemption */}
-      <RewardRedemption
-        userPoints={currentUser.points || 0}
-        userName={currentUser.name || "Warga Desa"}
-        userNik={userNik}
-        userAddress={userAddress}
-        userBadge={currentUser.badge || "Warga Pembelajar"}
-      />
 
       {/* Saved Books */}
       <section className="space-y-3">
