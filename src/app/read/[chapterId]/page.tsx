@@ -91,12 +91,14 @@ export default function ReadChapterPage() {
 
   useEffect(() => {
     async function fetchChapter() {
+      setLoading(true);
       try {
         const res = await fetch(`/api/read/${params.chapterId}`);
         if (res.ok) {
           const data = await res.json();
           setChapter(data);
           setIsOfflineLoaded(false);
+          setLoading(false);
           
           // Save reading progress to server
           fetch("/api/reading-progress", {
@@ -276,13 +278,13 @@ export default function ReadChapterPage() {
   const getThemeClasses = () => {
     switch (readerTheme) {
       case "sepia":
-        return "bg-[#fbf0d9] text-[#332415] border-[#ecdcc2]";
+        return "bg-[#fbf0d9] text-[#332415] border-[#ecdcc2] shadow-sm";
       case "dark":
-        return "bg-[#171e17] text-[#f5f7f3] border-[#2c372b]";
+        return "bg-[#171e17] text-[#f5f7f3] border-[#2c372b] shadow-md";
       case "oled":
-        return "bg-[#000000] text-[#ffffff] border-[#282828]";
+        return "bg-[#000000] text-[#ffffff] border-[#282828] shadow-md";
       default:
-        return "bg-surface-container-lowest text-on-surface border-outline-variant/30";
+        return "bg-surface-container text-on-surface border-outline-variant/30 shadow-sm";
     }
   };
 
@@ -299,7 +301,13 @@ export default function ReadChapterPage() {
 
   return (
     <div className={`min-h-screen -mx-margin md:-mx-xl -mt-[88px] md:-mt-[104px] pt-[88px] md:pt-[104px] transition-colors duration-300 ${
-      readerTheme === "sepia" ? "bg-[#f4ebd0]" : readerTheme === "oled" ? "bg-black" : "bg-surface"
+      readerTheme === "sepia" 
+        ? "bg-[#f4ebd0] text-[#332415]" 
+        : readerTheme === "oled" 
+        ? "bg-black text-white" 
+        : readerTheme === "dark" 
+        ? "bg-[#101510] text-[#f5f7f3]" 
+        : "bg-background text-on-surface"
     }`}>
       
       {/* Reading Progress Top Bar */}
@@ -311,14 +319,22 @@ export default function ReadChapterPage() {
       </div>
 
       {/* Top Reader Controls */}
-      <header className={`fixed top-1 left-0 right-0 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/20 transition-transform duration-300 ${showControls ? "translate-y-0" : "-translate-y-full"}`}>
+      <header className={`fixed top-1 left-0 right-0 z-40 backdrop-blur-md border-b transition-transform duration-300 ${
+        readerTheme === "sepia"
+          ? "bg-[#fbf0d9]/95 text-[#332415] border-[#ecdcc2]"
+          : readerTheme === "oled"
+          ? "bg-black/95 text-white border-[#282828]"
+          : readerTheme === "dark"
+          ? "bg-[#171e17]/95 text-[#f5f7f3] border-[#2c372b]"
+          : "bg-surface/90 text-on-surface border-outline-variant/20"
+      } ${showControls ? "translate-y-0" : "-translate-y-full"}`}>
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href={`/books/${chapter.book.id}`} className="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors" aria-label="Kembali ke Buku">
+          <Link href={`/books/${chapter.book.id}`} className="p-2 -ml-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" aria-label="Kembali ke Buku">
             <ChevronLeft className="w-6 h-6" />
           </Link>
           
           <div className="text-center max-w-[200px] sm:max-w-xs md:max-w-sm truncate">
-            <p className="font-label-md text-xs text-on-surface-variant truncate uppercase tracking-widest">{chapter.book.title}</p>
+            <p className="font-label-md text-xs opacity-75 truncate uppercase tracking-widest">{chapter.book.title}</p>
             <h1 className="font-title-md text-sm font-semibold truncate">{chapter.title}</h1>
           </div>
           
@@ -333,7 +349,7 @@ export default function ReadChapterPage() {
                 }
               }}
               className={`p-2 rounded-full transition-colors ${
-                isSpeaking ? "bg-primary text-on-primary" : "hover:bg-surface-variant/50 text-on-surface"
+                isSpeaking ? "bg-primary text-on-primary" : "hover:bg-black/10 dark:hover:bg-white/10"
               }`}
               title="Dengarkan Buku (Audio Reader)"
             >
@@ -343,7 +359,7 @@ export default function ReadChapterPage() {
             {/* Customizer */}
             <button 
               onClick={() => setShowSettings(true)}
-              className="p-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors"
+              className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
               title="Pengaturan Tampilan"
             >
               <Type className="w-5 h-5" />
@@ -352,7 +368,7 @@ export default function ReadChapterPage() {
             {/* Chapter List */}
             <button 
               onClick={() => setShowChapterList(true)}
-              className="p-2 rounded-full hover:bg-surface-variant/50 text-on-surface transition-colors"
+              className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
               title="Daftar Bab"
             >
               <List className="w-5 h-5" />
@@ -546,10 +562,10 @@ export default function ReadChapterPage() {
               <span className="font-title-md text-sm text-on-surface block mb-2">Warna Latar Membaca</span>
               <div className="grid grid-cols-4 gap-2">
                 {[
-                  { key: "default", label: "Terang", bg: "bg-white text-gray-900 border-gray-300" },
+                  { key: "default", label: "Standar", bg: "bg-surface-container text-on-surface border-outline-variant/30" },
                   { key: "sepia", label: "Sepia", bg: "bg-[#fbf0d9] text-[#433422] border-[#d8caa8]" },
-                  { key: "dark", label: "Gelap", bg: "bg-[#1d211c] text-[#dfe4dc] border-[#444]" },
-                  { key: "oled", label: "Hitam", bg: "bg-black text-white border-zinc-800" },
+                  { key: "dark", label: "Gelap", bg: "bg-[#171e17] text-[#f5f7f3] border-[#2c372b]" },
+                  { key: "oled", label: "OLED", bg: "bg-black text-white border-zinc-800" },
                 ].map((t) => (
                   <button
                     key={t.key}
