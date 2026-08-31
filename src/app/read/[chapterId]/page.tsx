@@ -428,6 +428,34 @@ export default function ReadChapterPage() {
             {chapter.title}
           </h1>
           <div className="w-12 h-1 bg-primary/40 mx-auto mt-4 rounded-full"></div>
+
+          {/* Quick TTS Audio Player Trigger Button */}
+          <div className="flex items-center justify-center gap-2 mt-5">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isSpeaking) {
+                  handlePauseSpeech();
+                } else {
+                  handleStartSpeech();
+                }
+              }}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all shadow-sm active:scale-95 border border-primary/30 ${
+                isSpeaking
+                  ? "bg-primary text-on-primary animate-pulse"
+                  : "bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary"
+              }`}
+            >
+              <Volume2 className="w-4 h-4" />
+              <span>
+                {isSpeaking
+                  ? isPaused
+                    ? "Lanjutkan Audio Reader"
+                    : "Jeda Audio Reader"
+                  : "🎧 Putar Audio Reader (Text-to-Speech)"}
+              </span>
+            </button>
+          </div>
         </div>
         
         <div className="space-y-6 md:space-y-8" style={{ fontSize: `${fontSize}px` }}>
