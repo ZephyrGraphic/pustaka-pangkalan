@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { AlertCircle, Bell, X, Volume2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+import { usePathname } from "next/navigation";
+
 interface Announcement {
   id: string;
   title: string;
@@ -13,6 +15,7 @@ interface Announcement {
 }
 
 export default function BroadcastBanner() {
+  const pathname = usePathname();
   const [broadcast, setBroadcast] = useState<Announcement | null>(null);
   const [dismissed, setDismissed] = useState(false);
 
@@ -41,7 +44,7 @@ export default function BroadcastBanner() {
     setDismissed(true);
   };
 
-  if (!broadcast || dismissed) return null;
+  if (!broadcast || dismissed || pathname === "/login" || pathname?.startsWith("/admin")) return null;
 
   const isEmergency = broadcast.category.toLowerCase().includes("darurat") || broadcast.title.toLowerCase().includes("peringatan") || broadcast.title.toLowerCase().includes("hama");
 

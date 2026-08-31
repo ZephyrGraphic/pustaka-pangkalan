@@ -46,7 +46,7 @@ export default function TopAppBar() {
     return () => window.removeEventListener("user-profile-updated", handleProfileUpdate);
   }, [session]);
 
-  if (pathname === "/login") return null;
+  if (pathname === "/login" || pathname?.startsWith("/admin")) return null;
 
   const isAdmin = (session?.user as any)?.role === "ADMIN";
   const defaultAvatar = "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80";

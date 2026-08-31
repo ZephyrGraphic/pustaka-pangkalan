@@ -9,7 +9,7 @@ export default function BottomNav() {
   const pathname = usePathname();
   const { t } = useLanguage();
 
-  if (pathname === "/login") return null;
+  if (pathname === "/login" || pathname?.startsWith("/admin")) return null;
 
   const navItems = [
     { path: "/", icon: Home, labelKey: "nav_home" },
