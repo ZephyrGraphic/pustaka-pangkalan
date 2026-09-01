@@ -28,17 +28,17 @@ export async function GET() {
     ];
 
     const dusunMap: { [key: string]: { points: number; members: number; booksRead: number } } = {
-      "Dusun I (Krajan Barat)": { points: 280, members: 4, booksRead: 12 },
-      "Dusun II (Krajan Timur)": { points: 210, members: 3, booksRead: 9 },
-      "Dusun III (Babakan Sukamaju)": { points: 190, members: 3, booksRead: 8 },
-      "Dusun IV (Pasir Angin)": { points: 150, members: 2, booksRead: 6 },
+      "Dusun Pangkalan": { points: 280, members: 4, booksRead: 12 },
+      "Dusun Cikajang": { points: 210, members: 3, booksRead: 9 },
+      "Dusun Pasir Arangan": { points: 190, members: 3, booksRead: 8 },
+      "Dusun Pasir Gombong": { points: 150, members: 2, booksRead: 6 },
     };
 
     // Tally real user points and reading counts
     users.forEach((user) => {
-      const addr = user.address || "Dusun I (Krajan Barat)";
-      let matchedDusun = Object.keys(dusunMap).find(d => addr.includes(d.split(" ")[1]) || addr === d);
-      if (!matchedDusun) matchedDusun = "Dusun I (Krajan Barat)";
+      const addr = user.address || "Dusun Pangkalan";
+      let matchedDusun = Object.keys(dusunMap).find(d => addr.toLowerCase().includes(d.toLowerCase()) || addr === d);
+      if (!matchedDusun) matchedDusun = "Dusun Pangkalan";
 
       dusunMap[matchedDusun].points += user.points || 50;
       dusunMap[matchedDusun].members += 1;

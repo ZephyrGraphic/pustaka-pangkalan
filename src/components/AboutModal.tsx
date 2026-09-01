@@ -55,7 +55,7 @@ export default function AboutModal({ triggerText = "Tentang Pustaka Pangkalan", 
               <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-on-surface text-xs uppercase tracking-wider">Lokasi Balai Perpustakaan</p>
-                <p className="text-xs text-on-surface-variant mt-0.5">Kompleks Balai Desa Pangkalan, Kec. Pangkalan, Jawa Barat</p>
+                <p className="text-xs text-on-surface-variant mt-0.5">Kompleks Balai Desa Pangkalan, Kec. Cikidang, Kab. Sukabumi, Jawa Barat</p>
               </div>
             </div>
 
@@ -71,31 +71,49 @@ export default function AboutModal({ triggerText = "Tentang Pustaka Pangkalan", 
               <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-on-surface text-xs uppercase tracking-wider">Keanggotaan Digital</p>
-                <p className="text-xs text-on-surface-variant mt-0.5">Setiap warga ber-NIK Desa Pangkalan otomatis berhak atas kartu anggota digital.</p>
+                <p className="text-xs text-on-surface-variant mt-0.5">4 Dusun Resmi: Dusun Pangkalan, Dusun Cikajang, Dusun Pasir Arangan, Dusun Pasir Gombong.</p>
               </div>
             </div>
           </div>
 
           {/* Kepala Desa & Maskot Resmi Pustaka */}
-          <div className="bg-gradient-to-r from-emerald-950/80 to-primary/80 text-white p-3.5 sm:p-4 rounded-2xl border border-primary/30 flex items-center gap-3.5 shadow-sm">
-            <div className="relative w-14 h-14 rounded-2xl overflow-hidden border border-amber-400/60 shadow-md shrink-0 bg-white">
-              <Image
-                src="/images/pak_kades_mascot.jpg"
-                alt="Maskot Pak Kades Usep Saepulrohman"
-                fill
-                className="object-cover"
-              />
+          <div className="bg-gradient-to-r from-emerald-950/80 to-primary/80 text-white p-3.5 sm:p-4 rounded-2xl border border-primary/30 flex items-center justify-between gap-3.5 shadow-sm">
+            <div className="flex items-center gap-3.5">
+              <div className="relative w-14 h-14 rounded-2xl overflow-hidden border border-amber-400/60 shadow-md shrink-0 bg-white">
+                <Image
+                  src="/images/pak_kades_mascot.jpg"
+                  alt="Maskot Pak Kades Usep Saepulrohman"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="space-y-0.5">
+                <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider block">Pelindung & Pengarah</span>
+                <p className="font-bold text-white text-xs sm:text-sm">Bapak Usep Saepulrohman</p>
+                <p className="text-[11px] text-white/80">Kepala Desa Pangkalan</p>
+              </div>
             </div>
-            <div className="space-y-0.5">
-              <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider block">Pelindung & Pengarah</span>
-              <p className="font-bold text-white text-xs sm:text-sm">Bapak Usep Saepulrohman</p>
-              <p className="text-[11px] text-white/80">Kepala Desa Pangkalan</p>
-            </div>
+            <a
+              href="https://desapangkalan.web.id/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-[11px] transition-all shrink-0 text-center shadow-sm"
+              title="Kunjungi Website Resmi Desa"
+            >
+              Web Desa
+            </a>
           </div>
 
           <div className="flex items-center justify-between pt-2 text-[11px] text-on-surface-variant/80 border-t border-outline-variant/20">
             <span>Versi Aplikasi: v2.5.0 (PWA Ready)</span>
-            <span>© 2026 Desa Pangkalan</span>
+            <a 
+              href="https://desapangkalan.web.id/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-semibold"
+            >
+              desapangkalan.web.id ↗
+            </a>
           </div>
         </div>
 

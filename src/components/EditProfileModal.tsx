@@ -27,10 +27,10 @@ const AVATAR_PRESETS = [
 ];
 
 const DUSUN_OPTIONS = [
-  "Dusun I (Krajan Barat)",
-  "Dusun II (Krajan Timur)",
-  "Dusun III (Babakan Sukamaju)",
-  "Dusun IV (Pasir Angin)",
+  "Dusun Pangkalan",
+  "Dusun Cikajang",
+  "Dusun Pasir Arangan",
+  "Dusun Pasir Gombong",
   "Luar Wilayah / Tamu Desa",
 ];
 

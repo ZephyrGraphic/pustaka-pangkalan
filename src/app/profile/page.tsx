@@ -81,7 +81,7 @@ export default function Profile() {
   const isAdmin = currentUser?.role === "ADMIN" || (session?.user as any)?.role === "ADMIN";
   const userAvatar = profileUser?.image || session.user.image || "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80";
   const userNik = profileUser?.email || session.user.email || "320220...";
-  const userAddress = profileUser?.address || "Dusun I (Krajan Barat)";
+  const userAddress = profileUser?.address || "Dusun Pangkalan";
 
   return (
     <div className="max-w-[580px] mx-auto w-full space-y-6 md:space-y-8 pb-16 animate-fade-in">
