@@ -53,7 +53,7 @@ export async function GET() {
             name: "Asep Sunandar",
             email: "3204123456780001",
             phone: "081234567890",
-            address: "Dusun I (Krajan Barat)",
+            address: "Dusun Pangkalan",
           },
           book: {
             id: "book_1",

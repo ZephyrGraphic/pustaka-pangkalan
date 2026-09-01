@@ -51,6 +51,25 @@ export default function AdminUsersPage() {
   const [editOccupation, setEditOccupation] = useState("");
   const [editSubmitting, setEditSubmitting] = useState(false);
 
+  const [dusunList, setDusunList] = useState<string[]>([
+    "Dusun Pangkalan",
+    "Dusun Cikajang",
+    "Dusun Pasir Arangan",
+    "Dusun Pasir Gombong",
+    "Luar Wilayah / Tamu Desa",
+  ]);
+
+  const fetchDusuns = async () => {
+    try {
+      const res = await fetch("/api/dusuns");
+      const data = await res.json();
+      if (data.dusuns && data.dusuns.length > 0) {
+        const names = data.dusuns.map((d: any) => d.name);
+        setDusunList([...names, "Luar Wilayah / Tamu Desa"]);
+      }
+    } catch (err) {}
+  };
+
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -72,6 +91,10 @@ export default function AdminUsersPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchDusuns();
+  }, []);
 
   useEffect(() => {
     fetchUsers();
@@ -116,27 +139,26 @@ export default function AdminUsersPage() {
     e.preventDefault();
     if (!resetPinModalUser) return;
 
-    if (newPin.length !== 6 || !/^\d+$/.test(newPin)) {
+    if (!/^\d{6}$/.test(newPin)) {
       setPinError("PIN baru harus tepat 6 digit angka.");
       return;
     }
 
     setPinSubmitting(true);
     setPinError("");
+
     try {
       const res = await fetch("/api/admin/users", {
-        method: "PUT",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: resetPinModalUser.id,
-          newPin: newPin,
-        }),
+        body: JSON.stringify({ userId: resetPinModalUser.id, newPin }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        toast.success(`PIN untuk ${resetPinModalUser.name} berhasil di-reset menjadi "${newPin}"!`);
+        toast.success(`PIN untuk ${resetPinModalUser.name} berhasil direset ke PIN baru.`);
         setResetPinModalUser(null);
+        setNewPin("");
       } else {
         setPinError(data.error || "Gagal mereset PIN.");
       }
@@ -151,7 +173,7 @@ export default function AdminUsersPage() {
     setEditModalUser(user);
     setEditName(user.name || "");
     setEditPhone(user.phone || "");
-    setEditAddress(user.address || "Dusun I (Krajan Barat)");
+    setEditAddress(user.address || dusunList[0]);
     setEditOccupation(user.occupation || "Wirausaha / UMKM Desa");
   };
 
@@ -188,13 +210,7 @@ export default function AdminUsersPage() {
     }
   };
 
-  const dusunOptions = [
-    "ALL",
-    "Dusun I (Krajan Barat)",
-    "Dusun II (Krajan Timur)",
-    "Dusun III (Sukamaju)",
-    "Luar Wilayah / Tamu Desa",
-  ];
+  const dusunOptions = ["ALL", ...dusunList];
 
   const totalUsersCount = users.length;
   const adminCount = users.filter((u) => u.role === "ADMIN").length;

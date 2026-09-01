@@ -31,11 +31,11 @@ const AVATAR_PRESETS = [
   { id: "officer", label: "Perangkat Desa", url: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&auto=format&fit=crop&q=80" },
 ];
 
-const DUSUN_OPTIONS = [
-  "Dusun I (Krajan Barat)",
-  "Dusun II (Krajan Timur)",
-  "Dusun III (Babakan Sukamaju)",
-  "Dusun IV (Pasir Angin)",
+const DEFAULT_DUSUN_OPTIONS = [
+  "Dusun Pangkalan",
+  "Dusun Cikajang",
+  "Dusun Pasir Arangan",
+  "Dusun Pasir Gombong",
   "Luar Wilayah / Tamu Desa",
 ];
 
@@ -59,6 +59,7 @@ function OnboardingContent() {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Form states
+  const [dusunList, setDusunList] = useState<string[]>(DEFAULT_DUSUN_OPTIONS);
   const [name, setName] = useState(initialName);
   const [nik, setNik] = useState(initialNik);
   const [pin, setPin] = useState("");
@@ -67,7 +68,7 @@ function OnboardingContent() {
   const [customAvatarUrl, setCustomAvatarUrl] = useState("");
   const [showCustomAvatarInput, setShowCustomAvatarInput] = useState(false);
   const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState(DUSUN_OPTIONS[0]);
+  const [address, setAddress] = useState(DEFAULT_DUSUN_OPTIONS[0]);
   const [occupation, setOccupation] = useState(MINAT_OPTIONS[0]);
 
   // Status & errors
@@ -75,10 +76,16 @@ function OnboardingContent() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!initialNik) {
-      // If user comes without NIK, we make sure they can enter it
-    }
-  }, [initialNik]);
+    fetch("/api/dusuns")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.dusuns && data.dusuns.length > 0) {
+          const names = data.dusuns.map((d: any) => d.name);
+          setDusunList([...names, "Luar Wilayah / Tamu Desa"]);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Handle PIN input with number pads
   const handlePinInput = (digit: string, isConfirm: boolean = false) => {
@@ -512,7 +519,7 @@ function OnboardingContent() {
                   onChange={(e) => setAddress(e.target.value)}
                   className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary appearance-none cursor-pointer"
                 >
-                  {DUSUN_OPTIONS.map((d) => (
+                  {dusunList.map((d) => (
                     <option key={d} value={d}>{d}</option>
                   ))}
                 </select>
