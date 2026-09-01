@@ -162,17 +162,15 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* 3D Mascot Character Avatar Highlight */}
-          <div className="relative z-10 shrink-0 w-36 h-36 sm:w-44 sm:h-44 rounded-3xl overflow-hidden border-2 border-amber-400/50 shadow-2xl bg-white/10 backdrop-blur-sm group hover:scale-105 transition-transform">
-            <Image
-              src="/images/pak_kades_mascot.jpg"
-              alt="Maskot Pak Kades Usep Saepulrohman"
-              fill
-              className="object-cover"
-            />
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2 text-center">
-              <span className="text-[10px] font-bold text-white block truncate">Usep Saepulrohman</span>
-              <span className="text-[8px] text-amber-300 font-semibold uppercase tracking-wider block">Kepala Desa Pangkalan</span>
+          {/* DKV Vector Mascot Character Badge */}
+          <div className="relative z-10 shrink-0 w-36 h-36 sm:w-48 sm:h-48 rounded-3xl overflow-hidden border-2 border-amber-400/60 shadow-2xl bg-white/95 backdrop-blur-md group hover:scale-105 transition-all p-1">
+            <div className="relative w-full h-full rounded-2xl overflow-hidden">
+              <Image
+                src="/images/pak_kades_mascot.jpg"
+                alt="Maskot Pak Kades Usep Saepulrohman"
+                fill
+                className="object-contain"
+              />
             </div>
           </div>
         </div>
