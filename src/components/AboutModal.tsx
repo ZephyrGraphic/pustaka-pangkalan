@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { Info, X, MapPin, Clock, ShieldCheck, BookOpen, ChevronRight } from "lucide-react";
 
 export default function AboutModal({ triggerText = "Tentang Pustaka Pangkalan", className = "" }: { triggerText?: string; className?: string }) {
@@ -72,6 +73,23 @@ export default function AboutModal({ triggerText = "Tentang Pustaka Pangkalan", 
                 <p className="font-bold text-on-surface text-xs uppercase tracking-wider">Keanggotaan Digital</p>
                 <p className="text-xs text-on-surface-variant mt-0.5">Setiap warga ber-NIK Desa Pangkalan otomatis berhak atas kartu anggota digital.</p>
               </div>
+            </div>
+          </div>
+
+          {/* Kepala Desa & Maskot Resmi Pustaka */}
+          <div className="bg-gradient-to-r from-emerald-950/80 to-primary/80 text-white p-3.5 sm:p-4 rounded-2xl border border-primary/30 flex items-center gap-3.5 shadow-sm">
+            <div className="relative w-14 h-14 rounded-2xl overflow-hidden border border-amber-400/60 shadow-md shrink-0 bg-white">
+              <Image
+                src="/images/pak_kades_mascot.jpg"
+                alt="Maskot Pak Kades Usep Saepulrohman"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider block">Pelindung & Pengarah</span>
+              <p className="font-bold text-white text-xs sm:text-sm">Bapak Usep Saepulrohman</p>
+              <p className="text-[11px] text-white/80">Kepala Desa Pangkalan</p>
             </div>
           </div>
 

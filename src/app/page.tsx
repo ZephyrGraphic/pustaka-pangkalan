@@ -120,6 +120,62 @@ export default async function Home() {
         <SearchBar />
       </section>
 
+      {/* Banner Ajakan Membaca Kepala Desa Pangkalan */}
+      <section className="animate-fade-in-up">
+        <div className="relative w-full rounded-3xl overflow-hidden shadow-xl border border-primary/20 bg-gradient-to-r from-emerald-950 via-primary to-emerald-900 text-white min-h-[220px] flex flex-col md:flex-row items-center justify-between p-6 sm:p-8 gap-6">
+          {/* Background Image Layer */}
+          <div className="absolute inset-0 z-0 opacity-25 mix-blend-overlay">
+            <Image
+              src="/images/kades_reading_banner.jpg"
+              alt="Banner Literasi Desa Pangkalan"
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          <div className="relative z-10 flex-1 space-y-3 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-300">
+              <span>🏛️ Pesan Kepala Desa Pangkalan</span>
+            </div>
+            <h3 className="font-headline-md text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight">
+              &quot;Hayu Maca, Ngawangun Desa Pangkalan nu Maju!&quot;
+            </h3>
+            <p className="text-xs sm:text-sm text-white/90 leading-relaxed max-w-xl">
+              Sampurasun Wargi Sadaya! Tingkatkeun élmu tatanén, peternakan bioflok, sareng wirausaha desa ngaliwatan perpustakaan digital urang.
+            </p>
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+              <Link
+                href="/explore"
+                className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-lg hover:scale-105 active:scale-95 flex items-center gap-2"
+              >
+                <span>Mulai Membaca E-Book</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/explore?category=Pertanian"
+                className="px-4 py-2.5 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-2xl text-xs sm:text-sm backdrop-blur-md border border-white/20 transition-all"
+              >
+                Modul Pertanian & Bioflok
+              </Link>
+            </div>
+          </div>
+
+          {/* 3D Mascot Character Avatar Highlight */}
+          <div className="relative z-10 shrink-0 w-36 h-36 sm:w-44 sm:h-44 rounded-3xl overflow-hidden border-2 border-amber-400/50 shadow-2xl bg-white/10 backdrop-blur-sm group hover:scale-105 transition-transform">
+            <Image
+              src="/images/pak_kades_mascot.jpg"
+              alt="Maskot Pak Kades Usep Saepulrohman"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2 text-center">
+              <span className="text-[10px] font-bold text-white block truncate">Usep Saepulrohman</span>
+              <span className="text-[8px] text-amber-300 font-semibold uppercase tracking-wider block">Kepala Desa Pangkalan</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Categories */}
       <section className="space-y-3">
         <h3 className="font-title-md text-base font-bold text-on-surface">Kategori Pengetahuan Desa</h3>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, X, Send, Bot, User, Mic, MicOff, BookOpen, ChevronDown } from "lucide-react";
+import { Sparkles, X, Send, Mic, MicOff, BookOpen, ChevronDown } from "lucide-react";
+import Image from "next/image";
 import { useLanguage } from "./LanguageProvider";
 
 interface ChatMessage {
@@ -19,7 +20,7 @@ export default function TanyaPustakaAI() {
     {
       id: "welcome",
       sender: "ai",
-      text: "Sampurasun! 🙏 Saya **Tanya Pustaka AI**, asisten cerdas perpustakaan Desa Pangkalan. Ada yang bisa saya bantu seputar pertanian, bioflok, usaha UMKM, atau budaya Sunda?",
+      text: "Sampurasun! 🙏 Saya **Tanya Pustaka AI** (Asisten Digital Pak Kades Usep Saepulrohman). Ada yang bisa saya bantu seputar panduan bertani, bioflok lele/nila, usaha BUMDes, atau sastra Sunda?",
       time: "Baru saja",
     },
   ]);
@@ -117,17 +118,28 @@ export default function TanyaPustakaAI() {
 
   return (
     <>
-      {/* Floating Action Button */}
+      {/* Floating Action Button with Pak Kades Mascot Avatar */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 bg-gradient-to-r from-primary via-emerald-600 to-green-700 text-on-primary px-4 py-3 rounded-full shadow-2xl flex items-center gap-2.5 font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all group border border-white/20"
+          className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 bg-gradient-to-r from-emerald-800 via-primary to-green-700 text-on-primary pl-2 pr-4 py-2 rounded-full shadow-2xl flex items-center gap-2.5 font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all group border-2 border-amber-400/40"
           aria-label="Buka Tanya Pustaka AI"
         >
-          <div className="relative">
-            <Sparkles className="w-5 h-5 animate-pulse text-amber-300" />
+          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/60 shadow-inner shrink-0 bg-white">
+            <Image
+              src="/images/pak_kades_ai_avatar.jpg"
+              alt="Maskot Pak Kades AI"
+              fill
+              className="object-cover"
+            />
           </div>
-          <span>Tanya Pustaka AI</span>
+          <div className="flex flex-col items-start leading-tight text-left">
+            <span className="text-[10px] text-amber-300 font-bold uppercase tracking-wider flex items-center gap-1">
+              <Sparkles className="w-2.5 h-2.5 animate-pulse" />
+              Pak Kades AI
+            </span>
+            <span className="text-xs font-extrabold text-white">Tanya Pustaka</span>
+          </div>
         </button>
       )}
 
@@ -135,14 +147,24 @@ export default function TanyaPustakaAI() {
       {isOpen && (
         <div className="fixed bottom-0 md:bottom-6 right-0 md:right-6 z-[99999] w-full md:w-[420px] h-[580px] max-h-[90vh] bg-surface-container text-on-surface rounded-t-3xl md:rounded-3xl shadow-2xl border border-outline-variant/30 flex flex-col overflow-hidden animate-fade-in-up">
           {/* Drawer Header */}
-          <div className="bg-gradient-to-r from-primary to-emerald-800 text-on-primary p-4 flex items-center justify-between shadow-sm shrink-0">
+          <div className="bg-gradient-to-r from-emerald-900 via-primary to-green-800 text-on-primary p-4 flex items-center justify-between shadow-sm shrink-0 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-amber-300 shadow-inner">
-                <Bot className="w-5 h-5" />
+              <div className="relative w-10 h-10 rounded-2xl overflow-hidden border-2 border-amber-400/60 shadow-md shrink-0 bg-white">
+                <Image
+                  src="/images/pak_kades_ai_avatar.jpg"
+                  alt="Maskot Pak Kades AI"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <div>
-                <h3 className="font-title-md text-sm font-bold leading-tight">Tanya Pustaka AI</h3>
-                <p className="text-[11px] text-white/80">Asisten Pengetahuan Desa Pangkalan</p>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="font-title-md text-sm font-bold leading-tight">Tanya Pustaka AI</h3>
+                  <span className="bg-amber-400/25 text-amber-200 border border-amber-400/30 text-[9px] px-1.5 py-0.2 rounded-full font-bold">
+                    Pak Kades Bot
+                  </span>
+                </div>
+                <p className="text-[11px] text-white/80">Asisten Pintar Desa Pangkalan</p>
               </div>
             </div>
             <button
@@ -162,8 +184,13 @@ export default function TanyaPustakaAI() {
                 className={`flex gap-2.5 ${m.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 {m.sender === "ai" && (
-                  <div className="w-7 h-7 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 text-xs font-bold mt-1">
-                    AI
+                  <div className="relative w-7 h-7 rounded-xl overflow-hidden border border-primary/30 shadow-sm shrink-0 mt-1 bg-white">
+                    <Image
+                      src="/images/pak_kades_ai_avatar.jpg"
+                      alt="Pak Kades AI"
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 )}
                 <div
