@@ -22,6 +22,7 @@ export default async function Home() {
   // Fetch user's reading progress
   let activeReading = null;
   let userAvatar = null;
+  let userName = "Warga";
   let userPoints = 0;
   let userBadge = "Warga Pembelajar";
 
@@ -29,8 +30,9 @@ export default async function Home() {
     const userId = (session.user as any).id;
     const userFromDb = await prisma.user.findUnique({
       where: { id: userId },
-      select: { image: true, points: true, badge: true },
+      select: { name: true, image: true, points: true, badge: true },
     });
+    userName = userFromDb?.name || session.user.name || "Warga";
     userAvatar = userFromDb?.image || session.user.image;
     userPoints = userFromDb?.points || 0;
     userBadge = userFromDb?.badge || "Warga Pembelajar";
@@ -66,7 +68,7 @@ export default async function Home() {
             </div>
             <h2 className="font-headline-lg-mobile md:font-headline-lg text-2xl md:text-3xl font-bold text-on-surface leading-tight">
               Wilujeng Sumping,<br />
-              <span className="text-primary">{session?.user?.name ? session.user.name.split(" ")[0] : "Warga"}</span>
+              <span className="text-primary">{userName}</span>
             </h2>
           </div>
           
