@@ -10,7 +10,8 @@ import {
   Star, 
   Plus, 
   Activity, 
-  ArrowRight 
+  ArrowRight,
+  MapPin
 } from "lucide-react";
 import Link from "next/link";
 
@@ -22,6 +23,10 @@ export default async function AdminDashboard() {
   const totalUsers = await prisma.user.count({ where: { role: "USER" } });
   const totalChapters = await prisma.chapter.count();
   const totalReviews = await prisma.review.count();
+  let totalDusuns = 4;
+  try {
+    totalDusuns = await (prisma as any).dusun.count();
+  } catch (e) {}
 
   // Recent reading progress activities
   const recentActivities = await prisma.readingProgress.findMany({
@@ -100,7 +105,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Action Shortcuts */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         <Link 
           href="/admin/books/new"
           className="bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 p-4 rounded-2xl transition-all group flex flex-col justify-between"
@@ -112,7 +117,7 @@ export default async function AdminDashboard() {
             <h4 className="font-title-md text-sm font-bold text-on-surface group-hover:text-primary transition-colors">
               Tambah Buku
             </h4>
-            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Unggah e-book atau modul baru</p>
+            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Unggah e-book atau modul</p>
           </div>
         </Link>
 
@@ -127,7 +132,7 @@ export default async function AdminDashboard() {
             <h4 className="font-title-md text-sm font-bold text-on-surface group-hover:text-primary transition-colors">
               Terbitkan Warta
             </h4>
-            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Kirim pengumuman ke warga</p>
+            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Kirim pengumuman warga</p>
           </div>
         </Link>
 
@@ -142,7 +147,7 @@ export default async function AdminDashboard() {
             <h4 className="font-title-md text-sm font-bold text-on-surface group-hover:text-primary transition-colors">
               Lihat Statistik
             </h4>
-            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Ekspor laporan & tren baca</p>
+            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Laporan & tren baca</p>
           </div>
         </Link>
 
@@ -157,7 +162,22 @@ export default async function AdminDashboard() {
             <h4 className="font-title-md text-sm font-bold text-on-surface group-hover:text-primary transition-colors">
               Kelola Pengguna
             </h4>
-            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Atur hak akses admin & warga</p>
+            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Akses admin & warga</p>
+          </div>
+        </Link>
+
+        <Link 
+          href="/admin/dusuns"
+          className="bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 p-4 rounded-2xl transition-all group flex flex-col justify-between"
+        >
+          <div className="p-2.5 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-xl w-fit mb-3">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="font-title-md text-sm font-bold text-on-surface group-hover:text-primary transition-colors">
+              Wilayah Dusun
+            </h4>
+            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">{totalDusuns} dusun desa</p>
           </div>
         </Link>
       </div>

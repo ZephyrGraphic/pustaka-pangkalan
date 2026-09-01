@@ -12,7 +12,8 @@ import {
   MessageSquare, 
   ShieldCheck, 
   Eye,
-  ArrowRight
+  ArrowRight,
+  MapPin
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
@@ -96,6 +97,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           >
             <Users className="w-4 h-4 text-primary shrink-0" />
             <span>Pengguna & Warga</span>
+          </Link>
+
+          <Link 
+            href="/admin/dusuns" 
+            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl hover:bg-surface-container-high text-on-surface transition-colors font-medium text-xs sm:text-sm"
+          >
+            <MapPin className="w-4 h-4 text-primary shrink-0" />
+            <span>Wilayah Dusun Desa</span>
           </Link>
 
           {/* Quick Switcher in Sidebar */}

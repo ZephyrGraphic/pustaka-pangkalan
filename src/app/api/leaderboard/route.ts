@@ -20,25 +20,37 @@ export async function GET() {
       },
     });
 
-    const dusunList = [
-      { name: "Dusun I (Krajan Barat)", points: 0, members: 0, booksRead: 0 },
-      { name: "Dusun II (Krajan Timur)", points: 0, members: 0, booksRead: 0 },
-      { name: "Dusun III (Babakan Sukamaju)", points: 0, members: 0, booksRead: 0 },
-      { name: "Dusun IV (Pasir Angin)", points: 0, members: 0, booksRead: 0 },
+    // Fetch all active Dusun from database
+    const dbDusuns = await (prisma as any).dusun.findMany({
+      orderBy: { order: "asc" },
+    });
+
+    const fallbackDusuns = [
+      { name: "Dusun Pangkalan" },
+      { name: "Dusun Cikajang" },
+      { name: "Dusun Pasir Arangan" },
+      { name: "Dusun Pasir Gombong" },
     ];
 
-    const dusunMap: { [key: string]: { points: number; members: number; booksRead: number } } = {
-      "Dusun Pangkalan": { points: 280, members: 4, booksRead: 12 },
-      "Dusun Cikajang": { points: 210, members: 3, booksRead: 9 },
-      "Dusun Pasir Arangan": { points: 190, members: 3, booksRead: 8 },
-      "Dusun Pasir Gombong": { points: 150, members: 2, booksRead: 6 },
-    };
+    const activeDusuns = dbDusuns && dbDusuns.length > 0 ? dbDusuns : fallbackDusuns;
+
+    const dusunMap: { [key: string]: { points: number; members: number; booksRead: number } } = {};
+    activeDusuns.forEach((d: any) => {
+      dusunMap[d.name] = { points: 100, members: 2, booksRead: 5 };
+    });
 
     // Tally real user points and reading counts
     users.forEach((user) => {
-      const addr = user.address || "Dusun Pangkalan";
-      let matchedDusun = Object.keys(dusunMap).find(d => addr.toLowerCase().includes(d.toLowerCase()) || addr === d);
-      if (!matchedDusun) matchedDusun = "Dusun Pangkalan";
+      const addr = user.address || activeDusuns[0].name;
+      let matchedDusun: string = activeDusuns[0].name;
+      const found = Object.keys(dusunMap).find(d => addr.toLowerCase().includes(d.toLowerCase()) || addr === d);
+      if (found) {
+        matchedDusun = found;
+      }
+
+      if (!dusunMap[matchedDusun]) {
+        dusunMap[matchedDusun] = { points: 0, members: 0, booksRead: 0 };
+      }
 
       dusunMap[matchedDusun].points += user.points || 50;
       dusunMap[matchedDusun].members += 1;
