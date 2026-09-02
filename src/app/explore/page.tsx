@@ -25,6 +25,26 @@ function ExploreContent() {
   const [offlineOnly, setOfflineOnly] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("latest");
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([
+    "Semua",
+    "Pertanian & Ketahanan Pangan",
+    "Sejarah, Budaya & Bahasa Sunda",
+    "Bisnis Desa, UMKM & BUMDes",
+    "Kesehatan & Gizi Keluarga",
+    "Teknologi, AI & Digital Desa",
+    "Pendidikan & Cerita Anak",
+  ]);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+          setCategories(["Semua", ...data.categories.map((c: any) => c.name)]);
+        }
+      })
+      .catch((err) => console.error("Error fetching categories:", err));
+  }, []);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -88,8 +108,6 @@ function ExploreContent() {
       console.error(err);
     }
   };
-
-  const categories = ["Semua", "Pertanian", "Sejarah", "Ekonomi", "Kesehatan"];
 
   const filteredBooks = books.filter((book) => {
     if (offlineOnly && !book.isOffline) return false;

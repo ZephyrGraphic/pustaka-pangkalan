@@ -47,13 +47,15 @@ model Book {
   author      String
   description String
   coverUrl    String?
-  category    String
-  pdfUrl      String?
-  isOffline   Boolean  @default(false)
-  pages       Int      @default(0)
-  rating      Float    @default(0.0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  category      String
+  categoryId    String?
+  categoryRel   Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  pdfUrl        String?
+  isOffline     Boolean  @default(false)
+  pages         Int      @default(0)
+  rating        Float    @default(0.0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   bookmarks     Bookmark[]
   readers       ReadingProgress[]
@@ -148,4 +150,17 @@ model Dusun {
   updatedAt DateTime @updatedAt
 
   users     User[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?  @default("BookOpen")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  books       Book[]
 }

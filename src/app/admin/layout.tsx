@@ -13,7 +13,8 @@ import {
   ShieldCheck, 
   Eye,
   ArrowRight,
-  MapPin
+  MapPin,
+  Layers
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
@@ -40,9 +41,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <p className="text-xs text-on-surface-variant">Desa Pangkalan</p>
             </div>
           </div>
+          <ThemeToggle />
         </div>
         
-        <nav className="flex-1 p-3 flex flex-col gap-1 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
           <Link 
             href="/admin" 
             className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl hover:bg-surface-container-high text-on-surface transition-colors font-medium text-xs sm:text-sm"
@@ -57,6 +59,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           >
             <Book className="w-4 h-4 text-primary shrink-0" />
             <span>Kelola Koleksi Buku</span>
+          </Link>
+
+          <Link 
+            href="/admin/categories" 
+            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl hover:bg-surface-container-high text-on-surface transition-colors font-medium text-xs sm:text-sm"
+          >
+            <Layers className="w-4 h-4 text-primary shrink-0" />
+            <span>Kategori Buku</span>
           </Link>
 
           <Link 

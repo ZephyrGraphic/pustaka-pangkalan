@@ -21,3 +21,12 @@ export const dusunSchema = z.object({
   name: z.string().min(2, "Nama dusun minimal 2 karakter").max(100, "Nama dusun maksimal 100 karakter"),
   order: z.number().int().nonnegative().optional(),
 });
+
+export const categorySchema = z.object({
+  name: z.string().min(2, "Nama kategori minimal 2 karakter").max(100, "Nama kategori maksimal 100 karakter"),
+  slug: z.string().min(2, "Slug minimal 2 karakter").max(100, "Slug maksimal 100 karakter").optional(),
+  description: z.string().max(300, "Deskripsi maksimal 300 karakter").optional().nullable(),
+  icon: z.string().max(50, "Nama ikon maksimal 50 karakter").optional().nullable(),
+  order: z.number().int().nonnegative("Urutan harus berupa angka positif").optional(),
+});
+

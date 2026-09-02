@@ -1,6 +1,6 @@
 import prisma from "../src/lib/prisma";
 import bcrypt from "bcryptjs";
-import { adminUserUpdateSchema, profileUpdateSchema, dusunSchema } from "../src/lib/validations";
+import { adminUserUpdateSchema, profileUpdateSchema, dusunSchema, categorySchema } from "../src/lib/validations";
 
 interface TestResult {
   suite: string;
@@ -18,6 +18,21 @@ function assert(condition: boolean, suite: string, name: string, details?: strin
   } else {
     console.error(`  ❌ [FAIL] ${suite} > ${name} - Details: ${details || "Assertion failed"}`);
   }
+}
+
+async function retryPrisma<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
+  let lastErr: any;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (attempt < maxRetries) {
+        await new Promise((r) => setTimeout(r, 800 * attempt));
+      }
+    }
+  }
+  throw lastErr;
 }
 
 async function runSTQAAudit() {
@@ -275,56 +290,66 @@ async function runSTQAAudit() {
   console.log("\n📚 SUITE 8: Physical Book Circulation CRUD Verification");
   try {
     // 1. Read: Query all borrow records (self-seeding if empty)
-    let allRecords = await prisma.borrowRecord.findMany({
-      include: { user: true, book: true },
-      orderBy: { createdAt: "desc" },
-    });
+    let allRecords = await retryPrisma(() =>
+      prisma.borrowRecord.findMany({
+        include: { user: true, book: true },
+        orderBy: { createdAt: "desc" },
+      })
+    );
 
     if (allRecords.length === 0) {
-      const seedUser = await prisma.user.findFirst();
-      const seedBook = await prisma.book.findFirst();
+      const seedUser = await retryPrisma(() => prisma.user.findFirst());
+      const seedBook = await retryPrisma(() => prisma.book.findFirst());
       if (seedUser && seedBook) {
-        await prisma.borrowRecord.create({
-          data: {
-            userId: seedUser.id,
-            bookId: seedBook.id,
-            dueDate: new Date(Date.now() + 7 * 86400000),
-            status: "BORROWED",
-            notes: "Buku fisik dipinjam di Balai Desa",
-          },
-        });
-        allRecords = await prisma.borrowRecord.findMany({
-          include: { user: true, book: true },
-        });
+        await retryPrisma(() =>
+          prisma.borrowRecord.create({
+            data: {
+              userId: seedUser.id,
+              bookId: seedBook.id,
+              dueDate: new Date(Date.now() + 7 * 86400000),
+              status: "BORROWED",
+              notes: "Buku fisik dipinjam di Balai Desa",
+            },
+          })
+        );
+        allRecords = await retryPrisma(() =>
+          prisma.borrowRecord.findMany({
+            include: { user: true, book: true },
+          })
+        );
       }
     }
 
     assert(allRecords.length >= 1, "CIRCULATION_CRUD", "Circulation records exist in database", `Total: ${allRecords.length}`);
 
     // 2. Create: Add a test borrow record
-    const testUser = await prisma.user.findFirst({ where: { email: "3202202600420001" } });
-    const testBook = await prisma.book.findFirst();
+    const testUser = await retryPrisma(() => prisma.user.findFirst({ where: { email: "3202202600420001" } }));
+    const testBook = await retryPrisma(() => prisma.book.findFirst());
     assert(!!testUser && !!testBook, "CIRCULATION_CRUD", "Reference user and book available for circulation test");
 
     if (testUser && testBook) {
       const initialDue = new Date(Date.now() + 7 * 86400000);
-      const newBorrow = await prisma.borrowRecord.create({
-        data: {
-          userId: testUser.id,
-          bookId: testBook.id,
-          dueDate: initialDue,
-          status: "BORROWED",
-          notes: "STQA Automated Test Borrowing",
-        },
-      });
+      const newBorrow = await retryPrisma(() =>
+        prisma.borrowRecord.create({
+          data: {
+            userId: testUser.id,
+            bookId: testBook.id,
+            dueDate: initialDue,
+            status: "BORROWED",
+            notes: "STQA Automated Test Borrowing",
+          },
+        })
+      );
       assert(!!newBorrow.id, "CIRCULATION_CRUD", "Create new borrow record (POST)", `Record ID: ${newBorrow.id}`);
 
       // 3. Update: Extend borrow by 7 days
       const extendedDue = new Date(initialDue.getTime() + 7 * 86400000);
-      const extendedRecord = await prisma.borrowRecord.update({
-        where: { id: newBorrow.id },
-        data: { dueDate: extendedDue },
-      });
+      const extendedRecord = await retryPrisma(() =>
+        prisma.borrowRecord.update({
+          where: { id: newBorrow.id },
+          data: { dueDate: extendedDue },
+        })
+      );
       assert(
         new Date(extendedRecord.dueDate).getTime() > new Date(initialDue).getTime(),
         "CIRCULATION_CRUD",
@@ -332,23 +357,113 @@ async function runSTQAAudit() {
       );
 
       // 4. Update: Mark as returned (Tandai Kembali)
-      const returnedRecord = await prisma.borrowRecord.update({
-        where: { id: newBorrow.id },
-        data: {
-          status: "RETURNED",
-          returnDate: new Date(),
-        },
-      });
+      const returnedRecord = await retryPrisma(() =>
+        prisma.borrowRecord.update({
+          where: { id: newBorrow.id },
+          data: {
+            status: "RETURNED",
+            returnDate: new Date(),
+          },
+        })
+      );
       assert(returnedRecord.status === "RETURNED", "CIRCULATION_CRUD", "Mark book as returned (PATCH RETURN)");
       assert(!!returnedRecord.returnDate, "CIRCULATION_CRUD", "Populate returnDate timestamp on return");
 
       // 5. Delete: Cleanup test record
-      await prisma.borrowRecord.delete({ where: { id: newBorrow.id } });
-      const verifyDeleted = await prisma.borrowRecord.findUnique({ where: { id: newBorrow.id } });
+      await retryPrisma(() => prisma.borrowRecord.delete({ where: { id: newBorrow.id } }));
+      const verifyDeleted = await retryPrisma(() => prisma.borrowRecord.findUnique({ where: { id: newBorrow.id } }));
       assert(!verifyDeleted, "CIRCULATION_CRUD", "Delete borrow record (DELETE)");
     }
   } catch (err: any) {
     assert(false, "CIRCULATION_CRUD", "Circulation CRUD suite", err.message);
+  }
+
+  // SUITE 9: BOOK CATEGORY MANAGEMENT & CASCADE AUDIT
+  console.log("\n📚 SUITE 9: Book Category Management & Cascade Audit");
+  try {
+    // 1. Read: Verify official categories exist in DB
+    const categories = await (prisma as any).category.findMany({
+      orderBy: { order: "asc" },
+      include: { _count: { select: { books: true } } },
+    });
+    assert(categories.length >= 8, "CATEGORY_CRUD", "All 8 official village book categories registered in DB", `Total: ${categories.length}`);
+
+    // 2. Validation: Test category Zod schema
+    const validCat = categorySchema.safeParse({
+      name: "Kesenian & Musik Tradisional",
+      description: "Seni musik calung dan degung Sunda",
+      icon: "Palette",
+      order: 9,
+    });
+    assert(validCat.success, "CATEGORY_CRUD", "Valid category payload accepted by schema");
+
+    const invalidShortName = categorySchema.safeParse({ name: "A", order: 1 });
+    assert(!invalidShortName.success, "CATEGORY_CRUD", "Invalid short category name correctly rejected");
+
+    const invalidOrder = categorySchema.safeParse({ name: "Kesenian", order: -5 });
+    assert(!invalidOrder.success, "CATEGORY_CRUD", "Negative order correctly rejected by schema");
+
+    // 3. Create: Add a temporary test category
+    const testCat = await (prisma as any).category.create({
+      data: {
+        name: "STQA Test Kategori Desa",
+        slug: "stqa-test-kategori-desa",
+        description: "Kategori uji otomatis",
+        icon: "Sparkles",
+        order: 999,
+      },
+    });
+    assert(!!testCat.id, "CATEGORY_CRUD", "Create new category in database (POST)", `ID: ${testCat.id}`);
+
+    // 4. Update: Modify category name and order
+    const updatedCat = await (prisma as any).category.update({
+      where: { id: testCat.id },
+      data: {
+        name: "STQA Test Kategori Desa Updated",
+        order: 1000,
+      },
+    });
+    assert(
+      updatedCat.name === "STQA Test Kategori Desa Updated" && updatedCat.order === 1000,
+      "CATEGORY_CRUD",
+      "Update category name and display order (PUT)"
+    );
+
+    // 5. Cascade test: Link a temporary book, then test safe category deletion
+    const dummyBook = await prisma.book.create({
+      data: {
+        title: "Buku Uji Cascade Kategori",
+        author: "Tim STQA Pustaka",
+        description: "Buku untuk menguji unbind category saat dihapus",
+        category: updatedCat.name,
+        categoryId: testCat.id,
+      },
+    });
+    assert(dummyBook.categoryId === testCat.id, "CATEGORY_CRUD", "Link book to category relational FK");
+
+    // Unbind and delete category
+    await prisma.book.updateMany({
+      where: { categoryId: testCat.id },
+      data: { categoryId: null, category: "Umum" },
+    });
+    await (prisma as any).category.delete({ where: { id: testCat.id } });
+
+    const verifyBookAfter = await prisma.book.findUnique({ where: { id: dummyBook.id } });
+    assert(
+      verifyBookAfter?.categoryId === null && verifyBookAfter?.category === "Umum",
+      "CATEGORY_CRUD",
+      "Safe unbind of books to fallback category 'Umum' upon category deletion"
+    );
+
+    // Cleanup dummy book
+    await prisma.book.delete({ where: { id: dummyBook.id } });
+    const verifyBookDeleted = await prisma.book.findUnique({ where: { id: dummyBook.id } });
+    assert(!verifyBookDeleted, "CATEGORY_CRUD", "Cleanup test book successfully");
+
+    const verifyCatDeleted = await (prisma as any).category.findUnique({ where: { id: testCat.id } });
+    assert(!verifyCatDeleted, "CATEGORY_CRUD", "Delete category from database (DELETE)");
+  } catch (err: any) {
+    assert(false, "CATEGORY_CRUD", "Category CRUD suite error", err.message);
   }
 
   // SUMMARY

@@ -9,8 +9,12 @@ export async function GET(request: Request) {
 
     let whereClause: any = {};
 
-    if (category) {
-      whereClause.category = category;
+    if (category && category !== "Semua") {
+      whereClause.OR = [
+        { category: { contains: category, mode: "insensitive" } },
+        { categoryRel: { name: { contains: category, mode: "insensitive" } } },
+        { categoryRel: { slug: { equals: category.toLowerCase() } } },
+      ];
     }
 
     if (search) {

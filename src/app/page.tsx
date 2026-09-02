@@ -1,4 +1,4 @@
-import { MapPin, ArrowRight, Play, Flame, Wheat, BookOpen, Briefcase, HeartPulse, Star, Trophy } from "lucide-react";
+import { MapPin, ArrowRight, Play, Flame, Wheat, BookOpen, Briefcase, HeartPulse, Star, Trophy, Cpu, GraduationCap, Palette } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
@@ -121,19 +121,31 @@ export default async function Home() {
         <div className="flex overflow-x-auto hide-scroll gap-2.5 pb-1 -mx-margin px-margin md:mx-0 md:px-0">
           <Link href="/explore?category=Pertanian" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
             <Wheat className="w-4 h-4 text-primary" />
-            <span>Pertanian & Peternakan</span>
+            <span>Pertanian & Ketahanan Pangan</span>
           </Link>
           <Link href="/explore?category=Sejarah" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
             <BookOpen className="w-4 h-4 text-primary" />
-            <span>Sastra & Budaya Sunda</span>
+            <span>Budaya & Bahasa Sunda</span>
           </Link>
-          <Link href="/explore?category=Ekonomi" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
+          <Link href="/explore?category=Bisnis" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
             <Briefcase className="w-4 h-4 text-primary" />
-            <span>Wirausaha UMKM</span>
+            <span>UMKM & BUMDes</span>
           </Link>
           <Link href="/explore?category=Kesehatan" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
             <HeartPulse className="w-4 h-4 text-primary" />
-            <span>Kesehatan Desa</span>
+            <span>Kesehatan & Gizi</span>
+          </Link>
+          <Link href="/explore?category=Teknologi" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
+            <Cpu className="w-4 h-4 text-primary" />
+            <span>Teknologi & AI Desa</span>
+          </Link>
+          <Link href="/explore?category=Pendidikan" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
+            <GraduationCap className="w-4 h-4 text-primary" />
+            <span>Pendidikan Anak</span>
+          </Link>
+          <Link href="/explore?category=Keterampilan" className="flex-shrink-0 flex items-center gap-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-2xl px-4 py-2.5 transition-all text-xs font-semibold text-on-surface shadow-sm">
+            <Palette className="w-4 h-4 text-primary" />
+            <span>Keterampilan Kreatif</span>
           </Link>
         </div>
       </section>

@@ -9,9 +9,10 @@ import {
   BarChart3, 
   Star, 
   Plus, 
-  Activity, 
   ArrowRight,
-  MapPin
+  MapPin,
+  Layers,
+  Activity
 } from "lucide-react";
 import Link from "next/link";
 
@@ -26,6 +27,10 @@ export default async function AdminDashboard() {
   let totalDusuns = 4;
   try {
     totalDusuns = await (prisma as any).dusun.count();
+  } catch (e) {}
+  let totalCategories = 8;
+  try {
+    totalCategories = await (prisma as any).category.count();
   } catch (e) {}
 
   // Recent reading progress activities
@@ -105,7 +110,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Action Shortcuts */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <Link 
           href="/admin/books/new"
           className="bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 p-4 rounded-2xl transition-all group flex flex-col justify-between"
@@ -118,6 +123,21 @@ export default async function AdminDashboard() {
               Tambah Buku
             </h4>
             <p className="font-body-md text-xs text-on-surface-variant mt-0.5">Unggah e-book atau modul</p>
+          </div>
+        </Link>
+
+        <Link 
+          href="/admin/categories"
+          className="bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 p-4 rounded-2xl transition-all group flex flex-col justify-between"
+        >
+          <div className="p-2.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-xl w-fit mb-3">
+            <Layers className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="font-title-md text-sm font-bold text-on-surface group-hover:text-primary transition-colors">
+              Kategori Buku
+            </h4>
+            <p className="font-body-md text-xs text-on-surface-variant mt-0.5">{totalCategories} topik bacaan</p>
           </div>
         </Link>
 

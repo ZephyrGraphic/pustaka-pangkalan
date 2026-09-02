@@ -30,6 +30,26 @@ export default function AdminBooksPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("ALL");
+  const [categories, setCategories] = useState<string[]>([
+    "ALL",
+    "Pertanian & Ketahanan Pangan",
+    "Sejarah, Budaya & Bahasa Sunda",
+    "Bisnis Desa, UMKM & BUMDes",
+    "Kesehatan & Gizi Keluarga",
+    "Teknologi, AI & Digital Desa",
+    "Pendidikan & Cerita Anak",
+  ]);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+          setCategories(["ALL", ...data.categories.map((c: any) => c.name)]);
+        }
+      })
+      .catch((err) => console.error("Error fetching categories:", err));
+  }, []);
 
   // Edit modal states
   const [editingBook, setEditingBook] = useState<BookItem | null>(null);
@@ -131,13 +151,14 @@ export default function AdminBooksPage() {
     }
   };
 
-  const categories = ["ALL", "Pertanian", "Sejarah", "Ekonomi", "Kesehatan"];
-
   const filteredBooks = books.filter((b) => {
     const matchesSearch =
       b.title.toLowerCase().includes(search.toLowerCase()) ||
       b.author.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = filterCategory === "ALL" || b.category === filterCategory;
+    const matchesCategory =
+      filterCategory === "ALL" ||
+      b.category === filterCategory ||
+      b.category.toLowerCase().includes(filterCategory.toLowerCase());
     return matchesSearch && matchesCategory;
   });
 
@@ -345,10 +366,9 @@ export default function AdminBooksPage() {
                     onChange={(e) => setEditCategory(e.target.value)}
                     className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-3 text-sm text-on-surface focus:outline-none focus:border-primary shadow-inner"
                   >
-                    <option value="Pertanian">Pertanian</option>
-                    <option value="Sejarah">Sejarah</option>
-                    <option value="Ekonomi">Ekonomi</option>
-                    <option value="Kesehatan">Kesehatan</option>
+                    {categories.filter(c => c !== "ALL").map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
                   </select>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
@@ -10,16 +10,39 @@ export default function NewBookPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [categories, setCategories] = useState<string[]>([
+    "Pertanian & Ketahanan Pangan",
+    "Sejarah, Budaya & Bahasa Sunda",
+    "Bisnis Desa, UMKM & BUMDes",
+    "Kesehatan & Gizi Keluarga",
+    "Teknologi, AI & Digital Desa",
+    "Pendidikan & Cerita Anak",
+  ]);
+
   const [formData, setFormData] = useState({
     title: "",
     author: "",
-    category: "Pertanian",
+    category: "Pertanian & Ketahanan Pangan",
     description: "",
     coverUrl: "",
     isOffline: false,
   });
 
-  const categories = ["Pertanian", "Sejarah", "Ekonomi", "Kesehatan"];
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+          const catNames = data.categories.map((c: any) => c.name);
+          setCategories(catNames);
+          setFormData((prev) => ({
+            ...prev,
+            category: prev.category || catNames[0],
+          }));
+        }
+      })
+      .catch((err) => console.error("Error fetching categories:", err));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
