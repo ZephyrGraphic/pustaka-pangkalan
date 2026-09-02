@@ -92,6 +92,40 @@ export async function PATCH(request: Request) {
   }
 }
 
+export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session || (session.user as any).role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { userId, newPin } = await request.json();
+    if (!userId || !newPin) {
+      return NextResponse.json({ error: "User ID dan PIN baru wajib disertakan" }, { status: 400 });
+    }
+
+    if (typeof newPin !== "string" || !/^\d{6}$/.test(newPin.trim())) {
+      return NextResponse.json({ error: "PIN baru harus tepat 6 digit angka" }, { status: 400 });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPin.trim(), 10);
+    const updated = await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+      select: { id: true, name: true, email: true },
+    });
+
+    return NextResponse.json({ 
+      success: true, 
+      message: `PIN untuk ${updated.name} berhasil direset!`,
+      user: updated 
+    });
+  } catch (error) {
+    console.error("Admin reset PIN POST error:", error);
+    return NextResponse.json({ error: "Gagal mereset PIN pengguna" }, { status: 500 });
+  }
+}
+
 export async function PUT(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session || (session.user as any).role !== "ADMIN") {

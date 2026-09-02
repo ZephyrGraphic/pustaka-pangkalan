@@ -114,6 +114,32 @@ async function runSTQAAudit() {
         select: { address: true, dusunId: true }
       });
       assert(verifyStep2?.address === "Dusun Pangkalan", "USER_CRUD", "Verify persistence of 'Dusun Pangkalan'");
+
+      // Step C: Test Reset PIN
+      const newPinHash = await bcrypt.hash("654321", 10);
+      await prisma.user.update({
+        where: { id: targetUser.id },
+        data: { password: newPinHash }
+      });
+      const updatedUserWithPin = await prisma.user.findUnique({
+        where: { id: targetUser.id },
+        select: { password: true }
+      });
+      const isNewPinValid = await bcrypt.compare("654321", updatedUserWithPin?.password || "");
+      assert(isNewPinValid, "USER_CRUD", "Reset PIN to '654321' verified with bcrypt compare");
+
+      // Reset back to 123456
+      const defaultPinHash = await bcrypt.hash("123456", 10);
+      await prisma.user.update({
+        where: { id: targetUser.id },
+        data: { password: defaultPinHash }
+      });
+      const restoredUser = await prisma.user.findUnique({
+        where: { id: targetUser.id },
+        select: { password: true }
+      });
+      const isRestoredValid = await bcrypt.compare("123456", restoredUser?.password || "");
+      assert(isRestoredValid, "USER_CRUD", "Restore PIN to '123456' verified with bcrypt compare");
     }
   } catch (err: any) {
     assert(false, "USER_CRUD", "CRUD operation execution", err.message);
@@ -157,25 +183,33 @@ async function runSTQAAudit() {
 
   // SUITE 6: RELATIONAL FOREIGN KEY INTEGRITY AUDIT
   console.log("\n🔗 SUITE 6: Relational Foreign Key Integrity Audit");
-  try {
-    const userWithRelation = await prisma.user.findFirst({
-      where: { email: "3202202600420001" },
-      include: { dusun: true }
-    });
+  let userWithRelation: any = null;
+  let dusunWithUsers: any = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      userWithRelation = await prisma.user.findFirst({
+        where: { email: "3202202600420001" },
+        include: { dusun: true }
+      });
+      dusunWithUsers = await (prisma as any).dusun.findFirst({
+        where: { name: "Dusun Pangkalan" },
+        include: {
+          _count: {
+            select: { users: true }
+          }
+        }
+      });
+      break;
+    } catch (e) {
+      if (attempt === 3) throw e;
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+  }
 
+  try {
     assert(!!userWithRelation, "RELATION_FK", "Query citizen with 'include: { dusun: true }'");
     assert(!!userWithRelation?.dusunId, "RELATION_FK", "Field 'dusunId' is populated on citizen", `dusunId: ${userWithRelation?.dusunId}`);
     assert(userWithRelation?.dusun?.name === "Dusun Pangkalan", "RELATION_FK", "Relation points correctly to 'Dusun Pangkalan'", `Dusun: ${userWithRelation?.dusun?.name}`);
-
-    // Test reverse relation from Dusun to Users
-    const dusunWithUsers = await (prisma as any).dusun.findFirst({
-      where: { name: "Dusun Pangkalan" },
-      include: {
-        _count: {
-          select: { users: true }
-        }
-      }
-    });
     assert((dusunWithUsers?._count?.users || 0) >= 1, "RELATION_FK", "Reverse relation Dusun.users correctly counts related citizens", `Relational count: ${dusunWithUsers?._count?.users}`);
   } catch (err: any) {
     assert(false, "RELATION_FK", "Relational foreign key query", err.message);
