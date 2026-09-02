@@ -184,12 +184,12 @@ export default function TanyaPustakaAI() {
                 className={`flex gap-2.5 ${m.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 {m.sender === "ai" && (
-                  <div className="relative w-7 h-7 rounded-xl overflow-hidden border border-primary/30 shadow-sm shrink-0 mt-1 bg-white">
+                  <div className="relative w-7 h-7 rounded-xl overflow-hidden border border-primary/40 shadow-sm shrink-0 mt-1 bg-slate-900">
                     <Image
-                      src="/images/pak_kades_ai_avatar.jpg"
+                      src="/images/kades_official.png"
                       alt="Pak Kades AI"
                       fill
-                      className="object-cover"
+                      className="object-contain object-top"
                     />
                   </div>
                 )}
