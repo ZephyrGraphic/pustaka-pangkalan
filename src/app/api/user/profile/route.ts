@@ -52,6 +52,8 @@ export async function GET() {
   }
 }
 
+import { profileUpdateSchema } from "@/lib/validations";
+
 export async function PUT(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
@@ -61,17 +63,37 @@ export async function PUT(request: Request) {
   const userId = (session.user as any).id;
 
   try {
-    const { name, image, phone, address, occupation, newPin } = await request.json();
+    const body = await request.json();
+    const parsed = profileUpdateSchema.safeParse(body);
 
-    const dataToUpdate: any = {};
-    if (name) dataToUpdate.name = name;
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0].message },
+        { status: 400 }
+      );
+    }
+
+    const { name, image, phone, address, occupation, newPin } = parsed.data;
+
+    const dataToUpdate: any = {
+      name: name.trim(),
+      isProfileComplete: true,
+    };
+
     if (image !== undefined) dataToUpdate.image = image;
-    if (phone !== undefined) dataToUpdate.phone = phone;
-    if (address !== undefined) dataToUpdate.address = address;
-    if (occupation !== undefined) dataToUpdate.occupation = occupation;
-    dataToUpdate.isProfileComplete = true;
+    if (phone !== undefined) dataToUpdate.phone = phone ? phone.trim() : null;
+    if (address !== undefined) {
+      dataToUpdate.address = address;
+      const matchedDusun = await (prisma as any).dusun.findFirst({
+        where: { name: address },
+      });
+      dataToUpdate.dusunId = matchedDusun ? matchedDusun.id : null;
+    }
+    if (occupation !== undefined) {
+      dataToUpdate.occupation = occupation ? occupation.trim() : null;
+    }
 
-    if (newPin && newPin.length === 6) {
+    if (newPin) {
       dataToUpdate.password = await bcrypt.hash(newPin, 10);
     }
 
@@ -86,6 +108,8 @@ export async function PUT(request: Request) {
         image: true,
         phone: true,
         address: true,
+        dusunId: true,
+        dusun: { select: { id: true, name: true } },
         occupation: true,
         isProfileComplete: true,
       },

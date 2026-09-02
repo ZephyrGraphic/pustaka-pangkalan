@@ -6,6 +6,8 @@ import prisma from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+import { dusunSchema } from "@/lib/validations";
+
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -17,12 +19,17 @@ export async function PUT(
 
   try {
     const { id } = await params;
-    const { name, order } = await request.json();
+    const body = await request.json();
+    const parsed = dusunSchema.safeParse(body);
 
-    if (!name || typeof name !== "string" || !name.trim()) {
-      return NextResponse.json({ error: "Nama dusun tidak boleh kosong" }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0].message },
+        { status: 400 }
+      );
     }
 
+    const { name, order } = parsed.data;
     const trimmedName = name.trim();
 
     // Find current dusun
@@ -49,15 +56,23 @@ export async function PUT(
       where: { id },
       data: {
         name: trimmedName,
-        order: order !== undefined ? Number(order) : currentDusun.order,
+        order: order !== undefined ? order : currentDusun.order,
       },
     });
 
-    // Cascade update users whose address was the old dusun name
+    // Cascade update users whose address was the old dusun name or whose dusunId was this id
     if (currentDusun.name !== trimmedName) {
       await prisma.user.updateMany({
-        where: { address: currentDusun.name },
-        data: { address: trimmedName },
+        where: {
+          OR: [
+            { address: currentDusun.name },
+            { dusunId: id },
+          ],
+        },
+        data: {
+          address: trimmedName,
+          dusunId: id,
+        },
       });
     }
 

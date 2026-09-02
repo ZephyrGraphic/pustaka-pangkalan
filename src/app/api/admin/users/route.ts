@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import bcrypt from "bcryptjs";
+import { adminUserUpdateSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -47,6 +48,8 @@ export async function GET(request: Request) {
         email: true, // NIK
         phone: true,
         address: true,
+        dusunId: true,
+        dusun: { select: { id: true, name: true } },
         occupation: true,
         image: true,
         role: true,
@@ -105,16 +108,41 @@ export async function PUT(request: Request) {
 
     const dataToUpdate: any = {};
 
-    if (name !== undefined) dataToUpdate.name = name.trim();
-    if (phone !== undefined) dataToUpdate.phone = phone.trim();
-    if (address !== undefined) dataToUpdate.address = address;
-    if (occupation !== undefined) dataToUpdate.occupation = occupation;
-
     if (newPin) {
       if (newPin.length !== 6 || !/^\d+$/.test(newPin)) {
         return NextResponse.json({ error: "PIN baru harus 6 digit angka" }, { status: 400 });
       }
       dataToUpdate.password = await bcrypt.hash(newPin, 10);
+    } else {
+      // Validate with Zod
+      const parsed = adminUserUpdateSchema.safeParse({
+        userId,
+        name,
+        phone,
+        address,
+        occupation,
+      });
+
+      if (!parsed.success) {
+        return NextResponse.json(
+          { error: parsed.error.issues[0].message },
+          { status: 400 }
+        );
+      }
+
+      dataToUpdate.name = parsed.data.name.trim();
+      if (parsed.data.phone !== undefined) dataToUpdate.phone = parsed.data.phone ? parsed.data.phone.trim() : null;
+      if (parsed.data.address !== undefined) {
+        dataToUpdate.address = parsed.data.address;
+        // Relational foreign key lookup
+        const matchedDusun = await (prisma as any).dusun.findFirst({
+          where: { name: parsed.data.address },
+        });
+        dataToUpdate.dusunId = matchedDusun ? matchedDusun.id : null;
+      }
+      if (parsed.data.occupation !== undefined) {
+        dataToUpdate.occupation = parsed.data.occupation ? parsed.data.occupation.trim() : null;
+      }
     }
 
     const updated = await prisma.user.update({
@@ -126,6 +154,8 @@ export async function PUT(request: Request) {
         email: true,
         phone: true,
         address: true,
+        dusunId: true,
+        dusun: { select: { id: true, name: true } },
         occupation: true,
         role: true,
         isProfileComplete: true,

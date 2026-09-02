@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { dusunSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -15,20 +16,21 @@ export async function GET() {
   try {
     const dusuns = await (prisma as any).dusun.findMany({
       orderBy: { order: "asc" },
+      include: {
+        _count: {
+          select: { users: true },
+        },
+      },
     });
 
-    const users = await prisma.user.findMany({
-      select: { address: true },
-    });
-
-    // Calculate user count for each dusun
-    const dusunsWithCount = dusuns.map((d: any) => {
-      const count = users.filter((u) => u.address === d.name || u.address?.includes(d.name)).length;
-      return {
-        ...d,
-        userCount: count,
-      };
-    });
+    const dusunsWithCount = dusuns.map((d: any) => ({
+      id: d.id,
+      name: d.name,
+      order: d.order,
+      createdAt: d.createdAt,
+      updatedAt: d.updatedAt,
+      userCount: d._count?.users || 0,
+    }));
 
     return NextResponse.json({ dusuns: dusunsWithCount });
   } catch (error) {
@@ -44,12 +46,17 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { name, order } = await request.json();
+    const body = await request.json();
+    const parsed = dusunSchema.safeParse(body);
 
-    if (!name || typeof name !== "string" || !name.trim()) {
-      return NextResponse.json({ error: "Nama dusun tidak boleh kosong" }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0].message },
+        { status: 400 }
+      );
     }
 
+    const { name, order } = parsed.data;
     const trimmedName = name.trim();
 
     // Check duplicate
@@ -65,7 +72,7 @@ export async function POST(request: Request) {
       orderBy: { order: "desc" },
     });
 
-    const nextOrder = order !== undefined ? Number(order) : (maxOrderDusun?.order || 0) + 1;
+    const nextOrder = order !== undefined ? order : (maxOrderDusun?.order || 0) + 1;
 
     const newDusun = await (prisma as any).dusun.create({
       data: {

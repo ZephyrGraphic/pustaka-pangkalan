@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useSWR from "swr";
 import { 
   User, 
   Activity, 
@@ -23,11 +24,17 @@ import Image from "next/image";
 import { useToast } from "@/components/ToastProvider";
 import ConfirmModal from "@/components/ConfirmModal";
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Gagal memuat data");
+  }
+  return res.json();
+};
+
 export default function AdminUsersPage() {
   const toast = useToast();
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState<"ALL" | "USER" | "ADMIN">("ALL");
   const [filterDusun, setFilterDusun] = useState<string>("ALL");
@@ -51,13 +58,36 @@ export default function AdminUsersPage() {
   const [editOccupation, setEditOccupation] = useState("");
   const [editSubmitting, setEditSubmitting] = useState(false);
 
-  const [dusunList, setDusunList] = useState<string[]>([
-    "Dusun Pangkalan",
-    "Dusun Cikajang",
-    "Dusun Pasir Arangan",
-    "Dusun Pasir Gombong",
+  // SWR: Fetch Dusuns
+  const { data: dusunData } = useSWR("/api/dusuns", fetcher, {
+    revalidateOnFocus: true,
+  });
+
+  const dusunList = [
+    ...(dusunData?.dusuns?.map((d: any) => d.name) || [
+      "Dusun Pangkalan",
+      "Dusun Cikajang",
+      "Dusun Pasir Arangan",
+      "Dusun Pasir Gombong",
+    ]),
     "Luar Wilayah / Tamu Desa",
-  ]);
+  ];
+
+  // SWR: Fetch Users with dynamic query params
+  let usersUrl = "/api/admin/users?";
+  if (search) usersUrl += `search=${encodeURIComponent(search)}&`;
+  if (filterRole !== "ALL") usersUrl += `role=${filterRole}&`;
+  if (filterDusun !== "ALL") usersUrl += `dusun=${encodeURIComponent(filterDusun)}&`;
+
+  const {
+    data: usersData,
+    isLoading: loading,
+    mutate: mutateUsers,
+  } = useSWR(usersUrl, fetcher, {
+    revalidateOnFocus: true,
+  });
+
+  const users: any[] = usersData?.users || [];
 
   const normalizeDusunName = (rawAddress: string | null | undefined, validDusuns: string[]) => {
     if (!rawAddress) return validDusuns[0] || "Dusun Pangkalan";
@@ -83,47 +113,6 @@ export default function AdminUsersPage() {
     return validDusuns[0] || "Dusun Pangkalan";
   };
 
-  const fetchDusuns = async () => {
-    try {
-      const res = await fetch("/api/dusuns", { cache: "no-store" });
-      const data = await res.json();
-      if (data.dusuns && data.dusuns.length > 0) {
-        const names = data.dusuns.map((d: any) => d.name);
-        setDusunList([...names, "Luar Wilayah / Tamu Desa"]);
-      }
-    } catch (err) {}
-  };
-
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      let url = "/api/admin/users?";
-      if (search) url += `search=${encodeURIComponent(search)}&`;
-      if (filterRole !== "ALL") url += `role=${filterRole}&`;
-      if (filterDusun !== "ALL") url += `dusun=${encodeURIComponent(filterDusun)}&`;
-
-      const res = await fetch(url, { cache: "no-store" });
-      const data = await res.json();
-      if (res.ok) {
-        setUsers(data.users || []);
-      } else {
-        toast.error(data.error || "Gagal memuat data pengguna");
-      }
-    } catch (err) {
-      toast.error("Gagal memuat data pengguna");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDusuns();
-  }, []);
-
-  useEffect(() => {
-    fetchUsers();
-  }, [filterRole, filterDusun, search]);
-
   const confirmToggleRole = async () => {
     if (!roleToggleTarget) return;
 
@@ -141,7 +130,7 @@ export default function AdminUsersPage() {
       if (res.ok) {
         toast.success(`Hak akses ${roleToggleTarget.name} berhasil diubah menjadi ${nextRole}`);
         setRoleToggleTarget(null);
-        fetchUsers();
+        mutateUsers();
       } else {
         toast.error("Gagal mengubah peran pengguna.");
       }
@@ -224,22 +213,28 @@ export default function AdminUsersPage() {
       if (res.ok) {
         toast.success(`Data profil ${editName} berhasil diperbarui.`);
         setEditModalUser(null);
-        // Instant synchronous update to eliminate any stale cache delay
-        setUsers((prev) =>
-          prev.map((u) =>
-            u.id === editModalUser.id
-              ? {
-                  ...u,
-                  name: editName,
-                  phone: editPhone,
-                  address: editAddress,
-                  occupation: editOccupation,
-                  ...(data.user || {}),
-                }
-              : u
-          )
+        // Instant optimistic mutation with SWR
+        await mutateUsers(
+          (current: any) => {
+            if (!current?.users) return current;
+            return {
+              ...current,
+              users: current.users.map((u: any) =>
+                u.id === editModalUser.id
+                  ? {
+                      ...u,
+                      name: editName,
+                      phone: editPhone,
+                      address: editAddress,
+                      occupation: editOccupation,
+                      ...(data.user || {}),
+                    }
+                  : u
+              ),
+            };
+          },
+          { revalidate: true }
         );
-        fetchUsers();
       } else {
         toast.error(data.error || "Gagal memperbarui data pengguna.");
       }
@@ -253,14 +248,14 @@ export default function AdminUsersPage() {
   const dusunOptions = ["ALL", ...dusunList];
   const editModalDusunOptions = Array.from(
     new Set([
-      ...dusunList.filter((d) => d !== "ALL"),
+      ...dusunList.filter((d: string) => d !== "ALL"),
       ...(editAddress ? [editAddress] : []),
     ])
   );
 
   const totalUsersCount = users.length;
-  const adminCount = users.filter((u) => u.role === "ADMIN").length;
-  const regularCount = users.filter((u) => u.role === "USER").length;
+  const adminCount = users.filter((u: any) => u.role === "ADMIN").length;
+  const regularCount = users.filter((u: any) => u.role === "USER").length;
 
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in pb-12">
@@ -362,7 +357,7 @@ export default function AdminUsersPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {users.map((user) => (
+          {users.map((user: any) => (
             <div
               key={user.id}
               className="bg-surface-container rounded-3xl p-4 sm:p-5 border border-outline-variant/20 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
