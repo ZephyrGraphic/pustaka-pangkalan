@@ -13,6 +13,19 @@ export default withAuth(
       }
     }
 
+    // If user is already authenticated and visits /login
+    if (path === "/login") {
+      if (token) {
+        const callbackUrl = req.nextUrl.searchParams.get("callbackUrl");
+        if (callbackUrl && !callbackUrl.startsWith("http") && !callbackUrl.includes("//")) {
+          return NextResponse.redirect(new URL(callbackUrl, req.url));
+        }
+        // Redirect admin to admin dashboard, regular citizen to homepage
+        const target = token.role === "ADMIN" ? "/admin" : "/";
+        return NextResponse.redirect(new URL(target, req.url));
+      }
+    }
+
     const response = NextResponse.next();
 
     // Security Headers
@@ -28,10 +41,11 @@ export default withAuth(
     callbacks: {
       authorized: ({ token, req }) => {
         const path = req.nextUrl.pathname;
-        // Allow public access to non-admin routes; withAuth middleware function handles custom redirects
+        // Protected admin routes require valid ADMIN token
         if (path.startsWith("/admin")) {
           return !!token && token.role === "ADMIN";
         }
+        // Allow public and guest access; middleware function handles redirect for authenticated users on /login
         return true;
       },
     },
@@ -42,5 +56,6 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/api/admin/:path*",
+    "/login",
   ],
 };

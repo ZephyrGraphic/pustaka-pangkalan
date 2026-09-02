@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { BookOpen, Users, Badge, Lock, User, Info } from "lucide-react";
+import { useState, useEffect, Suspense } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { BookOpen, Users, Badge, Lock, User, Info, Loader2 } from "lucide-react";
 
-export default function Login() {
+function LoginForm() {
+  const { data: session, status } = useSession();
   const [tab, setTab] = useState<"login" | "register">("login");
   
   const [loginNik, setLoginNik] = useState("");
@@ -20,6 +21,35 @@ export default function Login() {
   const [regLoading, setRegLoading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // If user is ALREADY authenticated, automatically redirect away from /login
+  useEffect(() => {
+    if (status === "authenticated") {
+      const callback = searchParams.get("callbackUrl");
+      if (callback && !callback.startsWith("http") && !callback.includes("//")) {
+        router.replace(callback);
+      } else if ((session?.user as any)?.role === "ADMIN") {
+        router.replace("/admin");
+      } else {
+        router.replace("/");
+      }
+    }
+  }, [status, session, router, searchParams]);
+
+  // While checking session or if already authenticated, display redirecting message
+  if (status === "authenticated" || status === "loading") {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3 animate-fade-in">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm font-semibold text-on-surface-variant">
+          {status === "authenticated"
+            ? "Anda sudah masuk. Mengalihkan ke beranda..."
+            : "Memeriksa status akun..."}
+        </p>
+      </div>
+    );
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +66,12 @@ export default function Login() {
       if (res?.error) {
         setLoginError(res.error);
       } else {
-        router.push("/");
+        const callback = searchParams.get("callbackUrl");
+        if (callback && !callback.startsWith("http") && !callback.includes("//")) {
+          router.replace(callback);
+        } else {
+          router.replace("/");
+        }
         router.refresh();
       }
     } catch (err) {
@@ -113,13 +148,13 @@ export default function Login() {
               ></div>
               <button 
                 onClick={() => setTab("login")}
-                className={`flex-1 py-2.5 px-4 rounded-xl font-title-md text-sm text-center z-10 transition-colors duration-200 ${tab === "login" ? "text-primary" : "text-on-surface-variant"}`}
+                className={`flex-1 py-2.5 px-4 rounded-xl font-title-md text-sm text-center z-10 transition-colors duration-200 cursor-pointer ${tab === "login" ? "text-primary font-bold" : "text-on-surface-variant"}`}
               >
                 Masuk
               </button>
               <button 
                 onClick={() => setTab("register")}
-                className={`flex-1 py-2.5 px-4 rounded-xl font-title-md text-sm text-center z-10 transition-colors duration-200 ${tab === "register" ? "text-primary" : "text-on-surface-variant"}`}
+                className={`flex-1 py-2.5 px-4 rounded-xl font-title-md text-sm text-center z-10 transition-colors duration-200 cursor-pointer ${tab === "register" ? "text-primary font-bold" : "text-on-surface-variant"}`}
               >
                 Daftar
               </button>
@@ -164,7 +199,7 @@ export default function Login() {
                 </div>
 
                 <div className="flex flex-col gap-4 mt-4">
-                  <button disabled={loginLoading} type="submit" className="w-full h-14 bg-primary hover:bg-primary/90 text-on-primary font-title-md rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 group">
+                  <button disabled={loginLoading} type="submit" className="w-full h-14 bg-primary hover:bg-primary/90 text-on-primary font-title-md rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 group cursor-pointer">
                     <span>{loginLoading ? "Memproses..." : "Masuk Ke Perpustakaan"}</span>
                   </button>
                   <div className="relative flex items-center py-2 opacity-70">
@@ -215,7 +250,7 @@ export default function Login() {
                   </div>
                 </div>
 
-                <button disabled={regLoading} type="submit" className="w-full h-14 mt-6 bg-primary hover:bg-primary/90 text-on-primary font-title-md rounded-2xl shadow-md flex items-center justify-center gap-2">
+                <button disabled={regLoading} type="submit" className="w-full h-14 mt-6 bg-primary hover:bg-primary/90 text-on-primary font-title-md rounded-2xl shadow-md flex items-center justify-center gap-2 cursor-pointer">
                   <span>{regLoading ? "Mendaftarkan..." : "Daftar Akun Baru"}</span>
                 </button>
                 <p className="text-center font-body-md text-xs text-on-surface-variant/80 mt-3">
@@ -237,5 +272,17 @@ export default function Login() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
