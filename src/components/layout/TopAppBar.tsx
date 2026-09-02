@@ -19,13 +19,10 @@ export default function TopAppBar() {
   );
 
   useEffect(() => {
-    if (session?.user?.image) {
-      setUserAvatar(session.user.image);
-    }
-
-    // Always fetch latest profile data from database to ensure 100% sync
     if (session?.user) {
-      fetch("/api/user/profile")
+      setUserAvatar(session.user.image || null);
+      // Always fetch latest profile data from database to ensure 100% sync
+      fetch("/api/user/profile", { cache: "no-store" })
         .then((res) => res.json())
         .then((data) => {
           if (data.user?.image) {
@@ -33,11 +30,13 @@ export default function TopAppBar() {
           }
         })
         .catch(() => {});
+    } else {
+      setUserAvatar(null);
     }
 
     // Listen to real-time profile update broadcast
     const handleProfileUpdate = (e: any) => {
-      if (e.detail?.image) {
+      if (session?.user && e.detail?.image) {
         setUserAvatar(e.detail.image);
       }
     };
@@ -112,7 +111,7 @@ export default function TopAppBar() {
             </Link>
           )}
 
-          <Link href="/profile" className="flex items-center gap-2">
+          <Link href={session?.user ? "/profile" : "/login"} className="flex items-center gap-2">
             {session?.user ? (
               <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-variant/30 flex items-center justify-center relative border border-outline-variant/20 hover:border-primary transition-colors">
                 <Image 
@@ -123,9 +122,9 @@ export default function TopAppBar() {
                 />
               </div>
             ) : (
-              <button className="text-sm font-medium text-primary hover:text-primary/80 transition-colors bg-primary/10 px-3 py-1.5 rounded-full">
-                Login
-              </button>
+              <span className="text-xs font-bold text-primary hover:text-primary/80 transition-colors bg-primary/10 hover:bg-primary/20 px-3.5 py-1.5 rounded-full border border-primary/20 shadow-sm cursor-pointer">
+                Masuk
+              </span>
             )}
           </Link>
           <ThemeToggle />

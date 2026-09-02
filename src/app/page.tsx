@@ -9,6 +9,10 @@ import AnnouncementCarousel from "@/components/AnnouncementCarousel";
 import BookCover from "@/components/BookCover";
 import DusunLeaderboard from "@/components/DusunLeaderboard";
 import TanyaPustakaAI from "@/components/TanyaPustakaAI";
+import HomeHeaderGreeting from "@/components/HomeHeaderGreeting";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -21,21 +25,9 @@ export default async function Home() {
 
   // Fetch user's reading progress
   let activeReading = null;
-  let userAvatar = null;
-  let userName = "Warga";
-  let userPoints = 0;
-  let userBadge = "Warga Pembelajar";
 
   if (session?.user) {
     const userId = (session.user as any).id;
-    const userFromDb = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { name: true, image: true, points: true, badge: true },
-    });
-    userName = userFromDb?.name || session.user.name || "Warga";
-    userAvatar = userFromDb?.image || session.user.image;
-    userPoints = userFromDb?.points || 0;
-    userBadge = userFromDb?.badge || "Warga Pembelajar";
 
     activeReading = await prisma.readingProgress.findFirst({
       where: { userId },
@@ -52,70 +44,10 @@ export default async function Home() {
     });
   }
 
-  const defaultAvatar = "https://images.unsplash.com/photo-1544717305-2782549b5136?w=200&auto=format&fit=crop&q=80";
-
   return (
     <div className="space-y-8 md:space-y-10 animate-fade-in pb-12">
-      {/* Header Section: Greeting & Streak */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <MapPin className="text-primary w-4 h-4 shrink-0" />
-              <span className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider font-semibold">
-                Desa Pangkalan
-              </span>
-            </div>
-            <h2 className="font-headline-lg-mobile md:font-headline-lg text-2xl md:text-3xl font-bold text-on-surface leading-tight">
-              Wilujeng Sumping,<br />
-              <span className="text-primary">{userName}</span>
-            </h2>
-          </div>
-          
-          <div className="relative">
-            <Link href={session ? "/profile" : "/login"}>
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-primary/30 shadow-md relative cursor-pointer hover:scale-105 transition-transform bg-surface-container">
-                <Image 
-                  src={userAvatar || defaultAvatar} 
-                  alt="Profile" 
-                  fill 
-                  className="object-cover"
-                />
-              </div>
-            </Link>
-            {session && (
-              <div className="absolute top-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-surface shadow-sm"></div>
-            )}
-          </div>
-        </div>
-
-        {/* Streak & Gamification Card (Glassmorphic) */}
-        {session && (
-          <div className="bg-surface-container/70 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-outline-variant/20 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-up">
-            <div className="flex items-center gap-3.5 flex-grow">
-              <div className="w-12 h-12 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 shadow-sm">
-                <Flame className="w-6 h-6" />
-              </div>
-              <div className="flex-grow space-y-1">
-                <div className="flex items-center gap-2">
-                  <p className="font-title-md text-sm font-bold text-on-surface">5 Hari Beruntun Membaca</p>
-                  <span className="bg-amber-400/20 text-amber-600 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-400/30">
-                    ⭐ {userPoints} Poin
-                  </span>
-                </div>
-                <div className="w-full max-w-xs h-2 bg-surface-container-highest rounded-full overflow-hidden">
-                  <div className="h-full bg-primary w-[70%] rounded-full"></div>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 self-end sm:self-center">
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                🏆 {userBadge}
-              </span>
-            </div>
-          </div>
-        )}
-      </section>
+      {/* Header Section: Greeting & Streak (Reactive Client Component) */}
+      <HomeHeaderGreeting />
 
       {/* Search Bar */}
       <section>
