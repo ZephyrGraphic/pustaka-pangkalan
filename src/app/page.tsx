@@ -124,53 +124,60 @@ export default async function Home() {
 
       {/* Banner Ajakan Membaca Kepala Desa Pangkalan */}
       <section className="animate-fade-in-up">
-        <div className="relative w-full rounded-3xl overflow-hidden shadow-xl border border-primary/20 bg-gradient-to-r from-emerald-950 via-primary to-emerald-900 text-white min-h-[220px] flex flex-col md:flex-row items-center justify-between p-6 sm:p-8 gap-6">
-          {/* Background Image Layer */}
-          <div className="absolute inset-0 z-0 opacity-25 mix-blend-overlay">
+        <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-primary/30 bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white min-h-[260px] flex flex-col md:flex-row items-center justify-between p-6 sm:p-8 md:p-10 gap-8">
+          {/* Background Image Layer: Desa Pangkalan Scenic */}
+          <div className="absolute inset-0 z-0 opacity-20 mix-blend-overlay">
             <Image
-              src="/images/kades_reading_banner.jpg"
-              alt="Banner Literasi Desa Pangkalan"
+              src="/images/desa_pangkalan_bg.jpg"
+              alt="Lanskap Desa Pangkalan"
               fill
               className="object-cover"
             />
           </div>
 
-          <div className="relative z-10 flex-1 space-y-3 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-300">
-              <span>🏛️ Pesan Kepala Desa Pangkalan</span>
+          <div className="relative z-10 flex-1 space-y-4 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 shadow-sm">
+              <span>🏛️ Pesan Resmi Kepala Desa Pangkalan</span>
             </div>
-            <h3 className="font-headline-md text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight">
+            <h3 className="font-headline-md text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
               &quot;Hayu Maca, Ngawangun Desa Pangkalan nu Maju!&quot;
             </h3>
             <p className="text-xs sm:text-sm text-white/90 leading-relaxed max-w-xl">
-              Sampurasun Wargi Sadaya! Tingkatkeun élmu tatanén, peternakan bioflok, sareng wirausaha desa ngaliwatan perpustakaan digital urang.
+              Sampurasun Wargi Sadaya! Tingkatkeun élmu tatanén, peternakan bioflok, sareng wirausaha desa ngaliwatan perpustakaan digital resmi Desa Pangkalan.
             </p>
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
               <Link
                 href="/explore"
-                className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-lg hover:scale-105 active:scale-95 flex items-center gap-2"
+                className="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-lg hover:scale-105 active:scale-95 flex items-center gap-2"
               >
                 <span>Mulai Membaca E-Book</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/explore?category=Pertanian"
-                className="px-4 py-2.5 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-2xl text-xs sm:text-sm backdrop-blur-md border border-white/20 transition-all"
+                className="px-5 py-3 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-2xl text-xs sm:text-sm backdrop-blur-md border border-white/20 transition-all"
               >
                 Modul Pertanian & Bioflok
               </Link>
             </div>
           </div>
 
-          {/* DKV Vector Mascot Character Badge */}
-          <div className="relative z-10 shrink-0 w-36 h-36 sm:w-48 sm:h-48 rounded-3xl overflow-hidden border-2 border-amber-400/60 shadow-2xl bg-white/95 backdrop-blur-md group hover:scale-105 transition-all p-1">
-            <div className="relative w-full h-full rounded-2xl overflow-hidden">
-              <Image
-                src="/images/pak_kades_mascot.jpg"
-                alt="Maskot Pak Kades Usep Saepulrohman"
-                fill
-                className="object-contain"
-              />
+          {/* Official Portrait of Pak Kades Usep Saepulrohman */}
+          <div className="relative z-10 shrink-0 flex flex-col items-center">
+            <div className="relative w-44 h-56 sm:w-52 sm:h-64 rounded-3xl overflow-hidden border-2 border-amber-400/60 shadow-2xl bg-gradient-to-t from-emerald-950 via-slate-900/60 to-slate-800/40 backdrop-blur-md group hover:scale-105 transition-all p-1.5">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-b from-white/10 to-transparent">
+                <Image
+                  src="/images/kades_official.png"
+                  alt="Kepala Desa Pangkalan - Bapak Usep Saepulrohman"
+                  fill
+                  className="object-contain object-bottom drop-shadow-2xl"
+                  priority
+                />
+              </div>
+              <div className="absolute bottom-2.5 inset-x-2.5 bg-black/80 backdrop-blur-md rounded-xl p-2 text-center border border-white/10 shadow-lg">
+                <span className="text-xs font-bold text-white block leading-tight">Usep Saepulrohman</span>
+                <span className="text-[9px] text-amber-300 font-bold uppercase tracking-wider block mt-0.5">Kepala Desa Pangkalan</span>
+              </div>
             </div>
           </div>
         </div>

@@ -125,12 +125,12 @@ export default function TanyaPustakaAI() {
           className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 bg-gradient-to-r from-emerald-800 via-primary to-green-700 text-on-primary pl-2 pr-4 py-2 rounded-full shadow-2xl flex items-center gap-2.5 font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all group border-2 border-amber-400/40"
           aria-label="Buka Tanya Pustaka AI"
         >
-          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/60 shadow-inner shrink-0 bg-white">
+          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/60 shadow-inner shrink-0 bg-slate-900">
             <Image
-              src="/images/pak_kades_ai_avatar.jpg"
-              alt="Maskot Pak Kades AI"
+              src="/images/kades_official.png"
+              alt="Pak Kades Usep Saepulrohman AI"
               fill
-              className="object-cover"
+              className="object-contain object-top"
             />
           </div>
           <div className="flex flex-col items-start leading-tight text-left">
@@ -149,12 +149,12 @@ export default function TanyaPustakaAI() {
           {/* Drawer Header */}
           <div className="bg-gradient-to-r from-emerald-900 via-primary to-green-800 text-on-primary p-4 flex items-center justify-between shadow-sm shrink-0 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-2xl overflow-hidden border-2 border-amber-400/60 shadow-md shrink-0 bg-white">
+              <div className="relative w-10 h-10 rounded-2xl overflow-hidden border-2 border-amber-400/60 shadow-md shrink-0 bg-slate-900">
                 <Image
-                  src="/images/pak_kades_ai_avatar.jpg"
-                  alt="Maskot Pak Kades AI"
+                  src="/images/kades_official.png"
+                  alt="Pak Kades Usep Saepulrohman AI"
                   fill
-                  className="object-cover"
+                  className="object-contain object-top"
                 />
               </div>
               <div>

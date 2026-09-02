@@ -81,10 +81,10 @@ export default function AboutModal({ triggerText = "Tentang Pustaka Pangkalan", 
             <div className="flex items-center gap-3.5">
               <div className="relative w-14 h-14 rounded-2xl overflow-hidden border border-amber-400/60 shadow-md shrink-0 bg-white">
                 <Image
-                  src="/images/pak_kades_mascot.jpg"
-                  alt="Maskot Pak Kades Usep Saepulrohman"
+                  src="/images/kades_official.png"
+                  alt="Kepala Desa Pangkalan - Bapak Usep Saepulrohman"
                   fill
-                  className="object-cover"
+                  className="object-contain object-top bg-slate-900"
                 />
               </div>
               <div className="space-y-0.5">
