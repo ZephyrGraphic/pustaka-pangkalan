@@ -34,6 +34,30 @@ const DEFAULT_DUSUN_OPTIONS = [
   "Luar Wilayah / Tamu Desa",
 ];
 
+const normalizeDusunName = (rawAddress: string | null | undefined, validDusuns: string[]) => {
+  if (!rawAddress) return validDusuns[0] || "Dusun Pangkalan";
+  if (validDusuns.includes(rawAddress)) return rawAddress;
+
+  const lower = rawAddress.toLowerCase();
+  if (lower.includes("pangkalan") || lower.includes("dusun 1") || lower.includes("dusun i") || lower.includes("krajan barat")) {
+    return "Dusun Pangkalan";
+  }
+  if (lower.includes("cikajang") || lower.includes("dusun 2") || lower.includes("dusun ii") || lower.includes("krajan timur")) {
+    return "Dusun Cikajang";
+  }
+  if (lower.includes("pasir arangan") || lower.includes("arangan") || lower.includes("dusun 3") || lower.includes("dusun iii") || lower.includes("sukamaju")) {
+    return "Dusun Pasir Arangan";
+  }
+  if (lower.includes("pasir gombong") || lower.includes("gombong") || lower.includes("dusun 4") || lower.includes("dusun iv") || lower.includes("pasir angin")) {
+    return "Dusun Pasir Gombong";
+  }
+  if (lower.includes("tamu") || lower.includes("luar")) {
+    return "Luar Wilayah / Tamu Desa";
+  }
+
+  return validDusuns[0] || "Dusun Pangkalan";
+};
+
 const MINAT_OPTIONS = [
   "Pertanian & Perikanan Modern",
   "Kewirausahaan & UMKM",
@@ -67,7 +91,7 @@ export default function EditProfileModal({
   useEffect(() => {
     setMounted(true);
     // Fetch dynamic dusun list from database
-    fetch("/api/dusuns")
+    fetch("/api/dusuns", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data.dusuns && data.dusuns.length > 0) {
@@ -86,7 +110,9 @@ export default function EditProfileModal({
   const [customAvatarUrl, setCustomAvatarUrl] = useState("");
   const [showCustomAvatar, setShowCustomAvatar] = useState(false);
   const [phone, setPhone] = useState(currentPhone || "");
-  const [address, setAddress] = useState(currentAddress || DEFAULT_DUSUN_OPTIONS[0]);
+  const [address, setAddress] = useState(
+    normalizeDusunName(currentAddress, DEFAULT_DUSUN_OPTIONS)
+  );
   const [occupation, setOccupation] = useState(currentOccupation || MINAT_OPTIONS[0]);
 
   // PIN Change Section
@@ -101,7 +127,8 @@ export default function EditProfileModal({
     setName(currentName);
     setSelectedAvatar(currentImage || AVATAR_PRESETS[0].url);
     setPhone(currentPhone || "");
-    setAddress(currentAddress || DEFAULT_DUSUN_OPTIONS[0]);
+    const normalized = normalizeDusunName(currentAddress, dusunOptions);
+    setAddress(normalized);
     setOccupation(currentOccupation || MINAT_OPTIONS[0]);
     setShowChangePin(false);
     setNewPin("");
@@ -312,7 +339,7 @@ export default function EditProfileModal({
                 onChange={(e) => setAddress(e.target.value)}
                 className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary appearance-none cursor-pointer"
               >
-                {dusunOptions.map((d) => (
+                {Array.from(new Set([...dusunOptions, ...(address ? [address] : [])])).map((d) => (
                   <option key={d} value={d}>{d}</option>
                 ))}
               </select>

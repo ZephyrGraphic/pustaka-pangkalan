@@ -7,7 +7,8 @@
     "build": "prisma generate && next build --webpack",
     "start": "next start",
     "postinstall": "prisma generate",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "tsx scratch/run_full_stqa_test.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

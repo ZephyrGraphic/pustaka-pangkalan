@@ -59,9 +59,33 @@ export default function AdminUsersPage() {
     "Luar Wilayah / Tamu Desa",
   ]);
 
+  const normalizeDusunName = (rawAddress: string | null | undefined, validDusuns: string[]) => {
+    if (!rawAddress) return validDusuns[0] || "Dusun Pangkalan";
+    if (validDusuns.includes(rawAddress)) return rawAddress;
+
+    const lower = rawAddress.toLowerCase();
+    if (lower.includes("pangkalan") || lower.includes("dusun 1") || lower.includes("dusun i") || lower.includes("krajan barat")) {
+      return "Dusun Pangkalan";
+    }
+    if (lower.includes("cikajang") || lower.includes("dusun 2") || lower.includes("dusun ii") || lower.includes("krajan timur")) {
+      return "Dusun Cikajang";
+    }
+    if (lower.includes("pasir arangan") || lower.includes("arangan") || lower.includes("dusun 3") || lower.includes("dusun iii") || lower.includes("sukamaju")) {
+      return "Dusun Pasir Arangan";
+    }
+    if (lower.includes("pasir gombong") || lower.includes("gombong") || lower.includes("dusun 4") || lower.includes("dusun iv") || lower.includes("pasir angin")) {
+      return "Dusun Pasir Gombong";
+    }
+    if (lower.includes("tamu") || lower.includes("luar")) {
+      return "Luar Wilayah / Tamu Desa";
+    }
+
+    return validDusuns[0] || "Dusun Pangkalan";
+  };
+
   const fetchDusuns = async () => {
     try {
-      const res = await fetch("/api/dusuns");
+      const res = await fetch("/api/dusuns", { cache: "no-store" });
       const data = await res.json();
       if (data.dusuns && data.dusuns.length > 0) {
         const names = data.dusuns.map((d: any) => d.name);
@@ -78,7 +102,7 @@ export default function AdminUsersPage() {
       if (filterRole !== "ALL") url += `role=${filterRole}&`;
       if (filterDusun !== "ALL") url += `dusun=${encodeURIComponent(filterDusun)}&`;
 
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: "no-store" });
       const data = await res.json();
       if (res.ok) {
         setUsers(data.users || []);
@@ -173,7 +197,8 @@ export default function AdminUsersPage() {
     setEditModalUser(user);
     setEditName(user.name || "");
     setEditPhone(user.phone || "");
-    setEditAddress(user.address || dusunList[0]);
+    const normalized = normalizeDusunName(user.address, dusunList);
+    setEditAddress(normalized);
     setEditOccupation(user.occupation || "Wirausaha / UMKM Desa");
   };
 
@@ -199,6 +224,21 @@ export default function AdminUsersPage() {
       if (res.ok) {
         toast.success(`Data profil ${editName} berhasil diperbarui.`);
         setEditModalUser(null);
+        // Instant synchronous update to eliminate any stale cache delay
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === editModalUser.id
+              ? {
+                  ...u,
+                  name: editName,
+                  phone: editPhone,
+                  address: editAddress,
+                  occupation: editOccupation,
+                  ...(data.user || {}),
+                }
+              : u
+          )
+        );
         fetchUsers();
       } else {
         toast.error(data.error || "Gagal memperbarui data pengguna.");
@@ -211,6 +251,12 @@ export default function AdminUsersPage() {
   };
 
   const dusunOptions = ["ALL", ...dusunList];
+  const editModalDusunOptions = Array.from(
+    new Set([
+      ...dusunList.filter((d) => d !== "ALL"),
+      ...(editAddress ? [editAddress] : []),
+    ])
+  );
 
   const totalUsersCount = users.length;
   const adminCount = users.filter((u) => u.role === "ADMIN").length;
@@ -563,7 +609,7 @@ export default function AdminUsersPage() {
                   onChange={(e) => setEditAddress(e.target.value)}
                   className="w-full bg-surface-container-high rounded-2xl px-4 py-2.5 text-xs text-on-surface border border-outline-variant/30 focus:outline-none focus:border-primary"
                 >
-                  {dusunOptions.filter((d) => d !== "ALL").map((d) => (
+                  {editModalDusunOptions.map((d) => (
                     <option key={d} value={d}>{d}</option>
                   ))}
                 </select>
