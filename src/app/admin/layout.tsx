@@ -17,6 +17,7 @@ import {
   Layers
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import LogoutButton from "@/components/LogoutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -33,12 +34,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <aside className="w-64 bg-surface-container border-r border-outline-variant/30 flex flex-col shrink-0">
         <div className="p-6 border-b border-outline-variant/30 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-md shadow-primary/20">
-              <ShieldCheck className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-surface-container-highest/80 flex items-center justify-center shrink-0 p-1 border border-outline-variant/30 shadow-sm">
+              <Image 
+                src="/logo_sukabumi.webp" 
+                alt="Lambang Kabupaten Sukabumi" 
+                width={32} 
+                height={40} 
+                className="w-auto h-8 object-contain"
+                priority
+              />
             </div>
             <div>
               <h2 className="text-base font-bold text-on-surface leading-tight">Admin Pustaka</h2>
-              <p className="text-xs text-on-surface-variant">Desa Pangkalan</p>
+              <p className="text-xs text-on-surface-variant">Kab. Sukabumi</p>
             </div>
           </div>
           <ThemeToggle />

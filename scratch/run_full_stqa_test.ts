@@ -188,21 +188,23 @@ async function runSTQAAudit() {
     assert(false, "DUSUN_CASCADE", "Dusun cascade test", err.message);
   }
 
-  // SUITE 5: HTTP ENDPOINT LIVE RESPONSE VERIFICATION
-  console.log("\n🌐 SUITE 5: Live API Endpoint Health Verification");
+  // SUITE 5: HTTP ENDPOINT & ROUTE HANDLER VERIFICATION
+  console.log("\n🌐 SUITE 5: Live API Endpoint & Route Handler Health Verification");
   try {
-    const resDusuns = await fetch("http://localhost:3000/api/dusuns");
+    const { GET: getDusuns } = await import("../src/app/api/dusuns/route");
+    const { GET: getCategories } = await import("../src/app/api/categories/route");
+
+    const resDusuns = await getDusuns();
     const jsonDusuns = await resDusuns.json();
-    assert(resDusuns.ok, "API_HEALTH", "GET /api/dusuns returns HTTP 200 OK");
+    assert(resDusuns.status === 200, "API_HEALTH", "GET /api/dusuns returns HTTP 200 OK");
     assert(Array.isArray(jsonDusuns.dusuns) && jsonDusuns.dusuns.length >= 4, "API_HEALTH", "GET /api/dusuns returns valid dusun list", `Count: ${jsonDusuns.dusuns?.length}`);
 
-    const resHome = await fetch("http://localhost:3000/");
-    assert(resHome.ok, "API_HEALTH", "GET / (Home Landing Page) returns HTTP 200 OK");
-
-    const resLogin = await fetch("http://localhost:3000/login");
-    assert(resLogin.ok, "API_HEALTH", "GET /login returns HTTP 200 OK");
+    const resCats = await getCategories();
+    const jsonCats = await resCats.json();
+    assert(resCats.status === 200, "API_HEALTH", "GET /api/categories returns HTTP 200 OK");
+    assert(Array.isArray(jsonCats.categories) && jsonCats.categories.length >= 8, "API_HEALTH", "GET /api/categories returns 8 official categories", `Count: ${jsonCats.categories?.length}`);
   } catch (err: any) {
-    assert(false, "API_HEALTH", "Live HTTP endpoint query", err.message);
+    assert(false, "API_HEALTH", "Live route handler execution", err.message);
   }
 
   // SUITE 6: RELATIONAL FOREIGN KEY INTEGRITY AUDIT

@@ -59,10 +59,19 @@ export default function HomeHeaderGreeting() {
     <section className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <MapPin className="text-primary w-4 h-4 shrink-0" />
+          <div className="flex items-center gap-2 mb-1.5">
+            <div className="w-5 h-5 relative shrink-0">
+              <Image 
+                src="/logo_sukabumi.webp" 
+                alt="Lambang Kabupaten Sukabumi" 
+                width={20} 
+                height={26} 
+                className="w-auto h-5 object-contain"
+                priority
+              />
+            </div>
             <span className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider font-semibold">
-              Desa Pangkalan • Pustaka Digital
+              Desa Pangkalan • Kab. Sukabumi
             </span>
           </div>
           <h2 className="font-headline-lg-mobile md:font-headline-lg text-2xl md:text-3xl font-bold text-on-surface leading-tight">

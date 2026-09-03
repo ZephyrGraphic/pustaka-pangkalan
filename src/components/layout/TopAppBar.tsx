@@ -59,10 +59,31 @@ export default function TopAppBar() {
   return (
     <header className="fixed top-0 w-full z-50 backdrop-blur-xl bg-surface/85 dark:bg-surface-dim/85 shadow-sm border-b border-outline-variant/10">
       <div className="flex items-center justify-between px-margin md:px-xl py-sm w-full max-w-7xl mx-auto h-16">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 text-primary dark:text-primary-fixed-dim bg-primary-container/20 px-3 py-1.5 rounded-full shadow-sm">
-            <Signal className="w-4 h-4" />
-            <span className="font-label-md text-label-md font-medium">Mode Terhubung</span>
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <Link href="/" className="flex items-center gap-2 group transition-transform active:scale-95">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 relative flex items-center justify-center shrink-0 drop-shadow-sm">
+              <Image 
+                src="/logo_sukabumi.webp" 
+                alt="Lambang Kabupaten Sukabumi" 
+                width={36} 
+                height={46} 
+                className="w-auto h-8 sm:h-9 object-contain group-hover:scale-105 transition-transform"
+                priority
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-xs sm:text-sm text-on-surface leading-tight tracking-tight group-hover:text-primary transition-colors">
+                Pustaka Pangkalan
+              </span>
+              <span className="text-[9px] sm:text-[10px] text-on-surface-variant font-medium leading-none">
+                Kab. Sukabumi
+              </span>
+            </div>
+          </Link>
+
+          <div className="hidden lg:flex items-center gap-1.5 text-primary dark:text-primary-fixed-dim bg-primary-container/20 px-2.5 py-1 rounded-full shadow-sm text-[11px]">
+            <Signal className="w-3.5 h-3.5" />
+            <span className="font-medium">Terhubung</span>
           </div>
         </div>
 

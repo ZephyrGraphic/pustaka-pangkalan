@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BookOpen, Users, Badge, Lock, User, Info, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 function LoginForm() {
   const { data: session, status } = useSession();
@@ -113,14 +114,24 @@ function LoginForm() {
         
         {/* Hero / Branding Section */}
         <div className="flex-1 w-full flex flex-col justify-center items-center lg:items-start pb-8 lg:py-0 text-center lg:text-left">
-          <div className="w-20 h-20 md:w-28 md:h-28 bg-primary-container rounded-[2rem] flex items-center justify-center mb-6 shadow-lg shadow-primary-container/20 mx-auto lg:mx-0">
-            <BookOpen className="text-on-primary-container w-10 h-10 md:w-14 md:h-14" />
+          <div className="w-24 h-24 md:w-32 md:h-32 bg-surface-container-high/60 backdrop-blur-md rounded-[2.5rem] flex items-center justify-center mb-6 shadow-xl border border-outline-variant/30 mx-auto lg:mx-0 p-3 group">
+            <Image 
+              src="/logo_sukabumi.webp" 
+              alt="Lambang Kabupaten Sukabumi" 
+              width={80} 
+              height={104} 
+              className="w-auto h-20 md:h-24 object-contain group-hover:scale-105 transition-transform drop-shadow-md"
+              priority
+            />
+          </div>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-3 mx-auto lg:mx-0">
+            <span>Pemerintah Kabupaten Sukabumi</span>
           </div>
           <h1 className="font-headline-lg-mobile md:font-headline-lg text-primary mb-3">
             Pustaka Pangkalan
           </h1>
           <p className="font-body-lg text-on-surface-variant/90 mb-8 max-w-[448px] mx-auto lg:mx-0 leading-relaxed">
-            Gerbang Ilmu Pengetahuan Desa. Akses ribuan koleksi buku digital untuk membangun potensi Pangkalan.
+            Gerbang Ilmu Pengetahuan Desa Pangkalan, Kec. Cikembar. Akses ribuan modul pertanian modern, UMKM, kesehatan, dan kearifan budaya Sunda.
           </p>
           <div className="hidden md:flex gap-4 flex-wrap justify-center lg:justify-start">
             <div className="flex items-center gap-2 bg-surface px-5 py-2.5 rounded-full border border-outline-variant/30 shadow-sm">
