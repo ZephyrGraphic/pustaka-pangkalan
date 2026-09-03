@@ -222,7 +222,7 @@ dot_cy = url_y + 22
 draw.ellipse([dot_cx - 6, dot_cy - 6, dot_cx + 6, dot_cy + 6], fill=(52, 211, 153, 255))
 draw.ellipse([dot_cx - 3, dot_cy - 3, dot_cx + 3, dot_cy + 3], fill=(255, 255, 255, 255))
 
-draw.text((logo_x + 40, url_y + 11), "https://perpus-pengkalan.vercel.app", font=f_domain, fill=(255, 255, 255, 255))
+draw.text((logo_x + 40, url_y + 11), "https://perpus-pangkalan.vercel.app", font=f_domain, fill=(255, 255, 255, 255))
 
 # Save output thumbnail in multiple destinations
 og_rgb = og_canvas.convert("RGB")

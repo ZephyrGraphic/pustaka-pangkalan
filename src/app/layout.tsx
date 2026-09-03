@@ -4,7 +4,7 @@ import Providers from "@/components/Providers";
 import ClientLayoutWrapper from "@/components/layout/ClientLayoutWrapper";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://perpus-pengkalan.vercel.app"),
+  metadataBase: new URL("https://perpus-pangkalan.vercel.app"),
   title: {
     default: "Pustaka Pangkalan - Perpustakaan Digital Desa Pangkalan Sukabumi",
     template: "%s | Pustaka Pangkalan",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://perpus-pengkalan.vercel.app",
+    url: "https://perpus-pangkalan.vercel.app",
     siteName: "Pustaka Digital Desa Pangkalan",
     title: "Pustaka Pangkalan - Perpustakaan Digital Desa Pangkalan Kabupaten Sukabumi",
     description: "Portal resmi perpustakaan digital Desa Pangkalan, Kec. Cikidang, Kabupaten Sukabumi. Akses ribuan koleksi e-book pertanian modern, UMKM, kesehatan keluarga, sastra Sunda, dan asisten Kades AI.",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://perpus-pengkalan.vercel.app",
+    canonical: "https://perpus-pangkalan.vercel.app",
   },
 };
 
