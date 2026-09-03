@@ -161,7 +161,7 @@ draw.text((text_start_x, logo_y + 98), "Perpustakaan & Portal Pengetahuan Digita
 
 # Description / Tagline
 desc_y = logo_y + logo_banner_h + 35
-desc_text1 = "Gerbang Literasi Mandiri Desa Pangkalan, Kec. Cikembar."
+desc_text1 = "Gerbang Literasi Mandiri Desa Pangkalan, Kec. Cikidang."
 desc_text2 = "Menyediakan ratusan modul pertanian modern, BUMDes, kesehatan,"
 desc_text3 = "sastra budaya Sunda, serta asisten cerdas Kades AI Desa."
 draw.text((logo_x, desc_y), desc_text1, font=f_tagline, fill=(243, 244, 246, 255))

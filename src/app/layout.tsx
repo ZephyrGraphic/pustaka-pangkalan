@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     default: "Pustaka Pangkalan - Perpustakaan Digital Desa Pangkalan Sukabumi",
     template: "%s | Pustaka Pangkalan",
   },
-  description: "Portal resmi perpustakaan digital Desa Pangkalan, Kec. Cikembar, Kabupaten Sukabumi. Akses ratusan e-book pertanian modern, wirausaha UMKM, kesehatan keluarga, sastra budaya Sunda, dan konsultasi literasi desa.",
+  description: "Portal resmi perpustakaan digital Desa Pangkalan, Kec. Cikidang, Kabupaten Sukabumi. Akses ratusan e-book pertanian modern, wirausaha UMKM, kesehatan keluarga, sastra budaya Sunda, dan konsultasi literasi desa.",
   applicationName: "Pustaka Pangkalan",
   authors: [{ name: "Pemerintah Desa Pangkalan" }],
   generator: "Next.js",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "Perpustakaan Digital Desa",
     "Desa Pangkalan",
     "Kabupaten Sukabumi",
-    "Kecamatan Cikembar",
+    "Kecamatan Cikidang",
     "Literasi Desa",
     "Buku Pertanian Modern",
     "Aksara Sunda",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     url: "https://perpus-pengkalan.vercel.app",
     siteName: "Pustaka Digital Desa Pangkalan",
     title: "Pustaka Pangkalan - Perpustakaan Digital Desa Pangkalan Kabupaten Sukabumi",
-    description: "Portal resmi perpustakaan digital Desa Pangkalan, Kabupaten Sukabumi. Akses ribuan koleksi e-book pertanian modern, UMKM, kesehatan keluarga, sastra Sunda, dan asisten Kades AI.",
+    description: "Portal resmi perpustakaan digital Desa Pangkalan, Kec. Cikidang, Kabupaten Sukabumi. Akses ribuan koleksi e-book pertanian modern, UMKM, kesehatan keluarga, sastra Sunda, dan asisten Kades AI.",
     images: [
       {
         url: "/og-image.png",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Pustaka Pangkalan - Perpustakaan Digital Desa Pangkalan Sukabumi",
-    description: "Portal resmi perpustakaan digital Desa Pangkalan, Kec. Cikembar, Kabupaten Sukabumi.",
+    description: "Portal resmi perpustakaan digital Desa Pangkalan, Kec. Cikidang, Kabupaten Sukabumi.",
     images: ["/og-image.png"],
   },
   alternates: {

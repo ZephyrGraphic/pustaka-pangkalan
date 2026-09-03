@@ -131,7 +131,7 @@ function LoginForm() {
             Pustaka Pangkalan
           </h1>
           <p className="font-body-lg text-on-surface-variant/90 mb-8 max-w-[448px] mx-auto lg:mx-0 leading-relaxed">
-            Gerbang Ilmu Pengetahuan Desa Pangkalan, Kec. Cikembar. Akses ribuan modul pertanian modern, UMKM, kesehatan, dan kearifan budaya Sunda.
+            Gerbang Ilmu Pengetahuan Desa Pangkalan, Kec. Cikidang. Akses ribuan modul pertanian modern, UMKM, kesehatan, dan kearifan budaya Sunda.
           </p>
           <div className="hidden md:flex gap-4 flex-wrap justify-center lg:justify-start">
             <div className="flex items-center gap-2 bg-surface px-5 py-2.5 rounded-full border border-outline-variant/30 shadow-sm">
